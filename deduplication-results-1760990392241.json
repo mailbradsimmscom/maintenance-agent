@@ -1,0 +1,315 @@
+{
+  "analysis_date": "2025-10-20T19:59:52.240Z",
+  "total_tasks": 68,
+  "suspected_duplicates": 14,
+  "unique_tasks": 54,
+  "reduction_percent": "20.6",
+  "thresholds": {
+    "semantic": {
+      "min": 0.85,
+      "highConfidence": 0.95
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "duplicate": {
+        "id": "task-1760989886970-57",
+        "description": "Replacing the Fuel Filter Element",
+        "frequency_basis": "condition",
+        "task_type": "filter_replacement"
+      },
+      "primary": {
+        "id": "task-1760989886050-50",
+        "description": "Replace the fuel filter element",
+        "frequency_basis": "condition",
+        "task_type": "filter_replacement"
+      },
+      "similarity_score": 0.923816562,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989886050-50",
+        "description": "Replace the fuel filter element",
+        "frequency_basis": "condition",
+        "task_type": "filter_replacement"
+      },
+      "primary": {
+        "id": "task-1760989886970-57",
+        "description": "Replacing the Fuel Filter Element",
+        "frequency_basis": "condition",
+        "task_type": "filter_replacement"
+      },
+      "similarity_score": 0.923828125,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989878160-0",
+        "description": "Check oil level and top up if necessary before operation.",
+        "frequency_basis": "event",
+        "task_type": "fluid_check"
+      },
+      "primary": {
+        "id": "task-1760989880238-7",
+        "description": "Check lubricating oil level and fill if necessary before operation.",
+        "frequency_basis": "event",
+        "task_type": "fluid_check"
+      },
+      "similarity_score": 0.867233336,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989880238-7",
+        "description": "Check lubricating oil level and fill if necessary before operation.",
+        "frequency_basis": "event",
+        "task_type": "fluid_check"
+      },
+      "primary": {
+        "id": "task-1760989878160-0",
+        "description": "Check oil level and top up if necessary before operation.",
+        "frequency_basis": "event",
+        "task_type": "fluid_check"
+      },
+      "similarity_score": 0.867235243,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989880383-8",
+        "description": "Change lubricating oil for the first time.",
+        "frequency_basis": "unknown",
+        "task_type": "fluid_replacement"
+      },
+      "primary": {
+        "id": "task-1760989879354-1",
+        "description": "Change lubricating oil for the first time.",
+        "frequency_basis": "usage",
+        "frequency_hours": 50,
+        "task_type": "fluid_replacement"
+      },
+      "similarity_score": 1.00024605,
+      "reason": "high_confidence_semantic_match",
+      "warning": "frequency_mismatch"
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989879506-2",
+        "description": "Clean cooling water suction hole during boat lifting.",
+        "frequency_basis": "event",
+        "task_type": "cleaning"
+      },
+      "primary": {
+        "id": "task-1760989880531-9",
+        "description": "Clean cooling water suction hole during lifting the boat.",
+        "frequency_basis": "event",
+        "task_type": "cleaning"
+      },
+      "similarity_score": 0.982330322,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989884098-36",
+        "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat",
+        "frequency_basis": "event",
+        "task_type": "lubrication"
+      },
+      "primary": {
+        "id": "task-1760989880665-10",
+        "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat.",
+        "frequency_basis": "event",
+        "task_type": "lubrication"
+      },
+      "similarity_score": 0.974493146,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989884514-39",
+        "description": "Inspect and replace anode during lifting the boat",
+        "frequency_basis": "event",
+        "task_type": "parts_replacement"
+      },
+      "primary": {
+        "id": "task-1760989881315-15",
+        "description": "Inspect and replace anode during lifting the boat.",
+        "frequency_basis": "event",
+        "task_type": "parts_replacement"
+      },
+      "similarity_score": 0.972938418,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989880531-9",
+        "description": "Clean cooling water suction hole during lifting the boat.",
+        "frequency_basis": "event",
+        "task_type": "cleaning"
+      },
+      "primary": {
+        "id": "task-1760989879506-2",
+        "description": "Clean cooling water suction hole during boat lifting.",
+        "frequency_basis": "event",
+        "task_type": "cleaning"
+      },
+      "similarity_score": 0.982273102,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989879798-4",
+        "description": "Inspect and replace anode during boat lifting.",
+        "frequency_basis": "event",
+        "task_type": "parts_replacement"
+      },
+      "primary": {
+        "id": "task-1760989881315-15",
+        "description": "Inspect and replace anode during lifting the boat.",
+        "frequency_basis": "event",
+        "task_type": "parts_replacement"
+      },
+      "similarity_score": 0.979772568,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989883971-35",
+        "description": "Clean cooling water suction hole during lifting the boat",
+        "frequency_basis": "event",
+        "task_type": "cleaning"
+      },
+      "primary": {
+        "id": "task-1760989880531-9",
+        "description": "Clean cooling water suction hole during lifting the boat.",
+        "frequency_basis": "event",
+        "task_type": "cleaning"
+      },
+      "similarity_score": 0.96729672,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989881315-15",
+        "description": "Inspect and replace anode during lifting the boat.",
+        "frequency_basis": "event",
+        "task_type": "parts_replacement"
+      },
+      "primary": {
+        "id": "task-1760989879798-4",
+        "description": "Inspect and replace anode during boat lifting.",
+        "frequency_basis": "event",
+        "task_type": "parts_replacement"
+      },
+      "similarity_score": 0.979726791,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989879656-3",
+        "description": "Lubricate and re-tighten propeller shaft nut during boat lifting.",
+        "frequency_basis": "event",
+        "task_type": "lubrication"
+      },
+      "primary": {
+        "id": "task-1760989880665-10",
+        "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat.",
+        "frequency_basis": "event",
+        "task_type": "lubrication"
+      },
+      "similarity_score": 0.984315872,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "duplicate": {
+        "id": "task-1760989880665-10",
+        "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat.",
+        "frequency_basis": "event",
+        "task_type": "lubrication"
+      },
+      "primary": {
+        "id": "task-1760989879656-3",
+        "description": "Lubricate and re-tighten propeller shaft nut during boat lifting.",
+        "frequency_basis": "event",
+        "task_type": "lubrication"
+      },
+      "similarity_score": 0.984315872,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    }
+  ],
+  "unique_task_ids": [
+    "task-1760989888195-66",
+    "task-1760989883069-28",
+    "task-1760989887519-61",
+    "task-1760989888324-67",
+    "task-1760989888059-65",
+    "task-1760989882667-25",
+    "task-1760989885537-46",
+    "task-1760989886721-55",
+    "task-1760989883457-31",
+    "task-1760989885793-48",
+    "task-1760989880793-11",
+    "task-1760989885918-49",
+    "task-1760989882797-26",
+    "task-1760989884385-38",
+    "task-1760989882920-27",
+    "task-1760989883327-30",
+    "task-1760989885107-43",
+    "task-1760989887655-62",
+    "task-1760989886587-54",
+    "task-1760989882254-22",
+    "task-1760989883837-34",
+    "task-1760989887799-63",
+    "task-1760989887248-59",
+    "task-1760989883202-29",
+    "task-1760989886466-53",
+    "task-1760989879354-1",
+    "task-1760989882535-24",
+    "task-1760989887927-64",
+    "task-1760989881858-19",
+    "task-1760989881712-18",
+    "task-1760989884916-42",
+    "task-1760989886847-56",
+    "task-1760989880917-12",
+    "task-1760989879949-5",
+    "task-1760989885371-45",
+    "task-1760989883583-32",
+    "task-1760989884643-40",
+    "task-1760989885669-47",
+    "task-1760989881576-17",
+    "task-1760989887379-60",
+    "task-1760989881047-13",
+    "task-1760989884249-37",
+    "task-1760989883714-33",
+    "task-1760989881449-16",
+    "task-1760989881988-20",
+    "task-1760989886314-52",
+    "task-1760989880096-6",
+    "task-1760989882118-21",
+    "task-1760989886179-51",
+    "task-1760989882404-23",
+    "task-1760989884790-41",
+    "task-1760989885238-44",
+    "task-1760989881182-14",
+    "task-1760989887106-58"
+  ]
+}

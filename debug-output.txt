@@ -1,0 +1,562 @@
+🧪 MULTI-PASS DEDUPLICATION TEST
+
+================================================================================
+Testing iterative deduplication with full audit trail
+Threshold: 80% + frequency match + type match
+
+Loaded 68 tasks from JSON
+
+================================================================================
+PASS 1: Initial Deduplication
+
+[1/68] [0s] Processing: Check oil level and top up if necessary before operation....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-0-1760984510932)
+[2/68] [2s] Processing: Change lubricating oil for the first time....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_replacement"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-1-1760984511879)
+[3/68] [2s] Processing: Clean cooling water suction hole during boat lifting....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"condition_based"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-2-1760984512656)
+[4/68] [3s] Processing: Lubricate and re-tighten propeller shaft nut during boat lif...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"condition_based"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-3-1760984513219)
+[5/68] [4s] Processing: Inspect and replace anode during boat lifting....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"parts_replacement"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-4-1760984513727)
+[6/68] [4s] Processing: Inspect rubber diaphragm for water tightness....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-5-1760984514329)
+[7/68] [5s] Processing: Replace the flexible mount....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"parts_replacement"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-6-1760984514876)
+[8/68] [5s] Processing: Check lubricating oil level and fill if necessary before ope...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-7-1760984515433)
+[9/68] [6s] Processing: Change lubricating oil for the first time....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_replacement"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-8-1760984516144)
+[10/68] [7s] Processing: Clean cooling water suction hole during lifting the boat....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"cleaning"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-9-1760984516869)
+[11/68] [7s] Processing: Lubricate and re-tighten propeller shaft nut during lifting ...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"lubrication"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-10-1760984517449)
+[12/68] [8s] Processing: Check hose fittings are properly tight daily or after 1 mont...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-11-1760984518022)
+[13/68] [8s] Processing: Consult authorized YANMAR marine dealer or distributor for g...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 4 results, top score: 31.4%
+  ✅ Inserted to Pinecone (ID: task-12-1760984519143)
+[14/68] [10s] Processing: Inspect remote control device daily or after 1 month....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 55.8%
+  ✅ Inserted to Pinecone (ID: task-13-1760984519694)
+[15/68] [10s] Processing: Consult authorized YANMAR marine dealer or distributor for i...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 23.4%
+  ✅ Inserted to Pinecone (ID: task-14-1760984520198)
+[16/68] [11s] Processing: Inspect and replace anode during lifting the boat....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"parts_replacement"}}
+    📊 Pinecone returned 2 results, top score: 35.4%
+  ✅ Inserted to Pinecone (ID: task-15-1760984520841)
+[17/68] [11s] Processing: Consult authorized YANMAR marine dealer or distributor for l...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"}}
+    📊 Pinecone returned 5 results, top score: 68.5%
+  ✅ Inserted to Pinecone (ID: task-16-1760984521356)
+[18/68] [12s] Processing: Inspect rubber diaphragm water tightness before operation an...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 71.4%
+  ✅ Inserted to Pinecone (ID: task-17-1760984521924)
+[19/68] [12s] Processing: Replace the flexible mount and inspect/test seal sensor ever...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"parts_replacement"}}
+    📊 Pinecone returned 3 results, top score: 43.2%
+  ✅ Inserted to Pinecone (ID: task-18-1760984522594)
+[20/68] [13s] Processing: Check coolant level daily....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-19-1760984523214)
+[21/68] [14s] Processing: Check or replace the seawater pump impeller every 50 hours....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 1 results, top score: 37.8%
+  ✅ Inserted to Pinecone (ID: task-20-1760984523976)
+[22/68] [14s] Processing: Replace coolant every 250 hours or annually, if Long Life Co...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_replacement"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-21-1760984524541)
+[23/68] [15s] Processing: Clean intake silencer (air cleaner) element every 250 hours....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"filter_replacement"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-22-1760984525335)
+[24/68] [16s] Processing: Clean or replace the exhaust/water mixing elbow every 250 ho...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"filter_replacement"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-23-1760984525901)
+[25/68] [16s] Processing: Check the alarm and indicators daily....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 2 results, top score: 55.7%
+  ✅ Inserted to Pinecone (ID: task-24-1760984526375)
+[26/68] [17s] Processing: Check the electrolyte level in the battery every 50 hours....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 2 results, top score: 51.5%
+  ✅ Inserted to Pinecone (ID: task-25-1760984527102)
+[27/68] [17s] Processing: Adjust the tension of the alternator V-ribbed belt or replac...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"adjustment"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-26-1760984527685)
+[28/68] [18s] Processing: Check the wiring connectors every 250 hours....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 4 results, top score: 41.3%
+  ✅ Inserted to Pinecone (ID: task-27-1760984528319)
+[29/68] [19s] Processing: Check for leakage of fuel, engine oil, and engine coolant da...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 70.6%
+  ✅ Inserted to Pinecone (ID: task-28-1760984528991)
+[30/68] [19s] Processing: Adjust intake/exhaust valve clearance at the first 50 hours ...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"adjustment"}}
+    📊 Pinecone returned 1 results, top score: 60.2%
+  ✅ Inserted to Pinecone (ID: task-29-1760984529621)
+[31/68] [20s] Processing: Check the remote control cable operation initially at 50 hou...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 41.9%
+  ✅ Inserted to Pinecone (ID: task-30-1760984530247)
+[32/68] [21s] Processing: Adjust the propeller shaft alignment initially at 50 hours a...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"adjustment"}}
+    📊 Pinecone returned 2 results, top score: 62.9%
+  ✅ Inserted to Pinecone (ID: task-31-1760984532089)
+[33/68] [22s] Processing: Replace rubberized hoses (fuel and water) every 2 years....
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"parts_replacement"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-32-1760984532709)
+[34/68] [23s] Processing: Check oil level and top up if necessary...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 83.4%
+  🔄 Duplicate of task-0-1760984510932 (83.4%)
+[35/68] [23s] Processing: Change lubricating oil for the first time...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_replacement"}}
+    📊 Pinecone returned 2 results, top score: 95.0%
+  ✅ Inserted to Pinecone (ID: task-34-1760984533798)
+[36/68] [24s] Processing: Clean cooling water suction hole during lifting the boat...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"cleaning"}}
+    📊 Pinecone returned 1 results, top score: 96.7%
+  ✅ Inserted to Pinecone (ID: task-35-1760984534316)
+[37/68] [25s] Processing: Lubricate and re-tighten propeller shaft nut during lifting ...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"lubrication"}}
+    📊 Pinecone returned 1 results, top score: 97.5%
+  ✅ Inserted to Pinecone (ID: task-36-1760984534846)
+[38/68] [25s] Processing: Check hose fittings are properly tight during lifting the bo...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 64.5%
+  ✅ Inserted to Pinecone (ID: task-37-1760984535580)
+[39/68] [26s] Processing: Check grounding circuit for possible corrosion...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 58.4%
+  ✅ Inserted to Pinecone (ID: task-38-1760984536294)
+[40/68] [27s] Processing: Inspect and replace anode during lifting the boat...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"parts_replacement"}}
+    📊 Pinecone returned 4 results, top score: 97.3%
+  ✅ Inserted to Pinecone (ID: task-39-1760984536928)
+[41/68] [27s] Processing: Inspect boat hull water tightness before operation...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 64.0%
+  ✅ Inserted to Pinecone (ID: task-40-1760984537544)
+[42/68] [28s] Processing: Replace the flexible mount every 7 years...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"parts_replacement"}}
+    📊 Pinecone returned 5 results, top score: 36.8%
+  🔄 Duplicate of task-18-1760984522594 (84.0%)
+[43/68] [28s] Processing: Inspect electrical system for looseness, damage, or corrosio...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 55.5%
+  ✅ Inserted to Pinecone (ID: task-42-1760984538475)
+[44/68] [29s] Processing: Inspect and change the position of output shaft seal every 7...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"parts_replacement"}}
+    📊 Pinecone returned 5 results, top score: 39.1%
+  ✅ Inserted to Pinecone (ID: task-43-1760984539062)
+[45/68] [29s] Processing: Repair lower case coating every 7 years...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"}}
+    📊 Pinecone returned 5 results, top score: 51.4%
+  ✅ Inserted to Pinecone (ID: task-44-1760984539562)
+[46/68] [30s] Processing: Check the negative brake every 7 years...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 65.6%
+  ✅ Inserted to Pinecone (ID: task-45-1760984540230)
+[47/68] [31s] Processing: Perform a visual inspection of the engine exterior...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"visual_inspection"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-46-1760984540768)
+[48/68] [31s] Processing: Check the fuel level and refill if necessary...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 48.0%
+  ✅ Inserted to Pinecone (ID: task-47-1760984542080)
+[49/68] [32s] Processing: Drain water and sediment from the fuel tank...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"cleaning"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-48-1760984542644)
+[50/68] [33s] Processing: Drain the fuel/water separator...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"cleaning"}}
+    ⚠️  Pinecone returned NO results
+  ✅ Inserted to Pinecone (ID: task-49-1760984543243)
+[51/68] [34s] Processing: Replace the fuel filter element...
+14:22:23 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:24 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:25 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:26 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:27 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:28 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:29 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:30 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:31 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:32 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:33 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:34 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:35 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:36 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:37 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:38 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:39 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:40 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:41 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:42 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:43 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:44 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:45 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:46 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:47 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:48 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+14:22:49 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"filter_replacement"}}
+    📊 Pinecone returned 2 results, top score: 50.9%
+  ✅ Inserted to Pinecone (ID: task-50-1760984571356)
+[52/68] [62s] Processing: Check the Engine lube oil level...
+14:22:51 [[33mwarn[39m]: Minute rate limit reached {
+  "component": "rate-limiter",
+  "service": "maintenance-agent",
+  "environment": "development",
+  "name": "openai",
+  "limit": 50
+}
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 61.9%
+  ✅ Inserted to Pinecone (ID: task-51-1760984573215)
+[53/68] [64s] Processing: Check the Marine Gear lube oil level...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 80.2%
+  🔄 Duplicate of task-51-1760984573215 (80.2%)
+[54/68] [64s] Processing: Replace the Engine lube oil...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_replacement"}}
+    📊 Pinecone returned 1 results, top score: 41.1%
+  ✅ Inserted to Pinecone (ID: task-53-1760984574258)
+[55/68] [65s] Processing: Replace the Marine Gear lube oil...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_replacement"}}
+    📊 Pinecone returned 2 results, top score: 35.8%
+  ✅ Inserted to Pinecone (ID: task-54-1760984574956)
+[56/68] [65s] Processing: Replace the Engine oil filter element...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"filter_replacement"}}
+    📊 Pinecone returned 3 results, top score: 51.4%
+  ✅ Inserted to Pinecone (ID: task-55-1760984575507)
+[57/68] [66s] Processing: Replace the Marine Gear oil filter element...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"filter_replacement"}}
+    📊 Pinecone returned 3 results, top score: 45.3%
+  ✅ Inserted to Pinecone (ID: task-56-1760984576101)
+[58/68] [66s] Processing: Replacing the Fuel Filter Element...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"filter_replacement"}}
+    📊 Pinecone returned 5 results, top score: 47.1%
+  ✅ Inserted to Pinecone (ID: task-57-1760984576751)
+[59/68] [67s] Processing: Changing the Engine Oil and Replacing the Engine Oil Filter ...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"filter_replacement"}}
+    📊 Pinecone returned 5 results, top score: 44.8%
+  ✅ Inserted to Pinecone (ID: task-58-1760984577491)
+[60/68] [68s] Processing: Changing the Marine Gear Oil and Replacing Marine Gear Oil F...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"filter_replacement"}}
+    📊 Pinecone returned 5 results, top score: 85.4%
+  ✅ Inserted to Pinecone (ID: task-59-1760984578056)
+[61/68] [68s] Processing: Checking or Replacing the Seawater Impeller...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 74.2%
+  ✅ Inserted to Pinecone (ID: task-60-1760984578817)
+[62/68] [69s] Processing: Changing the Coolant...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 52.9%
+  ✅ Inserted to Pinecone (ID: task-61-1760984579437)
+[63/68] [70s] Processing: Cleaning the Intake Silencer (Air Cleaner) Element...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"filter_replacement"}}
+    📊 Pinecone returned 5 results, top score: 71.4%
+  ✅ Inserted to Pinecone (ID: task-62-1760984580087)
+[64/68] [70s] Processing: Cleaning the Exhaust/Water Mixing Elbow...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"cleaning"}}
+    📊 Pinecone returned 2 results, top score: 47.3%
+  ✅ Inserted to Pinecone (ID: task-63-1760984580696)
+[65/68] [71s] Processing: Washing the Turbocharger Blower...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"cleaning"}}
+    📊 Pinecone returned 2 results, top score: 36.9%
+  ✅ Inserted to Pinecone (ID: task-64-1760984581316)
+[66/68] [72s] Processing: Adjusting the Alternator V-ribbed Belt Tension...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"adjustment"}}
+    📊 Pinecone returned 3 results, top score: 66.9%
+  ✅ Inserted to Pinecone (ID: task-65-1760984581959)
+[67/68] [72s] Processing: Checking the Wiring Connectors...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 64.0%
+  ✅ Inserted to Pinecone (ID: task-66-1760984582531)
+[68/68] [73s] Processing: Tightening All Major Nuts and Bolts...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"adjustment"}}
+    📊 Pinecone returned 4 results, top score: 42.8%
+  ✅ Inserted to Pinecone (ID: task-67-1760984583065)
+
+================================================================================
+PASS 1 RESULTS:
+
+Tasks processed: 68
+✅ Inserted:     65
+🔄 Duplicates:   3
+
+================================================================================
+PASS 2: Re-checking Duplicates for Convergence
+
+Re-checking 3 tasks flagged as duplicates...
+
+[33] Re-checking: Check oil level and top up if necessary...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 83.4%
+  🔄 Still duplicate of task-0-1760984510932
+[41] Re-checking: Replace the flexible mount every 7 years...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"4dbf0c41-a3ac-4993-b5d4-b591a6365c72"},"task_type":{"$eq":"parts_replacement"}}
+    📊 Pinecone returned 5 results, top score: 84.0%
+  🔄 Still duplicate of task-18-1760984522594
+[52] Re-checking: Check the Marine Gear lube oil level...
+    🔍 Querying with filter: {"asset_uid":{"$eq":"6747bcaf-5c31-e12f-8947-37fce290ab47"},"task_type":{"$eq":"fluid_check"}}
+    📊 Pinecone returned 5 results, top score: 80.2%
+  🔄 Still duplicate of task-51-1760984573215
+
+================================================================================
+PASS 2 RESULTS:
+
+Tasks re-checked:   3
+✅ Now unique:      0
+🔄 Still duplicates: 3
+📊 Status changed:   0
+
+================================================================================
+🎯 FINAL SUMMARY
+
+Total tasks:        68
+✅ Unique tasks:    65
+🔄 Duplicates:      3
+📊 Reduction:       4.4%
+
+================================================================================
+📈 CONVERGENCE ANALYSIS
+
+Pass 1:
+  Inserted: 65
+  Duplicates: 3
+
+Pass 2:
+  New inserts: 0
+  Still duplicates: 3
+  Status changes: 0
+
+✅ CONVERGED: No status changes in Pass 2
+
+================================================================================
+
+📄 Full audit log saved: test-results-1760984583429.json
+
+================================================================================
+🔍 DUPLICATE GROUPS
+
+
+Group: Check oil level and top up if necessary before operation....
+  Primary ID: task-0-1760984510932
+  Duplicates (1):
+    - [33] Check oil level and top up if necessary... (83.4%)
+
+Group: Replace the flexible mount and inspect/test seal sensor ever...
+  Primary ID: task-18-1760984522594
+  Duplicates (1):
+    - [41] Replace the flexible mount every 7 years... (84.0%)
+
+Group: Check the Engine lube oil level...
+  Primary ID: task-51-1760984573215
+  Duplicates (1):
+    - [52] Check the Marine Gear lube oil level... (80.2%)
+
+================================================================================
+
+✅ Multi-pass test complete!
+

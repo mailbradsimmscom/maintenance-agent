@@ -1,0 +1,743 @@
+{
+  "testStarted": "2025-10-20T18:34:03.059Z",
+  "threshold": 0.8,
+  "totalTasks": 68,
+  "passes": [
+    {
+      "passNumber": 1,
+      "tasksProcessed": 68,
+      "inserted": 65,
+      "duplicates": 3,
+      "decisions": [
+        {
+          "taskIndex": 0,
+          "description": "Check oil level and top up if necessary before operation.",
+          "system": "Stbd Sail Drive",
+          "frequency": "50 hours",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-0-1760985244041",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 1,
+          "description": "Change lubricating oil for the first time.",
+          "system": "Stbd Sail Drive",
+          "frequency": "50 hours",
+          "taskType": "fluid_replacement",
+          "action": "insert",
+          "pineconeId": "task-1-1760985245161",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 2,
+          "description": "Clean cooling water suction hole during boat lifting.",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "condition_based",
+          "action": "insert",
+          "pineconeId": "task-2-1760985245949",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 3,
+          "description": "Lubricate and re-tighten propeller shaft nut during boat lifting.",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "condition_based",
+          "action": "insert",
+          "pineconeId": "task-3-1760985246559",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 4,
+          "description": "Inspect and replace anode during boat lifting.",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "parts_replacement",
+          "action": "insert",
+          "pineconeId": "task-4-1760985247290",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 5,
+          "description": "Inspect rubber diaphragm for water tightness.",
+          "system": "Stbd Sail Drive",
+          "frequency": "7 years",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-5-1760985248220",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 6,
+          "description": "Replace the flexible mount.",
+          "system": "Stbd Sail Drive",
+          "frequency": "7 years",
+          "taskType": "parts_replacement",
+          "action": "insert",
+          "pineconeId": "task-6-1760985248644",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 7,
+          "description": "Check lubricating oil level and fill if necessary before operation.",
+          "system": "Stbd Sail Drive",
+          "frequency": "50 hours",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-7-1760985249368",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 8,
+          "description": "Change lubricating oil for the first time.",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "fluid_replacement",
+          "action": "insert",
+          "pineconeId": "task-8-1760985249843",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 9,
+          "description": "Clean cooling water suction hole during lifting the boat.",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "cleaning",
+          "action": "insert",
+          "pineconeId": "task-9-1760985250363",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 10,
+          "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat.",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "lubrication",
+          "action": "insert",
+          "pineconeId": "task-10-1760985250942",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 11,
+          "description": "Check hose fittings are properly tight daily or after 1 month.",
+          "system": "Stbd Sail Drive",
+          "frequency": "30 days",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-11-1760985252283",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 12,
+          "description": "Consult authorized YANMAR marine dealer or distributor for grounding circuit check for looseness, damage, or corrosion.",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-12-1760985252754",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 13,
+          "description": "Inspect remote control device daily or after 1 month.",
+          "system": "Stbd Sail Drive",
+          "frequency": "30 days",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-13-1760985253345",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 14,
+          "description": "Consult authorized YANMAR marine dealer or distributor for inspection and/or replacement of the clutch shifter.",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-14-1760985254072",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 15,
+          "description": "Inspect and replace anode during lifting the boat.",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "parts_replacement",
+          "action": "insert",
+          "pineconeId": "task-15-1760985254851",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 16,
+          "description": "Consult authorized YANMAR marine dealer or distributor for lower case coating repair.",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "unknown",
+          "action": "insert",
+          "pineconeId": "task-16-1760985255356",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 17,
+          "description": "Inspect rubber diaphragm water tightness before operation and consult authorized YANMAR marine dealer or distributor if irregularities are found.",
+          "system": "Stbd Sail Drive",
+          "frequency": "50 hours",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-17-1760985255889",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 18,
+          "description": "Replace the flexible mount and inspect/test seal sensor every 7 years.",
+          "system": "Stbd Sail Drive",
+          "frequency": "7 years",
+          "taskType": "parts_replacement",
+          "action": "insert",
+          "pineconeId": "task-18-1760985256487",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 19,
+          "description": "Check coolant level daily.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "1 days",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-19-1760985257132",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 20,
+          "description": "Check or replace the seawater pump impeller every 50 hours.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "50 hours",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-20-1760985257855",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 21,
+          "description": "Replace coolant every 250 hours or annually, if Long Life Coolant is used replace every 2 years.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "250 hours",
+          "taskType": "fluid_replacement",
+          "action": "insert",
+          "pineconeId": "task-21-1760985258673",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 22,
+          "description": "Clean intake silencer (air cleaner) element every 250 hours.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "250 hours",
+          "taskType": "filter_replacement",
+          "action": "insert",
+          "pineconeId": "task-22-1760985259925",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 23,
+          "description": "Clean or replace the exhaust/water mixing elbow every 250 hours.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "250 hours",
+          "taskType": "filter_replacement",
+          "action": "insert",
+          "pineconeId": "task-23-1760985260656",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 24,
+          "description": "Check the alarm and indicators daily.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "1 days",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-24-1760985261184",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 25,
+          "description": "Check the electrolyte level in the battery every 50 hours.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "50 hours",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-25-1760985261683",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 26,
+          "description": "Adjust the tension of the alternator V-ribbed belt or replace V-ribbed belt initially at 50 hours and then every 250 hours.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "250 hours",
+          "taskType": "adjustment",
+          "action": "insert",
+          "pineconeId": "task-26-1760985262224",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 27,
+          "description": "Check the wiring connectors every 250 hours.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "250 hours",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-27-1760985262736",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 28,
+          "description": "Check for leakage of fuel, engine oil, and engine coolant daily.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "1 days",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-28-1760985263215",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 29,
+          "description": "Adjust intake/exhaust valve clearance at the first 50 hours and then as needed.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "adjustment",
+          "action": "insert",
+          "pineconeId": "task-29-1760985263762",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 30,
+          "description": "Check the remote control cable operation initially at 50 hours and then as needed.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-30-1760985264451",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 31,
+          "description": "Adjust the propeller shaft alignment initially at 50 hours and then as needed.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "adjustment",
+          "action": "insert",
+          "pineconeId": "task-31-1760985265098",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 32,
+          "description": "Replace rubberized hoses (fuel and water) every 2 years.",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "2 years",
+          "taskType": "parts_replacement",
+          "action": "insert",
+          "pineconeId": "task-32-1760985265606",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 33,
+          "description": "Check oil level and top up if necessary",
+          "system": "Stbd Sail Drive",
+          "frequency": "50 hours",
+          "taskType": "fluid_check",
+          "action": "duplicate",
+          "duplicateOf": "task-0-1760985244041",
+          "similarity": 0.833810866,
+          "matchDescription": "Check oil level and top up if necessary before operation.",
+          "result": "duplicate"
+        },
+        {
+          "taskIndex": 34,
+          "description": "Change lubricating oil for the first time",
+          "system": "Stbd Sail Drive",
+          "frequency": "1 months",
+          "taskType": "fluid_replacement",
+          "action": "insert",
+          "pineconeId": "task-34-1760985266923",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 35,
+          "description": "Clean cooling water suction hole during lifting the boat",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "cleaning",
+          "action": "insert",
+          "pineconeId": "task-35-1760985267717",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 36,
+          "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "lubrication",
+          "action": "insert",
+          "pineconeId": "task-36-1760985268613",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 37,
+          "description": "Check hose fittings are properly tight during lifting the boat",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-37-1760985269219",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 38,
+          "description": "Check grounding circuit for possible corrosion",
+          "system": "Stbd Sail Drive",
+          "frequency": "50 hours",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-38-1760985269847",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 39,
+          "description": "Inspect and replace anode during lifting the boat",
+          "system": "Stbd Sail Drive",
+          "frequency": "null condition_based",
+          "taskType": "parts_replacement",
+          "action": "insert",
+          "pineconeId": "task-39-1760985270297",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 40,
+          "description": "Inspect boat hull water tightness before operation",
+          "system": "Stbd Sail Drive",
+          "frequency": "1 days",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-40-1760985270790",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 41,
+          "description": "Replace the flexible mount every 7 years",
+          "system": "Stbd Sail Drive",
+          "frequency": "7 years",
+          "taskType": "parts_replacement",
+          "action": "duplicate",
+          "duplicateOf": "task-18-1760985256487",
+          "similarity": 0.840377808,
+          "matchDescription": "Replace the flexible mount and inspect/test seal sensor every 7 years.",
+          "result": "duplicate"
+        },
+        {
+          "taskIndex": 42,
+          "description": "Inspect electrical system for looseness, damage, or corrosion every 7 years",
+          "system": "Stbd Sail Drive",
+          "frequency": "7 years",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-42-1760985271821",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 43,
+          "description": "Inspect and change the position of output shaft seal every 7 years",
+          "system": "Stbd Sail Drive",
+          "frequency": "7 years",
+          "taskType": "parts_replacement",
+          "action": "insert",
+          "pineconeId": "task-43-1760985272281",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 44,
+          "description": "Repair lower case coating every 7 years",
+          "system": "Stbd Sail Drive",
+          "frequency": "7 years",
+          "taskType": "unknown",
+          "action": "insert",
+          "pineconeId": "task-44-1760985272753",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 45,
+          "description": "Check the negative brake every 7 years",
+          "system": "Stbd Sail Drive",
+          "frequency": "7 years",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-45-1760985273298",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 46,
+          "description": "Perform a visual inspection of the engine exterior",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "1 days",
+          "taskType": "visual_inspection",
+          "action": "insert",
+          "pineconeId": "task-46-1760985273825",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 47,
+          "description": "Check the fuel level and refill if necessary",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "1 days",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-47-1760985274444",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 48,
+          "description": "Drain water and sediment from the fuel tank",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "50 hours",
+          "taskType": "cleaning",
+          "action": "insert",
+          "pineconeId": "task-48-1760985275037",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 49,
+          "description": "Drain the fuel/water separator",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "50 hours",
+          "taskType": "cleaning",
+          "action": "insert",
+          "pineconeId": "task-49-1760985275859",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 50,
+          "description": "Replace the fuel filter element",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "filter_replacement",
+          "action": "insert",
+          "pineconeId": "task-50-1760985304880",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 51,
+          "description": "Check the Engine lube oil level",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "1 days",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-51-1760985305676",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 52,
+          "description": "Check the Marine Gear lube oil level",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "1 days",
+          "taskType": "fluid_check",
+          "action": "duplicate",
+          "duplicateOf": "task-51-1760985305676",
+          "similarity": 0.80166626,
+          "matchDescription": "Check the Engine lube oil level",
+          "result": "duplicate"
+        },
+        {
+          "taskIndex": 53,
+          "description": "Replace the Engine lube oil",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "50 hours",
+          "taskType": "fluid_replacement",
+          "action": "insert",
+          "pineconeId": "task-53-1760985307861",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 54,
+          "description": "Replace the Marine Gear lube oil",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "50 hours",
+          "taskType": "fluid_replacement",
+          "action": "insert",
+          "pineconeId": "task-54-1760985308454",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 55,
+          "description": "Replace the Engine oil filter element",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "50 hours",
+          "taskType": "filter_replacement",
+          "action": "insert",
+          "pineconeId": "task-55-1760985308985",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 56,
+          "description": "Replace the Marine Gear oil filter element",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "50 hours",
+          "taskType": "filter_replacement",
+          "action": "insert",
+          "pineconeId": "task-56-1760985309742",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 57,
+          "description": "Replacing the Fuel Filter Element",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "filter_replacement",
+          "action": "insert",
+          "pineconeId": "task-57-1760985310273",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 58,
+          "description": "Changing the Engine Oil and Replacing the Engine Oil Filter Element",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "filter_replacement",
+          "action": "insert",
+          "pineconeId": "task-58-1760985310892",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 59,
+          "description": "Changing the Marine Gear Oil and Replacing Marine Gear Oil Filter Element",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "filter_replacement",
+          "action": "insert",
+          "pineconeId": "task-59-1760985311434",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 60,
+          "description": "Checking or Replacing the Seawater Impeller",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-60-1760985311924",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 61,
+          "description": "Changing the Coolant",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-61-1760985313511",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 62,
+          "description": "Cleaning the Intake Silencer (Air Cleaner) Element",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "filter_replacement",
+          "action": "insert",
+          "pineconeId": "task-62-1760985314297",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 63,
+          "description": "Cleaning the Exhaust/Water Mixing Elbow",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "cleaning",
+          "action": "insert",
+          "pineconeId": "task-63-1760985314850",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 64,
+          "description": "Washing the Turbocharger Blower",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "cleaning",
+          "action": "insert",
+          "pineconeId": "task-64-1760985315372",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 65,
+          "description": "Adjusting the Alternator V-ribbed Belt Tension",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "adjustment",
+          "action": "insert",
+          "pineconeId": "task-65-1760985316018",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 66,
+          "description": "Checking the Wiring Connectors",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "fluid_check",
+          "action": "insert",
+          "pineconeId": "task-66-1760985316650",
+          "result": "inserted"
+        },
+        {
+          "taskIndex": 67,
+          "description": "Tightening All Major Nuts and Bolts",
+          "system": "57 hp diesel engine (PORT)",
+          "frequency": "null condition_based",
+          "taskType": "adjustment",
+          "action": "insert",
+          "pineconeId": "task-67-1760985317520",
+          "result": "inserted"
+        }
+      ]
+    },
+    {
+      "passNumber": 2,
+      "tasksProcessed": 3,
+      "inserted": 0,
+      "duplicates": 3,
+      "statusChanged": 0,
+      "decisions": [
+        {
+          "taskIndex": 33,
+          "description": "Check oil level and top up if necessary",
+          "previousStatus": "duplicate",
+          "action": "duplicate",
+          "duplicateOf": "task-0-1760985244041",
+          "similarity": 0.833810866,
+          "result": "still_duplicate"
+        },
+        {
+          "taskIndex": 41,
+          "description": "Replace the flexible mount every 7 years",
+          "previousStatus": "duplicate",
+          "action": "duplicate",
+          "duplicateOf": "task-18-1760985256487",
+          "similarity": 0.840377808,
+          "result": "still_duplicate"
+        },
+        {
+          "taskIndex": 52,
+          "description": "Check the Marine Gear lube oil level",
+          "previousStatus": "duplicate",
+          "action": "duplicate",
+          "duplicateOf": "task-51-1760985305676",
+          "similarity": 0.80166626,
+          "result": "still_duplicate"
+        }
+      ]
+    }
+  ],
+  "finalStats": {
+    "uniqueTasks": 65,
+    "duplicates": 3,
+    "reductionPercent": "4.4"
+  },
+  "testCompleted": "2025-10-20T18:35:17.898Z"
+}

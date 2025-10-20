@@ -1,0 +1,252 @@
+{
+  "analysis_date": "2025-10-20T20:16:24.431Z",
+  "total_tasks": 68,
+  "duplicate_pairs_count": 13,
+  "duplicate_groups_count": 7,
+  "total_duplicate_tasks": 10,
+  "unique_tasks": 58,
+  "reduction_percent": "14.7",
+  "thresholds": {
+    "semantic": {
+      "min": 0.8,
+      "highConfidence": 0.9
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1760989879656-3",
+        "description": "Lubricate and re-tighten propeller shaft nut during boat lifting."
+      },
+      "taskB": {
+        "id": "task-1760989884098-36",
+        "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat"
+      },
+      "similarity_score": 0.9575749860963189,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989879656-3",
+        "description": "Lubricate and re-tighten propeller shaft nut during boat lifting."
+      },
+      "taskB": {
+        "id": "task-1760989880665-10",
+        "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat."
+      },
+      "similarity_score": 0.9840063817019686,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989881315-15",
+        "description": "Inspect and replace anode during lifting the boat."
+      },
+      "taskB": {
+        "id": "task-1760989884514-39",
+        "description": "Inspect and replace anode during lifting the boat"
+      },
+      "similarity_score": 0.9731651809224072,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989881315-15",
+        "description": "Inspect and replace anode during lifting the boat."
+      },
+      "taskB": {
+        "id": "task-1760989879798-4",
+        "description": "Inspect and replace anode during boat lifting."
+      },
+      "similarity_score": 0.9798928920295402,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989880531-9",
+        "description": "Clean cooling water suction hole during lifting the boat."
+      },
+      "taskB": {
+        "id": "task-1760989883971-35",
+        "description": "Clean cooling water suction hole during lifting the boat"
+      },
+      "similarity_score": 0.96714354789149,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989880531-9",
+        "description": "Clean cooling water suction hole during lifting the boat."
+      },
+      "taskB": {
+        "id": "task-1760989879506-2",
+        "description": "Clean cooling water suction hole during boat lifting."
+      },
+      "similarity_score": 0.9825831064539917,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989883971-35",
+        "description": "Clean cooling water suction hole during lifting the boat"
+      },
+      "taskB": {
+        "id": "task-1760989879506-2",
+        "description": "Clean cooling water suction hole during boat lifting."
+      },
+      "similarity_score": 0.957599443132524,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989884098-36",
+        "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat"
+      },
+      "taskB": {
+        "id": "task-1760989880665-10",
+        "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat."
+      },
+      "similarity_score": 0.974374020559846,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989878160-0",
+        "description": "Check oil level and top up if necessary before operation."
+      },
+      "taskB": {
+        "id": "task-1760989880238-7",
+        "description": "Check lubricating oil level and fill if necessary before operation."
+      },
+      "similarity_score": 0.8669584710029977,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886179-51",
+        "description": "Check the Engine lube oil level"
+      },
+      "taskB": {
+        "id": "task-1760989886314-52",
+        "description": "Check the Marine Gear lube oil level"
+      },
+      "similarity_score": 0.8015231228726998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886970-57",
+        "description": "Replacing the Fuel Filter Element"
+      },
+      "taskB": {
+        "id": "task-1760989886050-50",
+        "description": "Replace the fuel filter element"
+      },
+      "similarity_score": 0.923553392921915,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989884514-39",
+        "description": "Inspect and replace anode during lifting the boat"
+      },
+      "taskB": {
+        "id": "task-1760989879798-4",
+        "description": "Inspect and replace anode during boat lifting."
+      },
+      "similarity_score": 0.9563912290428136,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989884790-41",
+        "description": "Replace the flexible mount every 7 years"
+      },
+      "taskB": {
+        "id": "task-1760989881712-18",
+        "description": "Replace the flexible mount and inspect/test seal sensor every 7 years."
+      },
+      "similarity_score": 0.8405070560870426,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1760989879656-3",
+      "primary_description": "Lubricate and re-tighten propeller shaft nut during boat lifting.",
+      "duplicate_ids": [
+        "task-1760989884098-36",
+        "task-1760989880665-10"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1760989881315-15",
+      "primary_description": "Inspect and replace anode during lifting the boat.",
+      "duplicate_ids": [
+        "task-1760989884514-39",
+        "task-1760989879798-4"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1760989880531-9",
+      "primary_description": "Clean cooling water suction hole during lifting the boat.",
+      "duplicate_ids": [
+        "task-1760989883971-35",
+        "task-1760989879506-2"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1760989878160-0",
+      "primary_description": "Check oil level and top up if necessary before operation.",
+      "duplicate_ids": [
+        "task-1760989880238-7"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989886179-51",
+      "primary_description": "Check the Engine lube oil level",
+      "duplicate_ids": [
+        "task-1760989886314-52"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989886970-57",
+      "primary_description": "Replacing the Fuel Filter Element",
+      "duplicate_ids": [
+        "task-1760989886050-50"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989884790-41",
+      "primary_description": "Replace the flexible mount every 7 years",
+      "duplicate_ids": [
+        "task-1760989881712-18"
+      ],
+      "duplicate_count": 1
+    }
+  ]
+}

@@ -1,0 +1,1552 @@
+[
+  {
+    "description": "Check oil level and top up if necessary before operation.",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [],
+    "estimated_duration_hours": 0.25,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "87e0481d-b28c-4990-b310-48544ce2cb0e",
+      "relevance_score": 0.5498,
+      "section_title": "PERIODIC MAINTENANCE TABLE                    37",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:31.460Z"
+  },
+  {
+    "description": "Change lubricating oil for the first time.",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [
+      "Lubricating oil"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "87e0481d-b28c-4990-b310-48544ce2cb0e",
+      "relevance_score": 0.5498,
+      "section_title": "PERIODIC MAINTENANCE TABLE                    37",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:31.461Z"
+  },
+  {
+    "description": "Clean cooling water suction hole during boat lifting.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "87e0481d-b28c-4990-b310-48544ce2cb0e",
+      "relevance_score": 0.5498,
+      "section_title": "PERIODIC MAINTENANCE TABLE                    37",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:31.461Z"
+  },
+  {
+    "description": "Lubricate and re-tighten propeller shaft nut during boat lifting.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [
+      "Lubricant"
+    ],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "87e0481d-b28c-4990-b310-48544ce2cb0e",
+      "relevance_score": 0.5498,
+      "section_title": "PERIODIC MAINTENANCE TABLE                    37",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:31.461Z"
+  },
+  {
+    "description": "Inspect and replace anode during boat lifting.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [
+      "Anode"
+    ],
+    "estimated_duration_hours": 0.5,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "87e0481d-b28c-4990-b310-48544ce2cb0e",
+      "relevance_score": 0.5498,
+      "section_title": "PERIODIC MAINTENANCE TABLE                    37",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:31.461Z"
+  },
+  {
+    "description": "Inspect rubber diaphragm for water tightness.",
+    "frequency_type": "years",
+    "frequency_value": 7,
+    "parts_required": [
+      "Rubber diaphragm"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "87e0481d-b28c-4990-b310-48544ce2cb0e",
+      "relevance_score": 0.5498,
+      "section_title": "PERIODIC MAINTENANCE TABLE                    37",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:31.461Z"
+  },
+  {
+    "description": "Replace the flexible mount.",
+    "frequency_type": "years",
+    "frequency_value": 7,
+    "parts_required": [
+      "Flexible mount"
+    ],
+    "estimated_duration_hours": 2,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "87e0481d-b28c-4990-b310-48544ce2cb0e",
+      "relevance_score": 0.5498,
+      "section_title": "PERIODIC MAINTENANCE TABLE                    37",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:31.461Z"
+  },
+  {
+    "description": "Check lubricating oil level and fill if necessary before operation.",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Change lubricating oil for the first time.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [
+      "Lubricating oil"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Clean cooling water suction hole during lifting the boat.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [
+      "Lubricant"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Check hose fittings are properly tight daily or after 1 month.",
+    "frequency_type": "days",
+    "frequency_value": 30,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Consult authorized YANMAR marine dealer or distributor for grounding circuit check for looseness, damage, or corrosion.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Inspect remote control device daily or after 1 month.",
+    "frequency_type": "days",
+    "frequency_value": 30,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Consult authorized YANMAR marine dealer or distributor for inspection and/or replacement of the clutch shifter.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Inspect and replace anode during lifting the boat.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [
+      "Anode"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Consult authorized YANMAR marine dealer or distributor for lower case coating repair.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 2,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Inspect rubber diaphragm water tightness before operation and consult authorized YANMAR marine dealer or distributor if irregularities are found.",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Replace the flexible mount and inspect/test seal sensor every 7 years.",
+    "frequency_type": "years",
+    "frequency_value": 7,
+    "parts_required": [
+      "Flexible mount"
+    ],
+    "estimated_duration_hours": 4,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "1c0643e7-e8ff-49fe-b5a7-ddc33e81ca83",
+      "relevance_score": 0.5373,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:54:47.999Z"
+  },
+  {
+    "description": "Check coolant level daily.",
+    "frequency_type": "days",
+    "frequency_value": 1,
+    "parts_required": [],
+    "estimated_duration_hours": 0.1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Check or replace the seawater pump impeller every 50 hours.",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [
+      "seawater pump impeller"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Replace coolant every 250 hours or annually, if Long Life Coolant is used replace every 2 years.",
+    "frequency_type": "hours",
+    "frequency_value": 250,
+    "parts_required": [
+      "coolant"
+    ],
+    "estimated_duration_hours": 2,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Clean intake silencer (air cleaner) element every 250 hours.",
+    "frequency_type": "hours",
+    "frequency_value": 250,
+    "parts_required": [
+      "air cleaner element"
+    ],
+    "estimated_duration_hours": 0.5,
+    "criticality": "routine",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Clean or replace the exhaust/water mixing elbow every 250 hours.",
+    "frequency_type": "hours",
+    "frequency_value": 250,
+    "parts_required": [
+      "exhaust/water mixing elbow (if replacement is needed)"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Check the alarm and indicators daily.",
+    "frequency_type": "days",
+    "frequency_value": 1,
+    "parts_required": [],
+    "estimated_duration_hours": 0.1,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Check the electrolyte level in the battery every 50 hours.",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Adjust the tension of the alternator V-ribbed belt or replace V-ribbed belt initially at 50 hours and then every 250 hours.",
+    "frequency_type": "hours",
+    "frequency_value": 250,
+    "parts_required": [
+      "alternator V-ribbed belt"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Check the wiring connectors every 250 hours.",
+    "frequency_type": "hours",
+    "frequency_value": 250,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "routine",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Check for leakage of fuel, engine oil, and engine coolant daily.",
+    "frequency_type": "days",
+    "frequency_value": 1,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Adjust intake/exhaust valve clearance at the first 50 hours and then as needed.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 2,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Check the remote control cable operation initially at 50 hours and then as needed.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "routine",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Adjust the propeller shaft alignment initially at 50 hours and then as needed.",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 2,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Replace rubberized hoses (fuel and water) every 2 years.",
+    "frequency_type": "years",
+    "frequency_value": 2,
+    "parts_required": [
+      "rubberized hoses"
+    ],
+    "estimated_duration_hours": 2,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "a8e3d366-0dfa-4fa1-8748-0221fe9b615c",
+      "relevance_score": 0.5272,
+      "section_title": "Periodic Maintenance Interval",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:07.841Z"
+  },
+  {
+    "description": "Check oil level and top up if necessary",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Change lubricating oil for the first time",
+    "frequency_type": "months",
+    "frequency_value": 1,
+    "parts_required": [
+      "Lubricating oil"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Clean cooling water suction hole during lifting the boat",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Lubricate and re-tighten propeller shaft nut during lifting the boat",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [
+      "Lubricant"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Check hose fittings are properly tight during lifting the boat",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Check grounding circuit for possible corrosion",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Inspect and replace anode during lifting the boat",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [
+      "Anode"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Inspect boat hull water tightness before operation",
+    "frequency_type": "days",
+    "frequency_value": 1,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Replace the flexible mount every 7 years",
+    "frequency_type": "years",
+    "frequency_value": 7,
+    "parts_required": [
+      "Flexible mount"
+    ],
+    "estimated_duration_hours": 2,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Inspect electrical system for looseness, damage, or corrosion every 7 years",
+    "frequency_type": "years",
+    "frequency_value": 7,
+    "parts_required": [],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Inspect and change the position of output shaft seal every 7 years",
+    "frequency_type": "years",
+    "frequency_value": 7,
+    "parts_required": [
+      "Shaft seal"
+    ],
+    "estimated_duration_hours": 2,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Repair lower case coating every 7 years",
+    "frequency_type": "years",
+    "frequency_value": 7,
+    "parts_required": [],
+    "estimated_duration_hours": 2,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Check the negative brake every 7 years",
+    "frequency_type": "years",
+    "frequency_value": 7,
+    "parts_required": [],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+    "system_name": "Stbd Sail Drive",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "a55d6c70e832e1f62c4ccebf0861b9e78e0ab47dd2834ea4cf3bace7f3d4a4bf",
+      "chunk_id": "a39fd70c-aa0d-4a6e-a4b3-641f5416ad1e",
+      "relevance_score": 0.5206,
+      "section_title": "Ask your authorized YANMAR marine dealer or distributor for help",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:31.829Z"
+  },
+  {
+    "description": "Perform a visual inspection of the engine exterior",
+    "frequency_type": "days",
+    "frequency_value": 1,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Check the fuel level and refill if necessary",
+    "frequency_type": "days",
+    "frequency_value": 1,
+    "parts_required": [],
+    "estimated_duration_hours": 0.25,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Drain water and sediment from the fuel tank",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Drain the fuel/water separator",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Replace the fuel filter element",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [
+      "fuel filter element"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 0.9,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Check the Engine lube oil level",
+    "frequency_type": "days",
+    "frequency_value": 1,
+    "parts_required": [],
+    "estimated_duration_hours": 0.25,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Check the Marine Gear lube oil level",
+    "frequency_type": "days",
+    "frequency_value": 1,
+    "parts_required": [],
+    "estimated_duration_hours": 0.25,
+    "criticality": "important",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Replace the Engine lube oil",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [
+      "engine lube oil"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Replace the Marine Gear lube oil",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [
+      "marine gear lube oil"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Replace the Engine oil filter element",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [
+      "engine oil filter element"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Replace the Marine Gear oil filter element",
+    "frequency_type": "hours",
+    "frequency_value": 50,
+    "parts_required": [
+      "marine gear oil filter element"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 1,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "7a6e1b58-0811-47df-9659-14db45257365",
+      "relevance_score": 0.5171,
+      "section_title": "NOTICE",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:55:56.270Z"
+  },
+  {
+    "description": "Replacing the Fuel Filter Element",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [
+      "Fuel pre-filter (121857-55710)"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 0.9,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  },
+  {
+    "description": "Changing the Engine Oil and Replacing the Engine Oil Filter Element",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 0.9,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  },
+  {
+    "description": "Changing the Marine Gear Oil and Replacing Marine Gear Oil Filter Element",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [
+      "Fuel filter (129A00-55800)"
+    ],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 0.9,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  },
+  {
+    "description": "Checking or Replacing the Seawater Impeller",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 1,
+    "criticality": "critical",
+    "confidence": 0.9,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  },
+  {
+    "description": "Changing the Coolant",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 1,
+    "criticality": "important",
+    "confidence": 0.8,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  },
+  {
+    "description": "Cleaning the Intake Silencer (Air Cleaner) Element",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "routine",
+    "confidence": 0.8,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  },
+  {
+    "description": "Cleaning the Exhaust/Water Mixing Elbow",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "routine",
+    "confidence": 0.8,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  },
+  {
+    "description": "Washing the Turbocharger Blower",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "optional",
+    "confidence": 0.7,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  },
+  {
+    "description": "Adjusting the Alternator V-ribbed Belt Tension",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 0.9,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  },
+  {
+    "description": "Checking the Wiring Connectors",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "important",
+    "confidence": 0.9,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  },
+  {
+    "description": "Tightening All Major Nuts and Bolts",
+    "frequency_type": "condition_based",
+    "frequency_value": null,
+    "parts_required": [],
+    "estimated_duration_hours": 0.5,
+    "criticality": "routine",
+    "confidence": 0.9,
+    "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+    "system_name": "57 hp diesel engine (PORT)",
+    "source": "manual",
+    "source_details": {
+      "doc_id": "c19c1869c350e93edd5e2e820c01569f6c8b046b8055b16d6561482357a162f9",
+      "chunk_id": "c07a5131-d4d1-4a17-8354-e1b769aca159",
+      "relevance_score": 0.5103,
+      "section_title": "Every 250 Hours of Operation",
+      "page_start": null,
+      "page_end": null
+    },
+    "status": "pending",
+    "created_at": "2025-10-19T23:56:20.417Z"
+  }
+]

@@ -1,0 +1,244 @@
+// Maintenance Agent - Entry Point
+import { createClient } from '@supabase/supabase-js';
+import { Pinecone } from '@pinecone-database/pinecone';
+import OpenAI from 'openai';
+import dotenv from 'dotenv';
+import cron from 'node-cron';
+
+// Load environment variables
+dotenv.config();
+
+// Initialize clients
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
+
+const pinecone = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY,
+  environment: process.env.PINECONE_ENVIRONMENT || 'gcp-starter'
+});
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+// Core agent functions
+async function checkForNewSystems() {
+  console.log('Checking for new systems...');
+  
+  try {
+    // Get systems that haven't been processed recently
+    const { data: systems, error } = await supabase
+      .from('systems')
+      .select(`
+        *,
+        maintenance_agent_memory (
+          last_manual_extraction,
+          last_realworld_search,
+          manual_tasks_count
+        )
+      `)
+      .limit(5);
+    
+    if (error) throw error;
+    
+    if (systems?.length > 0) {
+      console.log(`Found ${systems.length} new systems to process`);
+      for (const system of systems) {
+        await processSystem(system);
+      }
+    } else {
+      console.log('No new systems found');
+    }
+  } catch (error) {
+    console.error('Error checking for new systems:', error);
+  }
+}
+
+async function processSystem(system) {
+  console.log(`Processing system: ${system.name} (${system.asset_uid})`);
+  
+  try {
+    // 1. Extract from manuals if available
+    const manualTasks = await extractFromManuals(system);
+    
+    // 2. Search real-world sources
+    const realWorldTasks = await searchRealWorld(system);
+    
+    // 3. Infer dependencies
+    const inferredTasks = await inferDependencies(system);
+    
+    // 4. Combine and deduplicate
+    const allTasks = [...manualTasks, ...realWorldTasks, ...inferredTasks];
+    const uniqueTasks = deduplicateTasks(allTasks);
+    
+    // 5. Queue for review
+    for (const task of uniqueTasks) {
+      await queueTaskForReview(system.asset_uid, task);
+    }
+    
+    // 6. Mark system as processed
+    await markSystemProcessed(system.asset_uid);
+    
+    console.log(`Queued ${uniqueTasks.length} tasks for ${system.name}`);
+  } catch (error) {
+    console.error(`Error processing system ${system.asset_uid}:`, error);
+  }
+}
+
+async function extractFromManuals(system) {
+  console.log(`  Extracting from manuals for ${system.name}...`);
+  // TODO: Query Pinecone for manual chunks
+  // TODO: Use LLM to extract maintenance tasks
+  return [];
+}
+
+async function searchRealWorld(system) {
+  console.log(`  Searching real-world sources for ${system.name}...`);
+  // TODO: Generate search queries
+  // TODO: Search external sources
+  // TODO: Extract relevant maintenance tasks
+  return [];
+}
+
+async function inferDependencies(system) {
+  console.log(`  Inferring dependencies for ${system.name}...`);
+  // TODO: Use LLM to infer hidden components
+  // TODO: Generate maintenance for dependencies
+  return [];
+}
+
+function deduplicateTasks(tasks) {
+  // TODO: Implement deduplication logic
+  return tasks;
+}
+
+async function queueTaskForReview(assetUid, task) {
+  // Create hash for deduplication
+  const hash = createTaskHash(assetUid, task);
+  
+  // Check if task already exists
+  const { data: existing } = await supabase
+    .from('maintenance_tasks_queue')
+    .select('id')
+    .eq('extraction_hash', hash)
+    .single();
+  
+  if (existing) {
+    console.log('    Task already queued, skipping');
+    return;
+  }
+  
+  const { error } = await supabase
+    .from('maintenance_tasks_queue')
+    .insert({
+      asset_uid: assetUid,
+      task_description: task.description,
+      frequency_type: task.frequencyType,
+      frequency_value: task.frequencyValue,
+      source: task.source,
+      source_details: task.sourceDetails || {},
+      confidence_score: task.confidence || 0.5,
+      status: 'pending',
+      extraction_hash: hash,
+      parts_required: task.parts || []
+    });
+  
+  if (error) {
+    console.error('Error queueing task:', error);
+  }
+}
+
+async function markSystemProcessed(assetUid) {
+  // Update or create memory record
+  const { data: existing } = await supabase
+    .from('maintenance_agent_memory')
+    .select('id')
+    .eq('asset_uid', assetUid)
+    .single();
+  
+  if (existing) {
+    // Update existing record
+    const { error } = await supabase
+      .from('maintenance_agent_memory')
+      .update({ 
+        last_manual_extraction: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('asset_uid', assetUid);
+    
+    if (error) {
+      console.error('Error updating agent memory:', error);
+    }
+  } else {
+    // Create new memory record
+    const { error } = await supabase
+      .from('maintenance_agent_memory')
+      .insert({
+        asset_uid: assetUid,
+        last_manual_extraction: new Date().toISOString()
+      });
+    
+    if (error) {
+      console.error('Error creating agent memory:', error);
+    }
+  }
+}
+
+// Helper function to create task hash
+function createTaskHash(assetUid, task) {
+  const str = `${assetUid}-${task.description}-${task.frequencyType}-${task.frequencyValue}`;
+  // Simple hash for now - could use crypto.createHash() for better hash
+  return str.toLowerCase().replace(/\s+/g, '-');
+}
+
+// Cron job setup
+function setupCronJobs() {
+  // Run every hour
+  cron.schedule('0 * * * *', () => {
+    console.log('Running hourly maintenance check...');
+    checkForNewSystems();
+  });
+  
+  // Run daily real-world update check
+  cron.schedule('0 2 * * *', () => {
+    console.log('Running daily real-world update check...');
+    // TODO: Check for service bulletins, updates
+  });
+  
+  console.log('Cron jobs scheduled');
+}
+
+// Main startup
+async function start() {
+  console.log('🚀 Maintenance Agent starting...');
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  
+  // Test database connection
+  const { data, error } = await supabase
+    .from('systems')
+    .select('count')
+    .limit(1);
+  
+  if (error) {
+    console.error('❌ Database connection failed:', error);
+    process.exit(1);
+  }
+  
+  console.log('✅ Database connected');
+  
+  // Set up cron jobs
+  setupCronJobs();
+  
+  // Run initial check
+  await checkForNewSystems();
+  
+  console.log('🤖 Agent running...');
+}
+
+// Start the agent
+start().catch(error => {
+  console.error('Failed to start agent:', error);
+  process.exit(1);
+});

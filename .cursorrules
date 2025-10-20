@@ -1,0 +1,128 @@
+## Maintenance Agent - Coding Standards
+
+### Style & Runtime
+
+Node 20. ESM only. No console.log (use src/utils/logger.js).
+Exception: console.error allowed ONLY in src/config/env.js for bootstrap failures.
+
+### Environment
+
+Read env ONLY via src/config/env.js (Zod validated).
+Never hard code values that should be in .env - ask user to add them.
+
+### Architecture
+
+This is an autonomous agent, not an API server.
+
+Flow for jobs: jobs → services → repositories
+Flow for future APIs: routes → services → repositories
+
+Jobs: orchestration and scheduling
+Services: business logic only
+Repositories: all DB/storage/network I/O
+
+No direct API calls from jobs or services.
+
+### Project Structure
+
+```
+src/
+├── config/       # Environment and configuration
+├── services/     # Business logic
+├── repositories/ # I/O operations
+├── jobs/         # Job orchestration
+├── utils/        # Shared utilities
+└── index.js     # Entry point
+
+scripts/         # Utility scripts (not app code)
+```
+
+### Key Patterns
+
+1. **No console.log**
+   - Use: `import { createLogger } from './utils/logger.js'`
+   - Exception: Bootstrap errors in config/env.js
+
+2. **Environment via Zod**
+   - Use: `import { getConfig } from './config/env.js'`
+   - Never: `process.env.ANYTHING`
+
+3. **Service → Repository**
+   - Services contain logic
+   - Repositories handle I/O
+   - Never skip layers
+
+4. **Feature Flags**
+   - Control features via environment
+   - Check flags before executing features
+
+5. **Async/Await**
+   - Always use async/await
+   - No callbacks or raw promises
+
+### Database
+
+Agent-specific tables:
+- maintenance_agent_memory
+- maintenance_tasks_queue
+
+Read-only from main system:
+- systems
+- documents
+- document_chunks
+
+### Security
+
+Admin token required for future API endpoints.
+No direct exposure of internal errors to users.
+Comprehensive logging for debugging.
+
+### File Limits
+
+Max 250 lines per file (soft limit).
+Break large files into focused modules.
+
+### Testing
+
+Test connections on startup.
+Log all operations for debugging.
+Use structured logging for searchability.
+
+### Separation from Main System
+
+CRITICAL: This agent is completely separate from main REIMAGINEDAPPV2.
+
+- No imports from main system
+- No shared code except patterns
+- Database integration only
+- Independent deployment
+
+### Compliance Checklist
+
+Before committing:
+- [ ] No console.log (except config/env.js)
+- [ ] Environment via getConfig()
+- [ ] Services → Repositories pattern
+- [ ] Structured logging used
+- [ ] Feature flags checked
+- [ ] No hardcoded secrets
+- [ ] Files under 250 lines
+
+### Current Status
+
+Last Audit: 2025-10-19
+Grade: 🚧 Initial Setup
+
+✅ Completed:
+- ESM-only modules
+- Zod environment validation
+- Structured logging setup
+- Service → Repository pattern
+- Job orchestration structure
+
+📋 TODO:
+- API endpoints for approval workflow
+- Frontend UI
+- Learning system
+- Render deployment config
+- Integration tests

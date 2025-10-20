@@ -1,0 +1,477 @@
+{
+  "analysis_date": "2025-10-20T23:15:38.559Z",
+  "total_tasks": 60,
+  "duplicate_pairs_count": 12,
+  "duplicate_groups_count": 10,
+  "total_duplicate_tasks": 11,
+  "unique_tasks": 49,
+  "reduction_percent": "18.3",
+  "thresholds": {
+    "semantic": {
+      "min": 0.65,
+      "highConfidence": 0.75
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1760989886587-54",
+        "description": "Replace the Marine Gear lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886466-53",
+        "description": "Replace the Engine lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.7496251162978924,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989884916-42",
+        "description": "Inspect electrical system for looseness, damage, or corrosion every 7 years",
+        "system_name": "Stbd Sail Drive",
+        "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+        "frequency_type": "years",
+        "frequency_value": 7,
+        "frequency_hours": 61320,
+        "frequency_basis": "calendar",
+        "task_type": "visual_inspection",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989885371-45",
+        "description": "Check the negative brake every 7 years",
+        "system_name": "Stbd Sail Drive",
+        "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+        "frequency_type": "years",
+        "frequency_value": 7,
+        "frequency_hours": 61320,
+        "frequency_basis": "calendar",
+        "task_type": "visual_inspection",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.6560371852150177,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989883069-28",
+        "description": "Check for leakage of fuel, engine oil, and engine coolant daily.",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989881858-19",
+        "description": "Check coolant level daily.",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.7055068224422929,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989880096-6",
+        "description": "Replace the flexible mount.",
+        "system_name": "Stbd Sail Drive",
+        "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+        "frequency_type": "years",
+        "frequency_value": 7,
+        "frequency_hours": 61320,
+        "frequency_basis": "calendar",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989884790-41",
+        "description": "Replace the flexible mount every 7 years",
+        "system_name": "Stbd Sail Drive",
+        "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+        "frequency_type": "years",
+        "frequency_value": 7,
+        "frequency_hours": 61320,
+        "frequency_basis": "calendar",
+        "task_type": "parts_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.722505161404173,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886179-51",
+        "description": "Check the Engine lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886314-52",
+        "description": "Check the Marine Gear lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.8015231228726998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989885918-49",
+        "description": "Drain the fuel/water separator",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "cleaning",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989885793-48",
+        "description": "Drain water and sediment from the fuel tank",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "cleaning",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.7260589157518095,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989885107-43",
+        "description": "Inspect and change the position of output shaft seal every 7 years",
+        "system_name": "Stbd Sail Drive",
+        "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+        "frequency_type": "years",
+        "frequency_value": 7,
+        "frequency_hours": 61320,
+        "frequency_basis": "calendar",
+        "task_type": "parts_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989881712-18",
+        "description": "Replace the flexible mount and inspect/test seal sensor every 7 years.",
+        "system_name": "Stbd Sail Drive",
+        "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+        "frequency_type": "years",
+        "frequency_value": 7,
+        "frequency_hours": 61320,
+        "frequency_basis": "calendar",
+        "task_type": "parts_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.728196773665873,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989885107-43",
+        "description": "Inspect and change the position of output shaft seal every 7 years",
+        "system_name": "Stbd Sail Drive",
+        "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+        "frequency_type": "years",
+        "frequency_value": 7,
+        "frequency_hours": 61320,
+        "frequency_basis": "calendar",
+        "task_type": "parts_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989884790-41",
+        "description": "Replace the flexible mount every 7 years",
+        "system_name": "Stbd Sail Drive",
+        "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+        "frequency_type": "years",
+        "frequency_value": 7,
+        "frequency_hours": 61320,
+        "frequency_basis": "calendar",
+        "task_type": "parts_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.658035128774723,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989881712-18",
+        "description": "Replace the flexible mount and inspect/test seal sensor every 7 years.",
+        "system_name": "Stbd Sail Drive",
+        "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+        "frequency_type": "years",
+        "frequency_value": 7,
+        "frequency_hours": 61320,
+        "frequency_basis": "calendar",
+        "task_type": "parts_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989884790-41",
+        "description": "Replace the flexible mount every 7 years",
+        "system_name": "Stbd Sail Drive",
+        "asset_uid": "4dbf0c41-a3ac-4993-b5d4-b591a6365c72",
+        "frequency_type": "years",
+        "frequency_value": 7,
+        "frequency_hours": 61320,
+        "frequency_basis": "calendar",
+        "task_type": "parts_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.8405070560870426,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886847-56",
+        "description": "Replace the Marine Gear oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886721-55",
+        "description": "Replace the Engine oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.7913643828483106,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989887248-59",
+        "description": "Changing the Marine Gear Oil and Replacing Marine Gear Oil Filter Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "fluid_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1760989887106-58",
+        "description": "Changing the Engine Oil and Replacing the Engine Oil Filter Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.7418281060644926,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989882404-23",
+        "description": "Clean or replace the exhaust/water mixing elbow every 250 hours.",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 250,
+        "frequency_hours": 250,
+        "frequency_basis": "usage",
+        "task_type": "cleaning",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989882254-22",
+        "description": "Clean intake silencer (air cleaner) element every 250 hours.",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 250,
+        "frequency_hours": 250,
+        "frequency_basis": "usage",
+        "task_type": "cleaning",
+        "criticality": "routine",
+        "confidence": 1
+      },
+      "similarity_score": 0.6541783424137257,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1760989886587-54",
+      "primary_description": "Replace the Marine Gear lube oil",
+      "duplicate_ids": [
+        "task-1760989886466-53"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989884916-42",
+      "primary_description": "Inspect electrical system for looseness, damage, or corrosion every 7 years",
+      "duplicate_ids": [
+        "task-1760989885371-45"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989883069-28",
+      "primary_description": "Check for leakage of fuel, engine oil, and engine coolant daily.",
+      "duplicate_ids": [
+        "task-1760989881858-19"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989880096-6",
+      "primary_description": "Replace the flexible mount.",
+      "duplicate_ids": [
+        "task-1760989884790-41"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989886179-51",
+      "primary_description": "Check the Engine lube oil level",
+      "duplicate_ids": [
+        "task-1760989886314-52"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989885918-49",
+      "primary_description": "Drain the fuel/water separator",
+      "duplicate_ids": [
+        "task-1760989885793-48"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989885107-43",
+      "primary_description": "Inspect and change the position of output shaft seal every 7 years",
+      "duplicate_ids": [
+        "task-1760989881712-18",
+        "task-1760989884790-41"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1760989886847-56",
+      "primary_description": "Replace the Marine Gear oil filter element",
+      "duplicate_ids": [
+        "task-1760989886721-55"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989887248-59",
+      "primary_description": "Changing the Marine Gear Oil and Replacing Marine Gear Oil Filter Element",
+      "duplicate_ids": [
+        "task-1760989887106-58"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989882404-23",
+      "primary_description": "Clean or replace the exhaust/water mixing elbow every 250 hours.",
+      "duplicate_ids": [
+        "task-1760989882254-22"
+      ],
+      "duplicate_count": 1
+    }
+  ]
+}

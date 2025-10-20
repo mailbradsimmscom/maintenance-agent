@@ -1,0 +1,22 @@
+{
+  "analysis_date": "2025-10-20T20:23:22.129Z",
+  "total_tasks": 60,
+  "duplicate_pairs_count": 0,
+  "duplicate_groups_count": 0,
+  "total_duplicate_tasks": 0,
+  "unique_tasks": 60,
+  "reduction_percent": "0.0",
+  "thresholds": {
+    "semantic": {
+      "min": 0.85,
+      "highConfidence": 0.95
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [],
+  "duplicate_groups": []
+}

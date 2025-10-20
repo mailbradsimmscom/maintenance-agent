@@ -1,0 +1,254 @@
+{
+  "analysis_date": "2025-10-20T20:24:48.002Z",
+  "total_tasks": 60,
+  "duplicate_pairs_count": 12,
+  "duplicate_groups_count": 9,
+  "total_duplicate_tasks": 11,
+  "unique_tasks": 49,
+  "reduction_percent": "18.3",
+  "thresholds": {
+    "semantic": {
+      "min": 0.65,
+      "highConfidence": 0.75
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1760989885371-45",
+        "description": "Check the negative brake every 7 years"
+      },
+      "taskB": {
+        "id": "task-1760989884916-42",
+        "description": "Inspect electrical system for looseness, damage, or corrosion every 7 years"
+      },
+      "similarity_score": 0.6560371852150177,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989882404-23",
+        "description": "Clean or replace the exhaust/water mixing elbow every 250 hours."
+      },
+      "taskB": {
+        "id": "task-1760989882254-22",
+        "description": "Clean intake silencer (air cleaner) element every 250 hours."
+      },
+      "similarity_score": 0.6541783424137257,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886587-54",
+        "description": "Replace the Marine Gear lube oil"
+      },
+      "taskB": {
+        "id": "task-1760989886466-53",
+        "description": "Replace the Engine lube oil"
+      },
+      "similarity_score": 0.7496251162978924,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989881712-18",
+        "description": "Replace the flexible mount and inspect/test seal sensor every 7 years."
+      },
+      "taskB": {
+        "id": "task-1760989884790-41",
+        "description": "Replace the flexible mount every 7 years"
+      },
+      "similarity_score": 0.8405070560870426,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989881712-18",
+        "description": "Replace the flexible mount and inspect/test seal sensor every 7 years."
+      },
+      "taskB": {
+        "id": "task-1760989885107-43",
+        "description": "Inspect and change the position of output shaft seal every 7 years"
+      },
+      "similarity_score": 0.728196773665873,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989881858-19",
+        "description": "Check coolant level daily."
+      },
+      "taskB": {
+        "id": "task-1760989883069-28",
+        "description": "Check for leakage of fuel, engine oil, and engine coolant daily."
+      },
+      "similarity_score": 0.7055068224422929,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989887248-59",
+        "description": "Changing the Marine Gear Oil and Replacing Marine Gear Oil Filter Element"
+      },
+      "taskB": {
+        "id": "task-1760989887106-58",
+        "description": "Changing the Engine Oil and Replacing the Engine Oil Filter Element"
+      },
+      "similarity_score": 0.7418281060644926,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886179-51",
+        "description": "Check the Engine lube oil level"
+      },
+      "taskB": {
+        "id": "task-1760989886314-52",
+        "description": "Check the Marine Gear lube oil level"
+      },
+      "similarity_score": 0.8015231228726998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989885793-48",
+        "description": "Drain water and sediment from the fuel tank"
+      },
+      "taskB": {
+        "id": "task-1760989885918-49",
+        "description": "Drain the fuel/water separator"
+      },
+      "similarity_score": 0.7260589157518095,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989884790-41",
+        "description": "Replace the flexible mount every 7 years"
+      },
+      "taskB": {
+        "id": "task-1760989880096-6",
+        "description": "Replace the flexible mount."
+      },
+      "similarity_score": 0.722505161404173,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989884790-41",
+        "description": "Replace the flexible mount every 7 years"
+      },
+      "taskB": {
+        "id": "task-1760989885107-43",
+        "description": "Inspect and change the position of output shaft seal every 7 years"
+      },
+      "similarity_score": 0.658035128774723,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886721-55",
+        "description": "Replace the Engine oil filter element"
+      },
+      "taskB": {
+        "id": "task-1760989886847-56",
+        "description": "Replace the Marine Gear oil filter element"
+      },
+      "similarity_score": 0.7913643828483106,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1760989885371-45",
+      "primary_description": "Check the negative brake every 7 years",
+      "duplicate_ids": [
+        "task-1760989884916-42"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989882404-23",
+      "primary_description": "Clean or replace the exhaust/water mixing elbow every 250 hours.",
+      "duplicate_ids": [
+        "task-1760989882254-22"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989886587-54",
+      "primary_description": "Replace the Marine Gear lube oil",
+      "duplicate_ids": [
+        "task-1760989886466-53"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989881712-18",
+      "primary_description": "Replace the flexible mount and inspect/test seal sensor every 7 years.",
+      "duplicate_ids": [
+        "task-1760989884790-41",
+        "task-1760989885107-43",
+        "task-1760989880096-6"
+      ],
+      "duplicate_count": 3
+    },
+    {
+      "primary_id": "task-1760989881858-19",
+      "primary_description": "Check coolant level daily.",
+      "duplicate_ids": [
+        "task-1760989883069-28"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989887248-59",
+      "primary_description": "Changing the Marine Gear Oil and Replacing Marine Gear Oil Filter Element",
+      "duplicate_ids": [
+        "task-1760989887106-58"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989886179-51",
+      "primary_description": "Check the Engine lube oil level",
+      "duplicate_ids": [
+        "task-1760989886314-52"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989885793-48",
+      "primary_description": "Drain water and sediment from the fuel tank",
+      "duplicate_ids": [
+        "task-1760989885918-49"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989886721-55",
+      "primary_description": "Replace the Engine oil filter element",
+      "duplicate_ids": [
+        "task-1760989886847-56"
+      ],
+      "duplicate_count": 1
+    }
+  ]
+}

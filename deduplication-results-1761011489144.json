@@ -1,0 +1,1550 @@
+{
+  "analysis_date": "2025-10-21T01:51:29.144Z",
+  "total_tasks": 155,
+  "duplicate_pairs_count": 77,
+  "duplicate_groups_count": 65,
+  "total_duplicate_tasks": 70,
+  "unique_tasks": 85,
+  "reduction_percent": "45.2",
+  "thresholds": {
+    "semantic": {
+      "min": 0.85,
+      "highConfidence": 0.95
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1761011391510-120",
+        "description": "Check for membranes replacement"
+      },
+      "taskB": {
+        "id": "task-1761011386803-113",
+        "description": "Check for membranes replacement"
+      },
+      "similarity_score": 0.9976805704048883,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011324918-62",
+        "description": "Perform the first start-up procedure after a shutdown to purge air and drain chemicals from the system."
+      },
+      "taskB": {
+        "id": "task-1761011326131-64",
+        "description": "Perform the first start-up procedure after a shutdown to purge air and drain chemicals from the system."
+      },
+      "similarity_score": 0.9997653358261932,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011332616-74",
+        "description": "Stop the unit and connect the original hoses."
+      },
+      "taskB": {
+        "id": "task-1761011330093-69",
+        "description": "Stop the unit and connect the original hoses."
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011265485-14",
+        "description": "Check for membranes replacement"
+      },
+      "taskB": {
+        "id": "task-1761011260116-6",
+        "description": "Check for membranes replacement"
+      },
+      "similarity_score": 0.9999991115964142,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011409485-147",
+        "description": "Do not store the unit under temperature below 5°C and above 45 °C."
+      },
+      "taskB": {
+        "id": "task-1761011440563-152",
+        "description": "Do not store the unit under temperature below 5°C and above 45 °C."
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011323307-59",
+        "description": "Flush the system to remove organic and inorganic sediments and inhibit bacteria growth."
+      },
+      "taskB": {
+        "id": "task-1761011321949-57",
+        "description": "Flush the system to remove organic and inorganic sediments and inhibit bacteria growth."
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011260547-7",
+        "description": "Perform shutdown procedure before long standstills"
+      },
+      "taskB": {
+        "id": "task-1761011266174-15",
+        "description": "Perform shutdown procedure before long standstills"
+      },
+      "similarity_score": 0.9999991109048998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011405968-140",
+        "description": "Ensure the pump group is installed in a ventilated area to aid in cooling the motor."
+      },
+      "taskB": {
+        "id": "task-1761011399635-132",
+        "description": "Install the pump group in a ventilated area to facilitate cooling of the electric motor."
+      },
+      "similarity_score": 0.929587117764647,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011390409-118",
+        "description": "Check the plant working pressure"
+      },
+      "taskB": {
+        "id": "task-1761011385416-111",
+        "description": "Check the plant working pressure"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011390409-118",
+        "description": "Check the plant working pressure"
+      },
+      "taskB": {
+        "id": "task-1761011259021-4",
+        "description": "Check the plant working pressure"
+      },
+      "similarity_score": 0.9999991792921887,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011390409-118",
+        "description": "Check the plant working pressure"
+      },
+      "taskB": {
+        "id": "task-1761011264300-12",
+        "description": "Check the plant working pressure"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011261532-9",
+        "description": "Replace the 5 micron cartridge filters"
+      },
+      "taskB": {
+        "id": "task-1761011256450-1",
+        "description": "Replace the 5 micron cartridge filters"
+      },
+      "similarity_score": 1,
+      "reason": "high_confidence_semantic_match",
+      "warning": "frequency_mismatch"
+    },
+    {
+      "taskA": {
+        "id": "task-1761011385416-111",
+        "description": "Check the plant working pressure"
+      },
+      "taskB": {
+        "id": "task-1761011259021-4",
+        "description": "Check the plant working pressure"
+      },
+      "similarity_score": 0.9999991792921887,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011385416-111",
+        "description": "Check the plant working pressure"
+      },
+      "taskB": {
+        "id": "task-1761011264300-12",
+        "description": "Check the plant working pressure"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011404827-138",
+        "description": "Remove the plug on the right side of the watermaker and replace it with a housebarb using the provided tools."
+      },
+      "taskB": {
+        "id": "task-1761011407882-144",
+        "description": "Remove the plug on the right side of the watermaker and replace it with a housebarb."
+      },
+      "similarity_score": 0.9446120961519111,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011276522-33",
+        "description": "Replace filters when they are dirty to maintain system performance."
+      },
+      "taskB": {
+        "id": "task-1761011272890-27",
+        "description": "Replace filters when they are dirty to maintain system performance."
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011276522-33",
+        "description": "Replace filters when they are dirty to maintain system performance."
+      },
+      "taskB": {
+        "id": "task-1761011379937-103",
+        "description": "Replace filters as part of regular maintenance to ensure system efficiency."
+      },
+      "similarity_score": 0.8508506484753829,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011276522-33",
+        "description": "Replace filters when they are dirty to maintain system performance."
+      },
+      "taskB": {
+        "id": "task-1761011383884-108",
+        "description": "Replace filters as part of regular maintenance to ensure system efficiency."
+      },
+      "similarity_score": 0.8508506484753829,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011387854-115",
+        "description": "Perform antifreeze procedure (winterizing procedure in cold climate - under 5°C)"
+      },
+      "taskB": {
+        "id": "task-1761011392564-122",
+        "description": "Perform antifreeze procedure (winterizing procedure in cold climate - under 5°C)"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011315785-50",
+        "description": "Perform periodic wash of the watermaker."
+      },
+      "taskB": {
+        "id": "task-1761011279751-39",
+        "description": "Perform periodic wash of the watermaker."
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011270946-23",
+        "description": "Reset the automatic hydraulic valve if the watermaker sucks air or experiences other problems."
+      },
+      "taskB": {
+        "id": "task-1761011268647-19",
+        "description": "Reset the automatic hydraulic valve if the watermaker sucks air or experiences other problems."
+      },
+      "similarity_score": 0.9999999999999998,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011328068-66",
+        "description": "Open the depressurization valve."
+      },
+      "taskB": {
+        "id": "task-1761011331083-71",
+        "description": "Open the depressurization valve."
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011336080-80",
+        "description": "Check the continuity of connection between the remote panel and the computer box."
+      },
+      "taskB": {
+        "id": "task-1761011339995-87",
+        "description": "Check the continuity of connection between the remote panel and the computer box."
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011343761-94",
+        "description": "Perform automatic washing of the system."
+      },
+      "taskB": {
+        "id": "task-1761011345803-97",
+        "description": "Perform automatic washing of the system."
+      },
+      "similarity_score": 0.9999958287716283,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011402502-136",
+        "description": "Fasten the watermaker with the provided L-brackets, ensuring it is not suspended."
+      },
+      "taskB": {
+        "id": "task-1761011406910-142",
+        "description": "Fasten the watermaker with the provided L-brackets and ensure it is not suspended."
+      },
+      "similarity_score": 0.9909530677555908,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011281933-43",
+        "description": "Press STOP to turn off the watermaker."
+      },
+      "taskB": {
+        "id": "task-1761011320171-54",
+        "description": "Press STOP to turn off the watermaker."
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011256980-2",
+        "description": "Replace the active carbon fibre filter"
+      },
+      "taskB": {
+        "id": "task-1761011263205-10",
+        "description": "Replace the active carbon fibre filter"
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011322783-58",
+        "description": "Replace filters after performing the cleaning procedure."
+      },
+      "taskB": {
+        "id": "task-1761011324235-61",
+        "description": "Replace the filters after performing the cleaning procedure."
+      },
+      "similarity_score": 0.9512116005386528,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011392003-121",
+        "description": "Membrane replacement"
+      },
+      "taskB": {
+        "id": "task-1761011387313-114",
+        "description": "Perform membrane replacement"
+      },
+      "similarity_score": 0.9177818695509014,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011441122-153",
+        "description": "Follow shutdown and cleaning procedures to ensure continued purity of the fresh water."
+      },
+      "taskB": {
+        "id": "task-1761011409985-148",
+        "description": "Follow shutdown and cleaning procedures to ensure continued purity of the fresh water."
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011384296-109",
+        "description": "Check membranes for any signs of wear or damage as part of regular maintenance."
+      },
+      "taskB": {
+        "id": "task-1761011381484-104",
+        "description": "Check membranes for any signs of wear or damage during regular maintenance."
+      },
+      "similarity_score": 0.9815966418138115,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011275363-31",
+        "description": "Calibrate the pump high pressure switch to ensure proper functioning."
+      },
+      "taskB": {
+        "id": "task-1761011271933-25",
+        "description": "Calibrate the pump high pressure switch using a screwdriver to ensure proper functioning."
+      },
+      "similarity_score": 0.8753621579858225,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011394190-125",
+        "description": "Check the status of the watermaker using the remote panel."
+      },
+      "taskB": {
+        "id": "task-1761011395479-127",
+        "description": "Check the status of the watermaker using the remote panel."
+      },
+      "similarity_score": 0.9999999999999998,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011383363-107",
+        "description": "Monitor the system closely during operation to prevent flooding."
+      },
+      "taskB": {
+        "id": "task-1761011379388-102",
+        "description": "Monitor the system closely during operation to prevent flooding."
+      },
+      "similarity_score": 0.9999999999999998,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011261101-8",
+        "description": "Check and clean the strainer"
+      },
+      "taskB": {
+        "id": "task-1761011255210-0",
+        "description": "Check and clean the strainer"
+      },
+      "similarity_score": 0.9999999999999998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011389968-117",
+        "description": "Check filter cleanliness"
+      },
+      "taskB": {
+        "id": "task-1761011384770-110",
+        "description": "Check filter cleanliness"
+      },
+      "similarity_score": 0.9999990271362851,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011271359-24",
+        "description": "Replace reverse osmosis membranes when they are old and water quality decreases or working pressure increases."
+      },
+      "taskB": {
+        "id": "task-1761011274876-30",
+        "description": "Replace reverse osmosis membranes when they are old or if chemical washings do not improve water quality."
+      },
+      "similarity_score": 0.8571702063040507,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011320709-55",
+        "description": "Perform final flushing of the watermaker after operation."
+      },
+      "taskB": {
+        "id": "task-1761011282572-44",
+        "description": "Perform final flushing of the watermaker."
+      },
+      "similarity_score": 0.9540581580383031,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011278657-37",
+        "description": "Activate the start-up procedure through the function of the second page."
+      },
+      "taskB": {
+        "id": "task-1761011284592-48",
+        "description": "Activate the start-up procedure through the function of the second page."
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011437259-150",
+        "description": "Read the use and maintenance manual before installing the system."
+      },
+      "taskB": {
+        "id": "task-1761011408497-145",
+        "description": "Read the use and maintenance manual before installing the system."
+      },
+      "similarity_score": 0.9999992041531679,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011342828-92",
+        "description": "Check the fresh water pressurizing pump of the boat is on."
+      },
+      "taskB": {
+        "id": "task-1761011338768-85",
+        "description": "Check the fresh water pressurizing pump of the boat is on before the start-up procedure."
+      },
+      "similarity_score": 0.8913404837242489,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011259573-5",
+        "description": "Check for leaks"
+      },
+      "taskB": {
+        "id": "task-1761011264939-13",
+        "description": "Check for leaks"
+      },
+      "similarity_score": 0.9978880769031133,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011326557-65",
+        "description": "Perform the antifreeze procedure in cold climates (under 5°C) by flushing the system and filling it with a propylene glycol solution."
+      },
+      "taskB": {
+        "id": "task-1761011325477-63",
+        "description": "Perform the antifreeze procedure in cold climates by flushing the system and filling it with a propylene glycol and unchlorinated water solution."
+      },
+      "similarity_score": 0.9247027730058303,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011382030-105",
+        "description": "Inspect the machine regularly to minimize the risk of fire hazards."
+      },
+      "taskB": {
+        "id": "task-1761011376829-100",
+        "description": "Inspect the machine regularly to minimize the risk of fire hazards."
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011337198-82",
+        "description": "Verify the 5 micron and active carbon cartridges are installed before the start-up procedure."
+      },
+      "taskB": {
+        "id": "task-1761011341375-89",
+        "description": "Verify the 5 micron and active carbon cartridges are installed."
+      },
+      "similarity_score": 0.9107737987773524,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011318607-53",
+        "description": "Press START to turn on the watermaker."
+      },
+      "taskB": {
+        "id": "task-1761011281379-42",
+        "description": "Press START to turn on the watermaker."
+      },
+      "similarity_score": 0.9999992816166395,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011394926-126",
+        "description": "Perform automatic washing of the system after stopping the watermaker."
+      },
+      "taskB": {
+        "id": "task-1761011393660-124",
+        "description": "Perform automatic washing of the system after stopping the watermaker."
+      },
+      "similarity_score": 0.9999980605970328,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011336571-81",
+        "description": "Verify all components and hoses are connected correctly before the start-up procedure."
+      },
+      "taskB": {
+        "id": "task-1761011340664-88",
+        "description": "Verify all components and hoses are connected correctly before start-up."
+      },
+      "similarity_score": 0.9699046483438366,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011259021-4",
+        "description": "Check the plant working pressure"
+      },
+      "taskB": {
+        "id": "task-1761011264300-12",
+        "description": "Check the plant working pressure"
+      },
+      "similarity_score": 0.9999991792921887,
+      "reason": "semantic_match_no_frequency",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011331557-72",
+        "description": "Start the watermaker with the by-pass activated."
+      },
+      "taskB": {
+        "id": "task-1761011328631-67",
+        "description": "Start the watermaker with the by-pass activated."
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011272890-27",
+        "description": "Replace filters when they are dirty to maintain system performance."
+      },
+      "taskB": {
+        "id": "task-1761011379937-103",
+        "description": "Replace filters as part of regular maintenance to ensure system efficiency."
+      },
+      "similarity_score": 0.8508506484753829,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011272890-27",
+        "description": "Replace filters when they are dirty to maintain system performance."
+      },
+      "taskB": {
+        "id": "task-1761011383884-108",
+        "description": "Replace filters as part of regular maintenance to ensure system efficiency."
+      },
+      "similarity_score": 0.8508506484753829,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011379937-103",
+        "description": "Replace filters as part of regular maintenance to ensure system efficiency."
+      },
+      "taskB": {
+        "id": "task-1761011383884-108",
+        "description": "Replace filters as part of regular maintenance to ensure system efficiency."
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011337718-83",
+        "description": "Check the seawater inlet valve and salt water drain valve (if existing) are open before the start-up procedure."
+      },
+      "taskB": {
+        "id": "task-1761011341871-90",
+        "description": "Check the seawater inlet valve and salt water drain valve (if existing) are open."
+      },
+      "similarity_score": 0.8953687015961493,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011397686-128",
+        "description": "Regular inspection of the watermaker to minimize the risk of failure or other issues."
+      },
+      "taskB": {
+        "id": "task-1761011398624-130",
+        "description": "Regular inspection of the watermaker to minimize the risk of failure or other issues."
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011266797-16",
+        "description": "Replace the 5 micron filter regularly to ensure proper functioning of the watermaker."
+      },
+      "taskB": {
+        "id": "task-1761011269200-20",
+        "description": "Replace the 5 micron filter regularly to ensure proper functioning of the watermaker."
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011382737-106",
+        "description": "Check the electrical wiring and connections regularly to prevent electrical hazards."
+      },
+      "taskB": {
+        "id": "task-1761011378770-101",
+        "description": "Check the electrical wiring and connections regularly to prevent electrical hazards."
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011329258-68",
+        "description": "Leave the unit running for approx. 20 minutes, checking that the hoses are properly positioned."
+      },
+      "taskB": {
+        "id": "task-1761011332078-73",
+        "description": "Leave the unit running for approx. 20 minutes, checking that the hoses are properly positioned."
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011398141-129",
+        "description": "Perform regular maintenance as per the maintenance schedule provided in the manual."
+      },
+      "taskB": {
+        "id": "task-1761011399063-131",
+        "description": "Perform regular maintenance as per the maintenance schedule provided in the manual."
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011409056-146",
+        "description": "Use only recommended material for the installation (hoses, fittings, and seals)."
+      },
+      "taskB": {
+        "id": "task-1761011439980-151",
+        "description": "Use only recommended material for the installation (hoses, fittings, and seals)."
+      },
+      "similarity_score": 0.9999992761274962,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011344859-96",
+        "description": "Activate automatic startup procedure after filter cartridge replacement or general service."
+      },
+      "taskB": {
+        "id": "task-1761011347110-99",
+        "description": "Perform automatic startup procedure after filter cartridge replacement or general service."
+      },
+      "similarity_score": 0.9711740818534521,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011393096-123",
+        "description": "Perform adjustments as necessary"
+      },
+      "taskB": {
+        "id": "task-1761011389330-116",
+        "description": "Perform adjustments as necessary"
+      },
+      "similarity_score": 0.9990794173068365,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011267950-18",
+        "description": "Clean the filter container thoroughly when changing the filter to prevent contamination."
+      },
+      "taskB": {
+        "id": "task-1761011270448-22",
+        "description": "Clean the filter container thoroughly when changing the filter to prevent particles from entering the machine."
+      },
+      "similarity_score": 0.8950128591338259,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011277652-35",
+        "description": "Check the grey valve on the active carbon filter is open."
+      },
+      "taskB": {
+        "id": "task-1761011343358-93",
+        "description": "Check the grey valve on the active carbon filter is open."
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011277652-35",
+        "description": "Check the grey valve on the active carbon filter is open."
+      },
+      "taskB": {
+        "id": "task-1761011339389-86",
+        "description": "Check the grey valve on the active carbon filter is open before the start-up procedure."
+      },
+      "similarity_score": 0.894361091520889,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011407491-143",
+        "description": "Connect the manometer horizontally if the unit is installed horizontally."
+      },
+      "taskB": {
+        "id": "task-1761011403046-137",
+        "description": "Connect the manometer horizontally if the unit is installed horizontally."
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011338240-84",
+        "description": "Check the reset valve is closed and the positioner is completely unscrewed before the start-up procedure."
+      },
+      "taskB": {
+        "id": "task-1761011342336-91",
+        "description": "Check the reset valve is closed and the positioner is completely unscrewed."
+      },
+      "similarity_score": 0.900910510271844,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011275998-32",
+        "description": "Check the charge level of the accumulator to ensure correct functioning of the watermaker."
+      },
+      "taskB": {
+        "id": "task-1761011272449-26",
+        "description": "Check the charge level of the accumulator to ensure correct functioning of the watermaker."
+      },
+      "similarity_score": 0.9998681152540847,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011277104-34",
+        "description": "Perform cleaning of membranes with SC1 product if clogged."
+      },
+      "taskB": {
+        "id": "task-1761011273385-28",
+        "description": "Perform cleaning of membranes with SC1 washing product if clogged."
+      },
+      "similarity_score": 0.9799017351363257,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011343358-93",
+        "description": "Check the grey valve on the active carbon filter is open."
+      },
+      "taskB": {
+        "id": "task-1761011339389-86",
+        "description": "Check the grey valve on the active carbon filter is open before the start-up procedure."
+      },
+      "similarity_score": 0.894361091520889,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011267345-17",
+        "description": "Install an additional 20 micron filter before the 5 micron filter if the watermaker is used in harsh conditions."
+      },
+      "taskB": {
+        "id": "task-1761011269745-21",
+        "description": "Install an additional 20 micron filter before the 5 micron filter if the watermaker is used in harsh conditions."
+      },
+      "similarity_score": 0.9999992932781829,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011257815-3",
+        "description": "Purge air from the system"
+      },
+      "taskB": {
+        "id": "task-1761011263832-11",
+        "description": "Purge air from the system"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011390931-119",
+        "description": "Check for leaks"
+      },
+      "taskB": {
+        "id": "task-1761011386137-112",
+        "description": "Check for leaks"
+      },
+      "similarity_score": 0.9999990126222877,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011406447-141",
+        "description": "Install the watermaker above the pump, ensuring it lies completely on a flat surface."
+      },
+      "taskB": {
+        "id": "task-1761011401383-134",
+        "description": "Install the watermaker above the pump, ensuring it lies completely on a flat surface."
+      },
+      "similarity_score": 0.9999992578248063,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011280245-40",
+        "description": "Perform manual wash of the watermaker."
+      },
+      "taskB": {
+        "id": "task-1761011317560-51",
+        "description": "Perform manual wash of the watermaker."
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011330598-70",
+        "description": "Perform the first start-up procedure when restarting the plant after a shutdown procedure."
+      },
+      "taskB": {
+        "id": "task-1761011333128-75",
+        "description": "Perform the first start-up procedure when restarting the plant after a shutdown procedure."
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011442643-154",
+        "description": "Install a backup treatment on board, such as a UV sterilizer or a microfiltration system."
+      },
+      "taskB": {
+        "id": "task-1761011410622-149",
+        "description": "Install a backup treatment on board, such as a UV sterilizer or a microfiltration system."
+      },
+      "similarity_score": 0.9999993708531522,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1761011391510-120",
+      "primary_description": "Check for membranes replacement",
+      "duplicate_ids": [
+        "task-1761011386803-113"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011324918-62",
+      "primary_description": "Perform the first start-up procedure after a shutdown to purge air and drain chemicals from the system.",
+      "duplicate_ids": [
+        "task-1761011326131-64"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011332616-74",
+      "primary_description": "Stop the unit and connect the original hoses.",
+      "duplicate_ids": [
+        "task-1761011330093-69"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011265485-14",
+      "primary_description": "Check for membranes replacement",
+      "duplicate_ids": [
+        "task-1761011260116-6"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011409485-147",
+      "primary_description": "Do not store the unit under temperature below 5°C and above 45 °C.",
+      "duplicate_ids": [
+        "task-1761011440563-152"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011323307-59",
+      "primary_description": "Flush the system to remove organic and inorganic sediments and inhibit bacteria growth.",
+      "duplicate_ids": [
+        "task-1761011321949-57"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011260547-7",
+      "primary_description": "Perform shutdown procedure before long standstills",
+      "duplicate_ids": [
+        "task-1761011266174-15"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011405968-140",
+      "primary_description": "Ensure the pump group is installed in a ventilated area to aid in cooling the motor.",
+      "duplicate_ids": [
+        "task-1761011399635-132"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011390409-118",
+      "primary_description": "Check the plant working pressure",
+      "duplicate_ids": [
+        "task-1761011385416-111",
+        "task-1761011259021-4",
+        "task-1761011264300-12"
+      ],
+      "duplicate_count": 3
+    },
+    {
+      "primary_id": "task-1761011261532-9",
+      "primary_description": "Replace the 5 micron cartridge filters",
+      "duplicate_ids": [
+        "task-1761011256450-1"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011404827-138",
+      "primary_description": "Remove the plug on the right side of the watermaker and replace it with a housebarb using the provided tools.",
+      "duplicate_ids": [
+        "task-1761011407882-144"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011276522-33",
+      "primary_description": "Replace filters when they are dirty to maintain system performance.",
+      "duplicate_ids": [
+        "task-1761011272890-27",
+        "task-1761011379937-103",
+        "task-1761011383884-108"
+      ],
+      "duplicate_count": 3
+    },
+    {
+      "primary_id": "task-1761011387854-115",
+      "primary_description": "Perform antifreeze procedure (winterizing procedure in cold climate - under 5°C)",
+      "duplicate_ids": [
+        "task-1761011392564-122"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011315785-50",
+      "primary_description": "Perform periodic wash of the watermaker.",
+      "duplicate_ids": [
+        "task-1761011279751-39"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011270946-23",
+      "primary_description": "Reset the automatic hydraulic valve if the watermaker sucks air or experiences other problems.",
+      "duplicate_ids": [
+        "task-1761011268647-19"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011328068-66",
+      "primary_description": "Open the depressurization valve.",
+      "duplicate_ids": [
+        "task-1761011331083-71"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011336080-80",
+      "primary_description": "Check the continuity of connection between the remote panel and the computer box.",
+      "duplicate_ids": [
+        "task-1761011339995-87"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011343761-94",
+      "primary_description": "Perform automatic washing of the system.",
+      "duplicate_ids": [
+        "task-1761011345803-97"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011402502-136",
+      "primary_description": "Fasten the watermaker with the provided L-brackets, ensuring it is not suspended.",
+      "duplicate_ids": [
+        "task-1761011406910-142"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011281933-43",
+      "primary_description": "Press STOP to turn off the watermaker.",
+      "duplicate_ids": [
+        "task-1761011320171-54"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011256980-2",
+      "primary_description": "Replace the active carbon fibre filter",
+      "duplicate_ids": [
+        "task-1761011263205-10"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011322783-58",
+      "primary_description": "Replace filters after performing the cleaning procedure.",
+      "duplicate_ids": [
+        "task-1761011324235-61"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011392003-121",
+      "primary_description": "Membrane replacement",
+      "duplicate_ids": [
+        "task-1761011387313-114"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011441122-153",
+      "primary_description": "Follow shutdown and cleaning procedures to ensure continued purity of the fresh water.",
+      "duplicate_ids": [
+        "task-1761011409985-148"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011384296-109",
+      "primary_description": "Check membranes for any signs of wear or damage as part of regular maintenance.",
+      "duplicate_ids": [
+        "task-1761011381484-104"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011275363-31",
+      "primary_description": "Calibrate the pump high pressure switch to ensure proper functioning.",
+      "duplicate_ids": [
+        "task-1761011271933-25"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011394190-125",
+      "primary_description": "Check the status of the watermaker using the remote panel.",
+      "duplicate_ids": [
+        "task-1761011395479-127"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011383363-107",
+      "primary_description": "Monitor the system closely during operation to prevent flooding.",
+      "duplicate_ids": [
+        "task-1761011379388-102"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011261101-8",
+      "primary_description": "Check and clean the strainer",
+      "duplicate_ids": [
+        "task-1761011255210-0"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011389968-117",
+      "primary_description": "Check filter cleanliness",
+      "duplicate_ids": [
+        "task-1761011384770-110"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011271359-24",
+      "primary_description": "Replace reverse osmosis membranes when they are old and water quality decreases or working pressure increases.",
+      "duplicate_ids": [
+        "task-1761011274876-30"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011320709-55",
+      "primary_description": "Perform final flushing of the watermaker after operation.",
+      "duplicate_ids": [
+        "task-1761011282572-44"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011278657-37",
+      "primary_description": "Activate the start-up procedure through the function of the second page.",
+      "duplicate_ids": [
+        "task-1761011284592-48"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011437259-150",
+      "primary_description": "Read the use and maintenance manual before installing the system.",
+      "duplicate_ids": [
+        "task-1761011408497-145"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011342828-92",
+      "primary_description": "Check the fresh water pressurizing pump of the boat is on.",
+      "duplicate_ids": [
+        "task-1761011338768-85"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011259573-5",
+      "primary_description": "Check for leaks",
+      "duplicate_ids": [
+        "task-1761011264939-13"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011326557-65",
+      "primary_description": "Perform the antifreeze procedure in cold climates (under 5°C) by flushing the system and filling it with a propylene glycol solution.",
+      "duplicate_ids": [
+        "task-1761011325477-63"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011382030-105",
+      "primary_description": "Inspect the machine regularly to minimize the risk of fire hazards.",
+      "duplicate_ids": [
+        "task-1761011376829-100"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011337198-82",
+      "primary_description": "Verify the 5 micron and active carbon cartridges are installed before the start-up procedure.",
+      "duplicate_ids": [
+        "task-1761011341375-89"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011318607-53",
+      "primary_description": "Press START to turn on the watermaker.",
+      "duplicate_ids": [
+        "task-1761011281379-42"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011394926-126",
+      "primary_description": "Perform automatic washing of the system after stopping the watermaker.",
+      "duplicate_ids": [
+        "task-1761011393660-124"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011336571-81",
+      "primary_description": "Verify all components and hoses are connected correctly before the start-up procedure.",
+      "duplicate_ids": [
+        "task-1761011340664-88"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011331557-72",
+      "primary_description": "Start the watermaker with the by-pass activated.",
+      "duplicate_ids": [
+        "task-1761011328631-67"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011337718-83",
+      "primary_description": "Check the seawater inlet valve and salt water drain valve (if existing) are open before the start-up procedure.",
+      "duplicate_ids": [
+        "task-1761011341871-90"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011397686-128",
+      "primary_description": "Regular inspection of the watermaker to minimize the risk of failure or other issues.",
+      "duplicate_ids": [
+        "task-1761011398624-130"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011266797-16",
+      "primary_description": "Replace the 5 micron filter regularly to ensure proper functioning of the watermaker.",
+      "duplicate_ids": [
+        "task-1761011269200-20"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011382737-106",
+      "primary_description": "Check the electrical wiring and connections regularly to prevent electrical hazards.",
+      "duplicate_ids": [
+        "task-1761011378770-101"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011329258-68",
+      "primary_description": "Leave the unit running for approx. 20 minutes, checking that the hoses are properly positioned.",
+      "duplicate_ids": [
+        "task-1761011332078-73"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011398141-129",
+      "primary_description": "Perform regular maintenance as per the maintenance schedule provided in the manual.",
+      "duplicate_ids": [
+        "task-1761011399063-131"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011409056-146",
+      "primary_description": "Use only recommended material for the installation (hoses, fittings, and seals).",
+      "duplicate_ids": [
+        "task-1761011439980-151"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011344859-96",
+      "primary_description": "Activate automatic startup procedure after filter cartridge replacement or general service.",
+      "duplicate_ids": [
+        "task-1761011347110-99"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011393096-123",
+      "primary_description": "Perform adjustments as necessary",
+      "duplicate_ids": [
+        "task-1761011389330-116"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011267950-18",
+      "primary_description": "Clean the filter container thoroughly when changing the filter to prevent contamination.",
+      "duplicate_ids": [
+        "task-1761011270448-22"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011277652-35",
+      "primary_description": "Check the grey valve on the active carbon filter is open.",
+      "duplicate_ids": [
+        "task-1761011343358-93",
+        "task-1761011339389-86"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1761011407491-143",
+      "primary_description": "Connect the manometer horizontally if the unit is installed horizontally.",
+      "duplicate_ids": [
+        "task-1761011403046-137"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011338240-84",
+      "primary_description": "Check the reset valve is closed and the positioner is completely unscrewed before the start-up procedure.",
+      "duplicate_ids": [
+        "task-1761011342336-91"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011275998-32",
+      "primary_description": "Check the charge level of the accumulator to ensure correct functioning of the watermaker.",
+      "duplicate_ids": [
+        "task-1761011272449-26"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011277104-34",
+      "primary_description": "Perform cleaning of membranes with SC1 product if clogged.",
+      "duplicate_ids": [
+        "task-1761011273385-28"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011267345-17",
+      "primary_description": "Install an additional 20 micron filter before the 5 micron filter if the watermaker is used in harsh conditions.",
+      "duplicate_ids": [
+        "task-1761011269745-21"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011257815-3",
+      "primary_description": "Purge air from the system",
+      "duplicate_ids": [
+        "task-1761011263832-11"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011390931-119",
+      "primary_description": "Check for leaks",
+      "duplicate_ids": [
+        "task-1761011386137-112"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011406447-141",
+      "primary_description": "Install the watermaker above the pump, ensuring it lies completely on a flat surface.",
+      "duplicate_ids": [
+        "task-1761011401383-134"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011280245-40",
+      "primary_description": "Perform manual wash of the watermaker.",
+      "duplicate_ids": [
+        "task-1761011317560-51"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011330598-70",
+      "primary_description": "Perform the first start-up procedure when restarting the plant after a shutdown procedure.",
+      "duplicate_ids": [
+        "task-1761011333128-75"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011442643-154",
+      "primary_description": "Install a backup treatment on board, such as a UV sterilizer or a microfiltration system.",
+      "duplicate_ids": [
+        "task-1761011410622-149"
+      ],
+      "duplicate_count": 1
+    }
+  ]
+}

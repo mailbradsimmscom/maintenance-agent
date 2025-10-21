@@ -1,0 +1,345 @@
+{
+  "analysis_date": "2025-10-21T01:13:44.697Z",
+  "total_tasks": 102,
+  "duplicate_pairs_count": 16,
+  "duplicate_groups_count": 14,
+  "total_duplicate_tasks": 15,
+  "unique_tasks": 87,
+  "reduction_percent": "14.7",
+  "thresholds": {
+    "semantic": {
+      "min": 0.85,
+      "highConfidence": 0.95
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1760989886847-56",
+        "description": "Replace the Marine Gear oil filter element"
+      },
+      "taskB": {
+        "id": "task-1761008896961-34",
+        "description": "Replace the Marine Gear oil filter element"
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008870283-0",
+        "description": "Replace the fuel filter element"
+      },
+      "taskB": {
+        "id": "task-1761008897541-35",
+        "description": "Replacing the Fuel Filter Element"
+      },
+      "similarity_score": 0.9235188285874039,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886587-54",
+        "description": "Replace the Marine Gear lube oil"
+      },
+      "taskB": {
+        "id": "task-1761008895975-32",
+        "description": "Replace the Marine Gear lube oil"
+      },
+      "similarity_score": 0.9999990879042212,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989885537-46",
+        "description": "Perform a visual inspection of the engine exterior"
+      },
+      "taskB": {
+        "id": "task-1761008891156-24",
+        "description": "Visual inspection of engine exterior"
+      },
+      "similarity_score": 0.9240839929887807,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008900846-41",
+        "description": "Cleaning the Exhaust/Water Mixing Elbow"
+      },
+      "taskB": {
+        "id": "task-1760989887799-63",
+        "description": "Cleaning the Exhaust/Water Mixing Elbow"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008894945-30",
+        "description": "Check the Marine Gear lube oil level"
+      },
+      "taskB": {
+        "id": "task-1760989886314-52",
+        "description": "Check the Marine Gear lube oil level"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886179-51",
+        "description": "Check the Engine lube oil level"
+      },
+      "taskB": {
+        "id": "task-1761008894372-29",
+        "description": "Check the Engine lube oil level"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989888324-67",
+        "description": "Tightening All Major Nuts and Bolts"
+      },
+      "taskB": {
+        "id": "task-1761008902785-45",
+        "description": "Tightening All Major Nuts and Bolts"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989888324-67",
+        "description": "Tightening All Major Nuts and Bolts"
+      },
+      "taskB": {
+        "id": "task-1761008887411-19",
+        "description": "Tighten all major nuts and bolts"
+      },
+      "similarity_score": 0.8978663631990793,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008895455-31",
+        "description": "Replace the Engine lube oil"
+      },
+      "taskB": {
+        "id": "task-1760989886466-53",
+        "description": "Replace the Engine lube oil"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008902785-45",
+        "description": "Tightening All Major Nuts and Bolts"
+      },
+      "taskB": {
+        "id": "task-1761008887411-19",
+        "description": "Tighten all major nuts and bolts"
+      },
+      "similarity_score": 0.8978663631990793,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008901276-42",
+        "description": "Wash the Turbocharger blower (If Equipped)"
+      },
+      "taskB": {
+        "id": "task-1760989887927-64",
+        "description": "Washing the Turbocharger Blower"
+      },
+      "similarity_score": 0.8766822459939354,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008899707-39",
+        "description": "Changing the Coolant"
+      },
+      "taskB": {
+        "id": "task-1760989887519-61",
+        "description": "Changing the Coolant"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008901825-43",
+        "description": "Adjusting the Alternator V-ribbed belt Tension"
+      },
+      "taskB": {
+        "id": "task-1760989888059-65",
+        "description": "Adjusting the Alternator V-ribbed Belt Tension"
+      },
+      "similarity_score": 0.9930539672995674,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008900256-40",
+        "description": "Cleaning the Intake Silencer (Air Cleaner) Element"
+      },
+      "taskB": {
+        "id": "task-1760989887655-62",
+        "description": "Cleaning the Intake Silencer (Air Cleaner) Element"
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886721-55",
+        "description": "Replace the Engine oil filter element"
+      },
+      "taskB": {
+        "id": "task-1761008896409-33",
+        "description": "Replace the Engine oil filter element"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1760989886847-56",
+      "primary_description": "Replace the Marine Gear oil filter element",
+      "duplicate_ids": [
+        "task-1761008896961-34"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008870283-0",
+      "primary_description": "Replace the fuel filter element",
+      "duplicate_ids": [
+        "task-1761008897541-35"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989886587-54",
+      "primary_description": "Replace the Marine Gear lube oil",
+      "duplicate_ids": [
+        "task-1761008895975-32"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989885537-46",
+      "primary_description": "Perform a visual inspection of the engine exterior",
+      "duplicate_ids": [
+        "task-1761008891156-24"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008900846-41",
+      "primary_description": "Cleaning the Exhaust/Water Mixing Elbow",
+      "duplicate_ids": [
+        "task-1760989887799-63"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008894945-30",
+      "primary_description": "Check the Marine Gear lube oil level",
+      "duplicate_ids": [
+        "task-1760989886314-52"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989886179-51",
+      "primary_description": "Check the Engine lube oil level",
+      "duplicate_ids": [
+        "task-1761008894372-29"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989888324-67",
+      "primary_description": "Tightening All Major Nuts and Bolts",
+      "duplicate_ids": [
+        "task-1761008902785-45",
+        "task-1761008887411-19"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1761008895455-31",
+      "primary_description": "Replace the Engine lube oil",
+      "duplicate_ids": [
+        "task-1760989886466-53"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008901276-42",
+      "primary_description": "Wash the Turbocharger blower (If Equipped)",
+      "duplicate_ids": [
+        "task-1760989887927-64"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008899707-39",
+      "primary_description": "Changing the Coolant",
+      "duplicate_ids": [
+        "task-1760989887519-61"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008901825-43",
+      "primary_description": "Adjusting the Alternator V-ribbed belt Tension",
+      "duplicate_ids": [
+        "task-1760989888059-65"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008900256-40",
+      "primary_description": "Cleaning the Intake Silencer (Air Cleaner) Element",
+      "duplicate_ids": [
+        "task-1760989887655-62"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989886721-55",
+      "primary_description": "Replace the Engine oil filter element",
+      "duplicate_ids": [
+        "task-1761008896409-33"
+      ],
+      "duplicate_count": 1
+    }
+  ]
+}

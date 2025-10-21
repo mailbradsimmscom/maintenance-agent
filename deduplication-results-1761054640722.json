@@ -1,0 +1,87 @@
+{
+  "analysis_date": "2025-10-21T13:50:40.721Z",
+  "total_tasks": 89,
+  "duplicate_pairs_count": 3,
+  "duplicate_groups_count": 3,
+  "total_duplicate_tasks": 3,
+  "unique_tasks": 86,
+  "reduction_percent": "3.4",
+  "thresholds": {
+    "semantic": {
+      "min": 0.85,
+      "highConfidence": 0.95
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1761054470516-22",
+        "description": "Check the grey valve on the active carbon filter is open."
+      },
+      "taskB": {
+        "id": "task-1761054486056-46",
+        "description": "Check the grey valve on the active carbon filter is open."
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761054526952-64",
+        "description": "Perform the first start-up procedure after a shutdown to purge air and drain chemicals from the system."
+      },
+      "taskB": {
+        "id": "task-1761054481417-39",
+        "description": "Perform the first start-up procedure when restarting the plant after a shutdown procedure to purge air and drain out chemicals."
+      },
+      "similarity_score": 0.918531687427676,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761054534887-76",
+        "description": "Check the plant working pressure"
+      },
+      "taskB": {
+        "id": "task-1761054457894-4",
+        "description": "Check the plant working pressure"
+      },
+      "similarity_score": 0.9999991471102224,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1761054470516-22",
+      "primary_description": "Check the grey valve on the active carbon filter is open.",
+      "duplicate_ids": [
+        "task-1761054486056-46"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761054526952-64",
+      "primary_description": "Perform the first start-up procedure after a shutdown to purge air and drain chemicals from the system.",
+      "duplicate_ids": [
+        "task-1761054481417-39"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761054534887-76",
+      "primary_description": "Check the plant working pressure",
+      "duplicate_ids": [
+        "task-1761054457894-4"
+      ],
+      "duplicate_count": 1
+    }
+  ]
+}

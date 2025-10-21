@@ -1,0 +1,488 @@
+{
+  "analysis_date": "2025-10-21T01:57:40.646Z",
+  "total_tasks": 85,
+  "duplicate_pairs_count": 13,
+  "duplicate_groups_count": 7,
+  "total_duplicate_tasks": 12,
+  "unique_tasks": 73,
+  "reduction_percent": "14.1",
+  "thresholds": {
+    "semantic": {
+      "min": 0.65,
+      "highConfidence": 0.75
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1761011282572-44",
+        "description": "Perform final flushing of the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "taskB": {
+        "id": "task-1761011393660-124",
+        "description": "Perform automatic washing of the system after stopping the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.6938155536894178,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011282572-44",
+        "description": "Perform final flushing of the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "taskB": {
+        "id": "task-1761011321217-56",
+        "description": "Perform long flushing procedure of the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "similarity_score": 0.7670094352988074,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011328631-67",
+        "description": "Start the watermaker with the by-pass activated.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "routine",
+        "confidence": 0.8
+      },
+      "taskB": {
+        "id": "task-1761011318607-53",
+        "description": "Press START to turn on the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.7272043860047844,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011406447-141",
+        "description": "Install the watermaker above the pump, ensuring it lies completely on a flat surface.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "installation",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761011406910-142",
+        "description": "Fasten the watermaker with the provided L-brackets and ensure it is not suspended.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "installation",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "similarity_score": 0.6551249103705234,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011282996-45",
+        "description": "Perform long flushing procedure (10 minutes).",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "taskB": {
+        "id": "task-1761011321217-56",
+        "description": "Perform long flushing procedure of the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "similarity_score": 0.739894198193452,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011400804-133",
+        "description": "Ensure the pump group is installed below the waterline and close to the water inlet (max 2m).",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "installation",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761011405968-140",
+        "description": "Ensure the pump group is installed in a ventilated area to aid in cooling the motor.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "installation",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "similarity_score": 0.6685230131469754,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011400804-133",
+        "description": "Ensure the pump group is installed below the waterline and close to the water inlet (max 2m).",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "installation",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761011405457-139",
+        "description": "Install the diaphragm pump group below the waterline and as close to the water inlet as possible.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "installation",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.8186850406016534,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011318607-53",
+        "description": "Press START to turn on the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761011281933-43",
+        "description": "Press STOP to turn off the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.7582476494202305,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011315785-50",
+        "description": "Perform periodic wash of the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": "days",
+        "frequency_value": 6,
+        "frequency_hours": 144,
+        "frequency_basis": "calendar",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "taskB": {
+        "id": "task-1761011280245-40",
+        "description": "Perform manual wash of the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": "days",
+        "frequency_value": 6,
+        "frequency_hours": 144,
+        "frequency_basis": "calendar",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "similarity_score": 0.8403662295531266,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011393660-124",
+        "description": "Perform automatic washing of the system after stopping the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761011321217-56",
+        "description": "Perform long flushing procedure of the watermaker.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "similarity_score": 0.6710451829363043,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011387854-115",
+        "description": "Perform antifreeze procedure (winterizing procedure in cold climate - under 5°C)",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761011325477-63",
+        "description": "Perform the antifreeze procedure in cold climates by flushing the system and filling it with a propylene glycol and unchlorinated water solution.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.7410594492510086,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011326131-64",
+        "description": "Perform the first start-up procedure after a shutdown to purge air and drain chemicals from the system.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761011347110-99",
+        "description": "Perform automatic startup procedure after filter cartridge replacement or general service.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.6612763746410845,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761011326131-64",
+        "description": "Perform the first start-up procedure after a shutdown to purge air and drain chemicals from the system.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761011333128-75",
+        "description": "Perform the first start-up procedure when restarting the plant after a shutdown procedure.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "critical",
+        "confidence": 0.8
+      },
+      "similarity_score": 0.7756955968174131,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1761011282572-44",
+      "primary_description": "Perform final flushing of the watermaker.",
+      "duplicate_ids": [
+        "task-1761011393660-124",
+        "task-1761011321217-56",
+        "task-1761011282996-45"
+      ],
+      "duplicate_count": 3
+    },
+    {
+      "primary_id": "task-1761011328631-67",
+      "primary_description": "Start the watermaker with the by-pass activated.",
+      "duplicate_ids": [
+        "task-1761011318607-53",
+        "task-1761011281933-43"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1761011406447-141",
+      "primary_description": "Install the watermaker above the pump, ensuring it lies completely on a flat surface.",
+      "duplicate_ids": [
+        "task-1761011406910-142"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011400804-133",
+      "primary_description": "Ensure the pump group is installed below the waterline and close to the water inlet (max 2m).",
+      "duplicate_ids": [
+        "task-1761011405968-140",
+        "task-1761011405457-139"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1761011315785-50",
+      "primary_description": "Perform periodic wash of the watermaker.",
+      "duplicate_ids": [
+        "task-1761011280245-40"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011387854-115",
+      "primary_description": "Perform antifreeze procedure (winterizing procedure in cold climate - under 5°C)",
+      "duplicate_ids": [
+        "task-1761011325477-63"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761011326131-64",
+      "primary_description": "Perform the first start-up procedure after a shutdown to purge air and drain chemicals from the system.",
+      "duplicate_ids": [
+        "task-1761011347110-99",
+        "task-1761011333128-75"
+      ],
+      "duplicate_count": 2
+    }
+  ]
+}

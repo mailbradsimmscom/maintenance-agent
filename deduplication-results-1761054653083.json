@@ -1,0 +1,205 @@
+{
+  "analysis_date": "2025-10-21T13:50:53.083Z",
+  "total_tasks": 86,
+  "duplicate_pairs_count": 5,
+  "duplicate_groups_count": 3,
+  "total_duplicate_tasks": 5,
+  "unique_tasks": 81,
+  "reduction_percent": "5.8",
+  "thresholds": {
+    "semantic": {
+      "min": 0.65,
+      "highConfidence": 0.75
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1761054532058-73",
+        "description": "Replace filters as part of regular maintenance to ensure system efficiency.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "taskB": {
+        "id": "task-1761054466308-15",
+        "description": "Replace filters if they are dirty or clogged.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 0.85
+      },
+      "similarity_score": 0.7025595187892784,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761054527650-65",
+        "description": "Perform the antifreeze procedure in cold climates (under 5°C) by flushing the system and filling it with a propylene glycol and unchlorinated water solution.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761054537289-80",
+        "description": "Perform antifreeze procedure (winterizing procedure in cold climate - under 5°C)",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "similarity_score": 0.8203711693591619,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761054466308-15",
+        "description": "Replace filters if they are dirty or clogged.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 0.85
+      },
+      "taskB": {
+        "id": "task-1761054478320-34",
+        "description": "Replace filters after performing the cleaning procedure.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "similarity_score": 0.6775504181638394,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761054540110-85",
+        "description": "Connect the pressure transducer to the PCB of the electric box.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761054538279-82",
+        "description": "Connect the cables of the salinity probe to the PCB of the electric box.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.6810200621390181,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761054538756-83",
+        "description": "Connect the cables of the diverting valve to the PCB of the electric box.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761054538279-82",
+        "description": "Connect the cables of the salinity probe to the PCB of the electric box.",
+        "system_name": "Schenker Zen 150 watermaker 48V.",
+        "asset_uid": "d0cbc03e-ad33-47c8-84b7-92b41d319727",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "condition_based",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.6576747122288166,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1761054532058-73",
+      "primary_description": "Replace filters as part of regular maintenance to ensure system efficiency.",
+      "duplicate_ids": [
+        "task-1761054466308-15",
+        "task-1761054478320-34"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1761054527650-65",
+      "primary_description": "Perform the antifreeze procedure in cold climates (under 5°C) by flushing the system and filling it with a propylene glycol and unchlorinated water solution.",
+      "duplicate_ids": [
+        "task-1761054537289-80"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761054540110-85",
+      "primary_description": "Connect the pressure transducer to the PCB of the electric box.",
+      "duplicate_ids": [
+        "task-1761054538279-82",
+        "task-1761054538756-83"
+      ],
+      "duplicate_count": 2
+    }
+  ]
+}

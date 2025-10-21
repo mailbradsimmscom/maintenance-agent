@@ -1,6 +1,19 @@
 /**
- * Capture raw Pinecone results for all systems
- * NO OpenAI extraction - just store scores for analysis
+ * LLM-Powered Vector Search
+ *
+ * Purpose: Generate system-specific maintenance search terms using LLM,
+ *          then find relevant chunks in Pinecone for each system
+ *
+ * Flow:
+ * 1. For each system, send details to GPT-4o-mini
+ * 2. LLM generates 5-8 maintenance search terms specific to that system
+ * 3. Create embedding from those terms
+ * 4. Query Pinecone (filtered by asset_uid)
+ * 5. Store results in pinecone_search_results
+ *
+ * Usage:
+ *   node scripts/LLM_powered_vector_search.js
+ *   node scripts/LLM_powered_vector_search.js --system "watermaker"
  */
 
 import { createClient } from '@supabase/supabase-js';
@@ -20,33 +33,82 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const SCORE_THRESHOLD = 0.30;
 const BATCH_SIZE = 10;
+const LLM_DELAY_MS = 1000; // 1 second between LLM calls to avoid rate limits
 
-async function captureAllPineconeScores() {
-  console.log('\n=== CAPTURING PINECONE SCORES FOR ALL SYSTEMS ===\n');
+/**
+ * Generate maintenance search terms for a specific system using LLM
+ */
+async function generateMaintenanceTerms(system) {
+  const prompt = `Generate 5-8 technical maintenance search terms for this marine system:
+
+System Type: ${system.system_norm}
+Manufacturer: ${system.manufacturer_norm}
+Model: ${system.model_norm}
+
+Focus on:
+- System-specific maintenance terminology
+- Common maintenance procedures
+- Parts that require service/replacement
+- Industry-standard terms for this equipment type
+
+Return only the search terms as a comma-separated list.`;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.3,
+      max_tokens: 150
+    });
+
+    const termsText = response.choices[0].message.content.trim();
+    return termsText;
+  } catch (error) {
+    console.error(`  ❌ Failed to generate terms: ${error.message}`);
+    return null;
+  }
+}
+
+/**
+ * Create embedding from search terms
+ */
+async function createEmbedding(searchTerms) {
+  const embeddingResponse = await openai.embeddings.create({
+    model: 'text-embedding-3-large',
+    input: searchTerms,
+    dimensions: 3072
+  });
+  return embeddingResponse.data[0].embedding;
+}
+
+/**
+ * Query Pinecone for maintenance chunks
+ */
+async function queryPinecone(index, embedding, assetUid, topK = 20) {
+  const results = await index.namespace('REIMAGINEDDOCS').query({
+    vector: embedding,
+    topK,
+    filter: { 'linked_asset_uid': { $eq: assetUid } },
+    includeMetadata: true
+  });
+
+  return results.matches || [];
+}
+
+/**
+ * Main LLM-powered search
+ */
+async function llmPoweredSearch() {
+  console.log('\n=== LLM-POWERED VECTOR SEARCH ===\n');
   console.log(`Score threshold: ${SCORE_THRESHOLD}`);
   console.log(`Batch size: ${BATCH_SIZE}\n`);
 
-  // Create table if it doesn't exist
-  console.log('Ensuring temp table exists...');
-  const { error: tableError } = await supabase
-    .from('pinecone_search_results')
-    .select('count')
-    .limit(0);
-
-  if (tableError && tableError.message.includes('does not exist')) {
-    console.log('⚠️  Table does not exist. Please run the migration:');
-    console.log('   migrations/agent/002_create_pinecone_results_temp.sql');
-    console.log('   in your Supabase SQL editor\n');
-    return;
-  }
-  console.log('✅ Table ready\n');
-
-  // Check for system filter arguments
+  // Check for system filter
   const args = process.argv.slice(2);
   const filterIndex = args.indexOf('--system');
   const systemFilter = filterIndex !== -1 ? args[filterIndex + 1] : null;
 
-  // Get systems (with optional filter)
+  // Get systems
   let query = supabase
     .from('systems')
     .select('asset_uid, description, manufacturer_norm, model_norm, system_norm');
@@ -73,18 +135,6 @@ async function captureAllPineconeScores() {
 
   const index = pinecone.index(process.env.PINECONE_INDEX_NAME);
 
-  // Create maintenance query embedding (only once!)
-  console.log('Creating query embedding...');
-  const maintenanceQuery = 'maintenance schedule inspection service interval replacement';
-
-  const embeddingResponse = await openai.embeddings.create({
-    model: 'text-embedding-3-large',
-    input: maintenanceQuery,
-    dimensions: 3072
-  });
-  const queryVector = embeddingResponse.data[0].embedding;
-  console.log('✅ Embedding created\n');
-
   let totalChunksFound = 0;
   let systemsWithChunks = 0;
   let processedCount = 0;
@@ -102,21 +152,31 @@ async function captureAllPineconeScores() {
       process.stdout.write(`[${processedCount}/${systems.length}] ${systemName.substring(0, 40)}...`);
 
       try {
-        // Query Pinecone
-        const results = await index.namespace('REIMAGINEDDOCS').query({
-          vector: queryVector,
-          topK: 20,
-          filter: { 'linked_asset_uid': { $eq: system.asset_uid } },
-          includeMetadata: true
-        });
+        // Step 1: Generate system-specific maintenance terms
+        const searchTerms = await generateMaintenanceTerms(system);
 
-        const relevantChunks = (results.matches || []).filter(m => m.score >= SCORE_THRESHOLD);
+        if (!searchTerms) {
+          console.log(' ⚠️  No terms generated');
+          continue;
+        }
+
+        // Rate limiting: Wait after LLM call
+        await new Promise(resolve => setTimeout(resolve, LLM_DELAY_MS));
+
+        // Step 2: Create embedding from terms
+        const embedding = await createEmbedding(searchTerms);
+
+        // Step 3: Query Pinecone with asset filter
+        const matches = await queryPinecone(index, embedding, system.asset_uid);
+
+        // Step 4: Filter by score threshold
+        const relevantChunks = matches.filter(m => m.score >= SCORE_THRESHOLD);
 
         if (relevantChunks.length > 0) {
           systemsWithChunks++;
           totalChunksFound += relevantChunks.length;
 
-          // Store in database
+          // Step 5: Store in database
           const records = relevantChunks.map(chunk => ({
             asset_uid: system.asset_uid,
             system_name: systemName,
@@ -132,7 +192,8 @@ async function captureAllPineconeScores() {
             page_start: chunk.metadata?.page_start,
             page_end: chunk.metadata?.page_end,
             chunk_metadata: chunk.metadata,
-            type: 'generic' // Mark as generic search
+            search_terms: searchTerms, // Store the terms used
+            type: 'LLM' // Mark as LLM-powered search
           }));
 
           const { error: insertError } = await supabase
@@ -144,13 +205,11 @@ async function captureAllPineconeScores() {
             console.error(insertError);
           } else {
             console.log(` ✅ ${relevantChunks.length} chunks (scores: ${relevantChunks[0].score.toFixed(3)}-${relevantChunks[relevantChunks.length-1].score.toFixed(3)})`);
+            console.log(`    Terms: ${searchTerms.substring(0, 60)}...`);
           }
         } else {
           console.log(` - no chunks`);
         }
-
-        // Small delay to avoid rate limits
-        await new Promise(resolve => setTimeout(resolve, 100));
 
       } catch (error) {
         console.log(` ❌ Error: ${error.message}`);
@@ -204,4 +263,4 @@ async function captureAllPineconeScores() {
   console.log('\n✅ Done! Results stored in pinecone_search_results table\n');
 }
 
-captureAllPineconeScores().catch(console.error);
+llmPoweredSearch().catch(console.error);

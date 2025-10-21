@@ -15,14 +15,11 @@ const pinecone = new Pinecone({
   apiKey: config.pinecone.apiKey,
 });
 
-// Get the index
-let index = null;
+// Get the index (recreate each time to avoid cache issues)
 async function getIndex() {
-  if (!index) {
-    // Pinecone v2+ automatically handles serverless indexes
-    index = pinecone.index(config.pinecone.indexName);
-  }
-  return index;
+  // Pinecone v2+ - use index name only, SDK handles host resolution
+  logger.info('Getting Pinecone index', { indexName: config.pinecone.indexName });
+  return pinecone.index(config.pinecone.indexName);
 }
 
 export const pineconeRepository = {

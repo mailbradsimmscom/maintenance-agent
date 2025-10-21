@@ -1,0 +1,1489 @@
+{
+  "analysis_date": "2025-10-21T01:09:21.804Z",
+  "total_tasks": 102,
+  "duplicate_pairs_count": 42,
+  "duplicate_groups_count": 19,
+  "total_duplicate_tasks": 30,
+  "unique_tasks": 72,
+  "reduction_percent": "29.4",
+  "thresholds": {
+    "semantic": {
+      "min": 0.65,
+      "highConfidence": 0.75
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1761008895455-31",
+        "description": "Replace the Engine lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886587-54",
+        "description": "Replace the Marine Gear lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.7496251162978924,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008895455-31",
+        "description": "Replace the Engine lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886466-53",
+        "description": "Replace the Engine lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 1,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008895455-31",
+        "description": "Replace the Engine lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1761008895975-32",
+        "description": "Replace the Marine Gear lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.7494350542114443,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008898190-36",
+        "description": "Changing the Engine Oil and Replacing the Engine Oil Filter Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761008870283-0",
+        "description": "Replace the fuel filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.6844451072274816,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008898190-36",
+        "description": "Changing the Engine Oil and Replacing the Engine Oil Filter Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761008897541-35",
+        "description": "Replacing the Fuel Filter Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.7309828286063499,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008898190-36",
+        "description": "Changing the Engine Oil and Replacing the Engine Oil Filter Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761008898801-37",
+        "description": "Changing the Marine Gear Oil and Replacing Marine Gear Oil Filter Element (If Equipped)",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.7116324744182795,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008900256-40",
+        "description": "Cleaning the Intake Silencer (Air Cleaner) Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "cleaning",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1760989887655-62",
+        "description": "Cleaning the Intake Silencer (Air Cleaner) Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "cleaning",
+        "criticality": "routine",
+        "confidence": 0.8
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008896409-33",
+        "description": "Replace the Engine oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1761008896961-34",
+        "description": "Replace the Marine Gear oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.7913643828483106,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008896409-33",
+        "description": "Replace the Engine oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1761008893907-28",
+        "description": "Replace the fuel filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 500,
+        "frequency_hours": 500,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.8409606933559244,
+      "reason": "high_confidence_semantic_match",
+      "warning": "frequency_mismatch"
+    },
+    {
+      "taskA": {
+        "id": "task-1761008896409-33",
+        "description": "Replace the Engine oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886721-55",
+        "description": "Replace the Engine oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008896409-33",
+        "description": "Replace the Engine oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886847-56",
+        "description": "Replace the Marine Gear oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.7913643828483106,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989887927-64",
+        "description": "Washing the Turbocharger Blower",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "cleaning",
+        "criticality": "optional",
+        "confidence": 0.7
+      },
+      "taskB": {
+        "id": "task-1761008901276-42",
+        "description": "Wash the Turbocharger blower (If Equipped)",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "cleaning",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.8766822459939354,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008896961-34",
+        "description": "Replace the Marine Gear oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886721-55",
+        "description": "Replace the Engine oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.7913643828483106,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008896961-34",
+        "description": "Replace the Marine Gear oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886847-56",
+        "description": "Replace the Marine Gear oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989888324-67",
+        "description": "Tightening All Major Nuts and Bolts",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "adjustment",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761008902785-45",
+        "description": "Tightening All Major Nuts and Bolts",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "adjustment",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989888324-67",
+        "description": "Tightening All Major Nuts and Bolts",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "adjustment",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761008887411-19",
+        "description": "Tighten all major nuts and bolts",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 0,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "adjustment",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.8978663631990793,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008870283-0",
+        "description": "Replace the fuel filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761008897541-35",
+        "description": "Replacing the Fuel Filter Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.9235188285874039,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989887519-61",
+        "description": "Changing the Coolant",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "fluid_replacement",
+        "criticality": "important",
+        "confidence": 0.8
+      },
+      "taskB": {
+        "id": "task-1761008899707-39",
+        "description": "Changing the Coolant",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "fluid_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008891156-24",
+        "description": "Visual inspection of engine exterior",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "visual_inspection",
+        "criticality": "routine",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989885537-46",
+        "description": "Perform a visual inspection of the engine exterior",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "visual_inspection",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.9240839929887807,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008900846-41",
+        "description": "Cleaning the Exhaust/Water Mixing Elbow",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "cleaning",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1760989887799-63",
+        "description": "Cleaning the Exhaust/Water Mixing Elbow",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "cleaning",
+        "criticality": "routine",
+        "confidence": 0.8
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008901825-43",
+        "description": "Adjusting the Alternator V-ribbed belt Tension",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "adjustment",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1760989888059-65",
+        "description": "Adjusting the Alternator V-ribbed Belt Tension",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "adjustment",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.9930539672995674,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008876142-5",
+        "description": "Replace the Engine oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "cycles",
+        "frequency_value": 50,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "parts_replacement",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761008877225-6",
+        "description": "Replace the Marine Gear oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "cycles",
+        "frequency_value": 50,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "parts_replacement",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.7913643828483106,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989882254-22",
+        "description": "Clean intake silencer (air cleaner) element every 250 hours.",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 250,
+        "frequency_hours": 250,
+        "frequency_basis": "usage",
+        "task_type": "cleaning",
+        "criticality": "routine",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989882404-23",
+        "description": "Clean or replace the exhaust/water mixing elbow every 250 hours.",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 250,
+        "frequency_hours": 250,
+        "frequency_basis": "usage",
+        "task_type": "cleaning",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.6541783424137257,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989882254-22",
+        "description": "Clean intake silencer (air cleaner) element every 250 hours.",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 250,
+        "frequency_hours": 250,
+        "frequency_basis": "usage",
+        "task_type": "cleaning",
+        "criticality": "routine",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1761008881456-11",
+        "description": "Clean intake silencer (air cleaner) element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 500,
+        "frequency_hours": 500,
+        "frequency_basis": "usage",
+        "task_type": "cleaning",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.7673631574263673,
+      "reason": "high_confidence_semantic_match",
+      "warning": "frequency_mismatch"
+    },
+    {
+      "taskA": {
+        "id": "task-1761008902785-45",
+        "description": "Tightening All Major Nuts and Bolts",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "adjustment",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761008887411-19",
+        "description": "Tighten all major nuts and bolts",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 0,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "adjustment",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.8978663631990793,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008878836-8",
+        "description": "Check or replace the seawater pump impeller",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1760989881988-20",
+        "description": "Check or replace the seawater pump impeller every 50 hours.",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.807534559892325,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008893907-28",
+        "description": "Replace the fuel filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 500,
+        "frequency_hours": 500,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886721-55",
+        "description": "Replace the Engine oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.8409606933559244,
+      "reason": "high_confidence_semantic_match",
+      "warning": "frequency_mismatch"
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886587-54",
+        "description": "Replace the Marine Gear lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886466-53",
+        "description": "Replace the Engine lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.7496251162978924,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886587-54",
+        "description": "Replace the Marine Gear lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1761008895975-32",
+        "description": "Replace the Marine Gear lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.9999990879042212,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886721-55",
+        "description": "Replace the Engine oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886847-56",
+        "description": "Replace the Marine Gear oil filter element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "filter_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "similarity_score": 0.7913643828483106,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008892331-26",
+        "description": "Drain water and sediment from fuel tank",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1761008893498-27",
+        "description": "Drain the fuel/water separator",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.716374617482795,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008894945-30",
+        "description": "Check the Marine Gear lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "routine",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886179-51",
+        "description": "Check the Engine lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.8015231228726998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008894945-30",
+        "description": "Check the Marine Gear lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "routine",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886314-52",
+        "description": "Check the Marine Gear lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 1,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008894945-30",
+        "description": "Check the Marine Gear lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "routine",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1761008894372-29",
+        "description": "Check the Engine lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "routine",
+        "confidence": 1
+      },
+      "similarity_score": 0.8015231228726998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886179-51",
+        "description": "Check the Engine lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1760989886314-52",
+        "description": "Check the Marine Gear lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.8015231228726998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886179-51",
+        "description": "Check the Engine lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1761008894372-29",
+        "description": "Check the Engine lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "routine",
+        "confidence": 1
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008890644-23",
+        "description": "Replace rubberized hoses (fuel and water)",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "years",
+        "frequency_value": 2,
+        "frequency_hours": 17520,
+        "frequency_basis": "calendar",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1760989883583-32",
+        "description": "Replace rubberized hoses (fuel and water) every 2 years.",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "years",
+        "frequency_value": 2,
+        "frequency_hours": 17520,
+        "frequency_basis": "calendar",
+        "task_type": "parts_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.8126068135766891,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008875706-4",
+        "description": "Replace the Marine Gear lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "cycles",
+        "frequency_value": 50,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761008874993-3",
+        "description": "Replace the Engine lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "cycles",
+        "frequency_value": 50,
+        "frequency_hours": null,
+        "frequency_basis": "event",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.7493763982066114,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989887248-59",
+        "description": "Changing the Marine Gear Oil and Replacing Marine Gear Oil Filter Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "fluid_replacement",
+        "criticality": "important",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1760989887106-58",
+        "description": "Changing the Engine Oil and Replacing the Engine Oil Filter Element",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "condition_based",
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.7418281060644926,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886314-52",
+        "description": "Check the Marine Gear lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1761008894372-29",
+        "description": "Check the Engine lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "days",
+        "frequency_value": 1,
+        "frequency_hours": 24,
+        "frequency_basis": "calendar",
+        "task_type": "fluid_check",
+        "criticality": "routine",
+        "confidence": 1
+      },
+      "similarity_score": 0.8015231228726998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1760989886466-53",
+        "description": "Replace the Engine lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "critical",
+        "confidence": 1
+      },
+      "taskB": {
+        "id": "task-1761008895975-32",
+        "description": "Replace the Marine Gear lube oil",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": "hours",
+        "frequency_value": 50,
+        "frequency_hours": 50,
+        "frequency_basis": "usage",
+        "task_type": "fluid_replacement",
+        "criticality": "important",
+        "confidence": 1
+      },
+      "similarity_score": 0.7494350542114443,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761008872458-1",
+        "description": "Check the Engine lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "visual_inspection",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "taskB": {
+        "id": "task-1761008873666-2",
+        "description": "Check the Marine Gear lube oil level",
+        "system_name": "57 hp diesel engine (PORT)",
+        "asset_uid": "6747bcaf-5c31-e12f-8947-37fce290ab47",
+        "frequency_type": null,
+        "frequency_value": null,
+        "frequency_hours": null,
+        "frequency_basis": "condition",
+        "task_type": "visual_inspection",
+        "criticality": "routine",
+        "confidence": 0.9
+      },
+      "similarity_score": 0.8015231228726998,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1761008895455-31",
+      "primary_description": "Replace the Engine lube oil",
+      "duplicate_ids": [
+        "task-1760989886587-54",
+        "task-1760989886466-53",
+        "task-1761008895975-32"
+      ],
+      "duplicate_count": 3
+    },
+    {
+      "primary_id": "task-1761008898190-36",
+      "primary_description": "Changing the Engine Oil and Replacing the Engine Oil Filter Element",
+      "duplicate_ids": [
+        "task-1761008870283-0",
+        "task-1761008897541-35",
+        "task-1761008898801-37"
+      ],
+      "duplicate_count": 3
+    },
+    {
+      "primary_id": "task-1761008900256-40",
+      "primary_description": "Cleaning the Intake Silencer (Air Cleaner) Element",
+      "duplicate_ids": [
+        "task-1760989887655-62"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008896409-33",
+      "primary_description": "Replace the Engine oil filter element",
+      "duplicate_ids": [
+        "task-1761008896961-34",
+        "task-1761008893907-28",
+        "task-1760989886721-55",
+        "task-1760989886847-56"
+      ],
+      "duplicate_count": 4
+    },
+    {
+      "primary_id": "task-1760989887927-64",
+      "primary_description": "Washing the Turbocharger Blower",
+      "duplicate_ids": [
+        "task-1761008901276-42"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989888324-67",
+      "primary_description": "Tightening All Major Nuts and Bolts",
+      "duplicate_ids": [
+        "task-1761008902785-45",
+        "task-1761008887411-19"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1760989887519-61",
+      "primary_description": "Changing the Coolant",
+      "duplicate_ids": [
+        "task-1761008899707-39"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008891156-24",
+      "primary_description": "Visual inspection of engine exterior",
+      "duplicate_ids": [
+        "task-1760989885537-46"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008900846-41",
+      "primary_description": "Cleaning the Exhaust/Water Mixing Elbow",
+      "duplicate_ids": [
+        "task-1760989887799-63"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008901825-43",
+      "primary_description": "Adjusting the Alternator V-ribbed belt Tension",
+      "duplicate_ids": [
+        "task-1760989888059-65"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008876142-5",
+      "primary_description": "Replace the Engine oil filter element",
+      "duplicate_ids": [
+        "task-1761008877225-6"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989882254-22",
+      "primary_description": "Clean intake silencer (air cleaner) element every 250 hours.",
+      "duplicate_ids": [
+        "task-1760989882404-23",
+        "task-1761008881456-11"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1761008878836-8",
+      "primary_description": "Check or replace the seawater pump impeller",
+      "duplicate_ids": [
+        "task-1760989881988-20"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008892331-26",
+      "primary_description": "Drain water and sediment from fuel tank",
+      "duplicate_ids": [
+        "task-1761008893498-27"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008894945-30",
+      "primary_description": "Check the Marine Gear lube oil level",
+      "duplicate_ids": [
+        "task-1760989886179-51",
+        "task-1760989886314-52",
+        "task-1761008894372-29"
+      ],
+      "duplicate_count": 3
+    },
+    {
+      "primary_id": "task-1761008890644-23",
+      "primary_description": "Replace rubberized hoses (fuel and water)",
+      "duplicate_ids": [
+        "task-1760989883583-32"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008875706-4",
+      "primary_description": "Replace the Marine Gear lube oil",
+      "duplicate_ids": [
+        "task-1761008874993-3"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1760989887248-59",
+      "primary_description": "Changing the Marine Gear Oil and Replacing Marine Gear Oil Filter Element",
+      "duplicate_ids": [
+        "task-1760989887106-58"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761008872458-1",
+      "primary_description": "Check the Engine lube oil level",
+      "duplicate_ids": [
+        "task-1761008873666-2"
+      ],
+      "duplicate_count": 1
+    }
+  ]
+}

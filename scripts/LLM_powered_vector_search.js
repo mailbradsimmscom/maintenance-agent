@@ -103,19 +103,27 @@ async function llmPoweredSearch() {
   console.log(`Score threshold: ${SCORE_THRESHOLD}`);
   console.log(`Batch size: ${BATCH_SIZE}\n`);
 
-  // Check for system filter
+  // Check for filter arguments
   const args = process.argv.slice(2);
-  const filterIndex = args.indexOf('--system');
-  const systemFilter = filterIndex !== -1 ? args[filterIndex + 1] : null;
+  const systemIndex = args.indexOf('--system');
+  const assetUidIndex = args.indexOf('--asset-uid');
 
-  // Get systems
+  const systemFilter = systemIndex !== -1 ? args[systemIndex + 1] : null;
+  const assetUidFilter = assetUidIndex !== -1 ? args[assetUidIndex + 1] : null;
+
+  // Get systems (with optional filters)
   let query = supabase
     .from('systems')
     .select('asset_uid, description, manufacturer_norm, model_norm, system_norm');
 
   if (systemFilter) {
-    console.log(`🔍 Filtering for systems matching: "${systemFilter}"\n`);
+    console.log(`🔍 Filtering by system name: "${systemFilter}"\n`);
     query = query.ilike('description', `%${systemFilter}%`);
+  }
+
+  if (assetUidFilter) {
+    console.log(`🔍 Filtering by asset_uid: "${assetUidFilter}"\n`);
+    query = query.eq('asset_uid', assetUidFilter);
   }
 
   const { data: systems, error } = await query;
@@ -125,11 +133,12 @@ async function llmPoweredSearch() {
     return;
   }
 
-  console.log(`Total systems${systemFilter ? ' (filtered)' : ''}: ${systems.length}\n`);
+  const isFiltered = systemFilter || assetUidFilter;
+  console.log(`Total systems${isFiltered ? ' (filtered)' : ''}: ${systems.length}\n`);
 
-  if (systemFilter && systems.length > 0) {
+  if (isFiltered && systems.length > 0) {
     console.log('Systems to process:');
-    systems.forEach(s => console.log(`  - ${s.description || `${s.manufacturer_norm} ${s.model_norm}`}`));
+    systems.forEach(s => console.log(`  - ${s.description || `${s.manufacturer_norm} ${s.model_norm}`} (${s.asset_uid})`));
     console.log('');
   }
 

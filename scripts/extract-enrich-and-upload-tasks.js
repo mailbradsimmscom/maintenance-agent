@@ -142,22 +142,44 @@ function normalizeFrequencyToHours(task) {
  * Main extraction and upload process
  */
 async function extractEnrichAndUpload() {
-  // Check for dry-run flag
+  // Check for flags
   const args = process.argv.slice(2);
   const isDryRun = args.includes('--dry-run');
+
+  const systemIndex = args.indexOf('--system');
+  const assetUidIndex = args.indexOf('--asset-uid');
+
+  const systemFilter = systemIndex !== -1 ? args[systemIndex + 1] : null;
+  const assetUidFilter = assetUidIndex !== -1 ? args[assetUidIndex + 1] : null;
 
   console.log('\n=== OPTIMIZED: EXTRACT, ENRICH & UPLOAD TASKS ===\n');
   if (isDryRun) {
     console.log('🔍 DRY RUN MODE - No uploads will be performed\n');
   }
+  if (systemFilter) {
+    console.log(`🔍 Filtering by system name: "${systemFilter}"\n`);
+  }
+  if (assetUidFilter) {
+    console.log(`🔍 Filtering by asset_uid: "${assetUidFilter}"\n`);
+  }
   console.log(`Threshold: ${SCORE_THRESHOLD}+ (50%)\n`);
 
-  // Get high-scoring chunks
-  const { data: chunks, error } = await supabase
+  // Get high-scoring chunks (with optional filters)
+  let query = supabase
     .from('pinecone_search_results')
     .select('*')
     .gte('relevance_score', SCORE_THRESHOLD)
     .order('relevance_score', { ascending: false });
+
+  if (systemFilter) {
+    query = query.ilike('system_name', `%${systemFilter}%`);
+  }
+
+  if (assetUidFilter) {
+    query = query.eq('asset_uid', assetUidFilter);
+  }
+
+  const { data: chunks, error } = await query;
 
   if (error) {
     console.error('Failed to fetch chunks:', error);

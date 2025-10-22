@@ -1,0 +1,1132 @@
+{
+  "analysis_date": "2025-10-21T21:22:34.347Z",
+  "total_tasks": 198,
+  "duplicate_pairs_count": 56,
+  "duplicate_groups_count": 47,
+  "total_duplicate_tasks": 51,
+  "unique_tasks": 147,
+  "reduction_percent": "25.8",
+  "thresholds": {
+    "semantic": {
+      "min": 0.85,
+      "highConfidence": 0.95
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1761081613559-93",
+        "description": "Inspect and maintain emission-related parts every 50 hours of operation."
+      },
+      "taskB": {
+        "id": "task-1761081613020-92",
+        "description": "Inspect and maintain emission-related parts after the initial 50 hours of operation."
+      },
+      "similarity_score": 0.9240119254227951,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081552362-43",
+        "description": "Drain the fuel/water separator"
+      },
+      "taskB": {
+        "id": "task-1761081734620-190",
+        "description": "Drain the fuel/water separator"
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081589969-58",
+        "description": "Adjust Propeller Shaft Alignment"
+      },
+      "taskB": {
+        "id": "task-1761081609390-85",
+        "description": "Adjust the propeller shaft alignment"
+      },
+      "similarity_score": 0.9306494034066379,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081589969-58",
+        "description": "Adjust Propeller Shaft Alignment"
+      },
+      "taskB": {
+        "id": "task-1761081725216-178",
+        "description": "Adjust the propeller shaft alignment"
+      },
+      "similarity_score": 0.9306651205033004,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081589969-58",
+        "description": "Adjust Propeller Shaft Alignment"
+      },
+      "taskB": {
+        "id": "task-1761081543019-29",
+        "description": "Adjust propeller shaft alignment"
+      },
+      "similarity_score": 0.9570590925434022,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081592566-63",
+        "description": "Replace the fuel filter element"
+      },
+      "taskB": {
+        "id": "task-1761081727203-180",
+        "description": "Replace the fuel filter element"
+      },
+      "similarity_score": 0.9999999999999998,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081593510-65",
+        "description": "Check the Marine Gear lube oil level"
+      },
+      "taskB": {
+        "id": "task-1761081728769-182",
+        "description": "Check the Marine Gear lube oil level"
+      },
+      "similarity_score": 0.9999991939370318,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081593510-65",
+        "description": "Check the Marine Gear lube oil level"
+      },
+      "taskB": {
+        "id": "task-1761081648953-105",
+        "description": "Check the marine gear oil level and condition."
+      },
+      "similarity_score": 0.8579536383937231,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081723069-176",
+        "description": "Adjust intake/exhaust valve clearance"
+      },
+      "taskB": {
+        "id": "task-1761081607186-83",
+        "description": "Adjust intake/exhaust valve clearance"
+      },
+      "similarity_score": 0.9999999999999998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081596051-68",
+        "description": "Replace the Engine oil filter element"
+      },
+      "taskB": {
+        "id": "task-1761081730532-185",
+        "description": "Replace the Engine oil filter element"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081609390-85",
+        "description": "Adjust the propeller shaft alignment"
+      },
+      "taskB": {
+        "id": "task-1761081725216-178",
+        "description": "Adjust the propeller shaft alignment"
+      },
+      "similarity_score": 0.9999990810276347,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081609390-85",
+        "description": "Adjust the propeller shaft alignment"
+      },
+      "taskB": {
+        "id": "task-1761081543019-29",
+        "description": "Adjust propeller shaft alignment"
+      },
+      "similarity_score": 0.9402709048241584,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081735314-191",
+        "description": "Replace the fuel filter element"
+      },
+      "taskB": {
+        "id": "task-1761081552983-44",
+        "description": "Replace the fuel filter element"
+      },
+      "similarity_score": 0.9999991948234366,
+      "reason": "high_confidence_semantic_match",
+      "warning": "frequency_mismatch"
+    },
+    {
+      "taskA": {
+        "id": "task-1761081530528-11",
+        "description": "Draining the Fuel Tank"
+      },
+      "taskB": {
+        "id": "task-1761081544840-30",
+        "description": "Drain the fuel tank"
+      },
+      "similarity_score": 0.8911481400276459,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081610011-86",
+        "description": "Replace rubberized hoses (fuel and water)"
+      },
+      "taskB": {
+        "id": "task-1761081725623-179",
+        "description": "Replace rubberized hoses (fuel and water)"
+      },
+      "similarity_score": 0.9999999999999998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081720129-171",
+        "description": "Check the electrolyte level in the battery"
+      },
+      "taskB": {
+        "id": "task-1761081603585-78",
+        "description": "Check the electrolyte level in the battery"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081581965-50",
+        "description": "Replace the Marine Gear oil filter element"
+      },
+      "taskB": {
+        "id": "task-1761081740158-197",
+        "description": "Replace the Marine Gear oil filter element"
+      },
+      "similarity_score": 0.9999999999999999,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081709341-153",
+        "description": "Replace fuel filter (cartridge type)"
+      },
+      "taskB": {
+        "id": "task-1761081672264-138",
+        "description": "Replace fuel filter (cartridge type)"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081717674-167",
+        "description": "Clean intake silencer (air cleaner) element"
+      },
+      "taskB": {
+        "id": "task-1761081600434-74",
+        "description": "Clean intake silencer (air cleaner) element"
+      },
+      "similarity_score": 0.9999989735761263,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081660569-123",
+        "description": "Clean the intake silencer (air cleaner) element."
+      },
+      "taskB": {
+        "id": "task-1761081526037-5",
+        "description": "Cleaning the Intake Silencer (Air Cleaner) Element"
+      },
+      "similarity_score": 0.895345553366364,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081729263-183",
+        "description": "Replace the Engine lube oil"
+      },
+      "taskB": {
+        "id": "task-1761081593905-66",
+        "description": "Replace the Engine lube oil"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081539405-24",
+        "description": "Change engine oil and replace engine oil filter element"
+      },
+      "taskB": {
+        "id": "task-1761081586425-54",
+        "description": "Change the Engine Oil and Replace the Engine Oil Filter Element"
+      },
+      "similarity_score": 0.9246255904228948,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081526976-6",
+        "description": "Cleaning the Exhaust/Water Mixing Elbow"
+      },
+      "taskB": {
+        "id": "task-1761081661191-124",
+        "description": "Clean the exhaust/water mixing elbow."
+      },
+      "similarity_score": 0.8906204829499288,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081603155-77",
+        "description": "Check the alarm and indicators"
+      },
+      "taskB": {
+        "id": "task-1761081592040-62",
+        "description": "Check Alarm Indicators"
+      },
+      "similarity_score": 0.8525903823536773,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081603155-77",
+        "description": "Check the alarm and indicators"
+      },
+      "taskB": {
+        "id": "task-1761081719577-170",
+        "description": "Check the alarm and indicators"
+      },
+      "similarity_score": 0.9999991425387282,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081597272-70",
+        "description": "Check coolant level"
+      },
+      "taskB": {
+        "id": "task-1761081715086-163",
+        "description": "Check coolant level"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081542461-28",
+        "description": "Check and adjust remote control cables"
+      },
+      "taskB": {
+        "id": "task-1761081589228-57",
+        "description": "Check and Adjust the Remote Control Cables"
+      },
+      "similarity_score": 0.9544094074433935,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081540972-26",
+        "description": "Check and adjust alternator V-ribbed belt tension"
+      },
+      "taskB": {
+        "id": "task-1761081587038-55",
+        "description": "Check and Adjust the Alternator V-ribbed belt Tension"
+      },
+      "similarity_score": 0.9441695895727589,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081718333-168",
+        "description": "Clean or replace the exhaust/water mixing elbow"
+      },
+      "taskB": {
+        "id": "task-1761081601060-75",
+        "description": "Clean or replace the exhaust/water mixing elbow"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081597836-71",
+        "description": "Check or replace the seawater pump impeller"
+      },
+      "taskB": {
+        "id": "task-1761081715819-164",
+        "description": "Check or replace the seawater pump impeller"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081528750-8",
+        "description": "Adjusting the Alternator V-ribbed belt Tension"
+      },
+      "taskB": {
+        "id": "task-1761081662074-126",
+        "description": "Adjust the alternator V-ribbed belt tension."
+      },
+      "similarity_score": 0.8743202517340476,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081727618-181",
+        "description": "Check the Engine lube oil level"
+      },
+      "taskB": {
+        "id": "task-1761081593017-64",
+        "description": "Check the Engine lube oil level"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081724676-177",
+        "description": "Check the remote control cable operation"
+      },
+      "taskB": {
+        "id": "task-1761081607715-84",
+        "description": "Check the remote control cable operation"
+      },
+      "similarity_score": 0.9999999999999998,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081734097-189",
+        "description": "Drain water and sediment from fuel tank"
+      },
+      "taskB": {
+        "id": "task-1761081551835-42",
+        "description": "Drain water and sediment from fuel tank"
+      },
+      "similarity_score": 0.9999990249342202,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081598420-72",
+        "description": "Replace coolant"
+      },
+      "taskB": {
+        "id": "task-1761081716446-165",
+        "description": "Replace coolant"
+      },
+      "similarity_score": 0.9999987342011339,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081595538-67",
+        "description": "Replace the Marine Gear lube oil"
+      },
+      "taskB": {
+        "id": "task-1761081730128-184",
+        "description": "Replace the Marine Gear lube oil"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081732889-187",
+        "description": "Visual inspection of engine exterior"
+      },
+      "taskB": {
+        "id": "task-1761081550762-40",
+        "description": "Visual inspection of engine exterior"
+      },
+      "similarity_score": 0.9999992388039037,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081587583-56",
+        "description": "Inspect and Adjust Intake/Exhaust Valve Clearance"
+      },
+      "taskB": {
+        "id": "task-1761081541990-27",
+        "description": "Inspect and adjust intake/exhaust valve clearance"
+      },
+      "similarity_score": 0.9651642650835326,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081585375-52",
+        "description": "Check and refill Marine Gear Oil after initial operation"
+      },
+      "taskB": {
+        "id": "task-1761081538777-23",
+        "description": "Check and refill marine gear oil after initial 50 hours of operation"
+      },
+      "similarity_score": 0.8919553598418949,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081554996-48",
+        "description": "Replace the Marine Gear lube oil"
+      },
+      "taskB": {
+        "id": "task-1761081737895-195",
+        "description": "Replace the Marine Gear lube oil"
+      },
+      "similarity_score": 0.9999991804855172,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081720725-172",
+        "description": "Adjust the tension of the alternator V-ribbed belt or replace V-ribbed belt"
+      },
+      "taskB": {
+        "id": "task-1761081604091-79",
+        "description": "Adjust the tension of the alternator V-ribbed belt or replace V-ribbed belt"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081721458-173",
+        "description": "Check the wiring connectors"
+      },
+      "taskB": {
+        "id": "task-1761081605547-80",
+        "description": "Check the wiring connectors"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081728769-182",
+        "description": "Check the Marine Gear lube oil level"
+      },
+      "taskB": {
+        "id": "task-1761081648953-105",
+        "description": "Check the marine gear oil level and condition."
+      },
+      "similarity_score": 0.857946509065665,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081725216-178",
+        "description": "Adjust the propeller shaft alignment"
+      },
+      "taskB": {
+        "id": "task-1761081543019-29",
+        "description": "Adjust propeller shaft alignment"
+      },
+      "similarity_score": 0.9402435715573619,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081717032-166",
+        "description": "Clean and check the seawater passages"
+      },
+      "taskB": {
+        "id": "task-1761081599930-73",
+        "description": "Clean and check the seawater passages"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081732109-186",
+        "description": "Replace the Marine Gear oil filter element"
+      },
+      "taskB": {
+        "id": "task-1761081596655-69",
+        "description": "Replace the Marine Gear oil filter element"
+      },
+      "similarity_score": 0.9999992010894757,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081739633-196",
+        "description": "Replace the Engine oil filter element"
+      },
+      "taskB": {
+        "id": "task-1761081555440-49",
+        "description": "Replace the Engine oil filter element"
+      },
+      "similarity_score": 0.9999989877653072,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081553937-46",
+        "description": "Check the Marine Gear lube oil level"
+      },
+      "taskB": {
+        "id": "task-1761081736373-193",
+        "description": "Check the Marine Gear lube oil level"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081668797-134",
+        "description": "Replace the engine oil filter"
+      },
+      "taskB": {
+        "id": "task-1761081676678-145",
+        "description": "Replace the lubricating oil filter"
+      },
+      "similarity_score": 0.8566490408343168,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081737123-194",
+        "description": "Replace the Engine lube oil"
+      },
+      "taskB": {
+        "id": "task-1761081554442-47",
+        "description": "Replace the Engine lube oil"
+      },
+      "similarity_score": 1,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081553541-45",
+        "description": "Check the Engine lube oil level"
+      },
+      "taskB": {
+        "id": "task-1761081735872-192",
+        "description": "Check the Engine lube oil level"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_and_frequency_match",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081714458-162",
+        "description": "Inspect and clean oil pressure sensor"
+      },
+      "taskB": {
+        "id": "task-1761081713872-161",
+        "description": "Inspect and clean oil pressure switch"
+      },
+      "similarity_score": 0.9045791628538594,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081592040-62",
+        "description": "Check Alarm Indicators"
+      },
+      "taskB": {
+        "id": "task-1761081719577-170",
+        "description": "Check the alarm and indicators"
+      },
+      "similarity_score": 0.8525636220350653,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081722085-174",
+        "description": "Check for leakage of fuel, engine oil and engine coolant"
+      },
+      "taskB": {
+        "id": "task-1761081606149-81",
+        "description": "Check for leakage of fuel, engine oil and engine coolant"
+      },
+      "similarity_score": 0.9999103660789023,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081530007-10",
+        "description": "Tightening All Major Nuts and Bolts"
+      },
+      "taskB": {
+        "id": "task-1761081722524-175",
+        "description": "Tighten all major nuts and bolts"
+      },
+      "similarity_score": 0.9000748283218063,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    },
+    {
+      "taskA": {
+        "id": "task-1761081710075-154",
+        "description": "Replace lubricating oil filter (cartridge type)"
+      },
+      "taskB": {
+        "id": "task-1761081672890-139",
+        "description": "Replace lubricating oil filter (cartridge type)"
+      },
+      "similarity_score": 1.0000000000000002,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1761081613559-93",
+      "primary_description": "Inspect and maintain emission-related parts every 50 hours of operation.",
+      "duplicate_ids": [
+        "task-1761081613020-92"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081552362-43",
+      "primary_description": "Drain the fuel/water separator",
+      "duplicate_ids": [
+        "task-1761081734620-190"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081589969-58",
+      "primary_description": "Adjust Propeller Shaft Alignment",
+      "duplicate_ids": [
+        "task-1761081609390-85",
+        "task-1761081725216-178",
+        "task-1761081543019-29"
+      ],
+      "duplicate_count": 3
+    },
+    {
+      "primary_id": "task-1761081592566-63",
+      "primary_description": "Replace the fuel filter element",
+      "duplicate_ids": [
+        "task-1761081727203-180"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081593510-65",
+      "primary_description": "Check the Marine Gear lube oil level",
+      "duplicate_ids": [
+        "task-1761081728769-182",
+        "task-1761081648953-105"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1761081723069-176",
+      "primary_description": "Adjust intake/exhaust valve clearance",
+      "duplicate_ids": [
+        "task-1761081607186-83"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081596051-68",
+      "primary_description": "Replace the Engine oil filter element",
+      "duplicate_ids": [
+        "task-1761081730532-185"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081735314-191",
+      "primary_description": "Replace the fuel filter element",
+      "duplicate_ids": [
+        "task-1761081552983-44"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081530528-11",
+      "primary_description": "Draining the Fuel Tank",
+      "duplicate_ids": [
+        "task-1761081544840-30"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081610011-86",
+      "primary_description": "Replace rubberized hoses (fuel and water)",
+      "duplicate_ids": [
+        "task-1761081725623-179"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081720129-171",
+      "primary_description": "Check the electrolyte level in the battery",
+      "duplicate_ids": [
+        "task-1761081603585-78"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081581965-50",
+      "primary_description": "Replace the Marine Gear oil filter element",
+      "duplicate_ids": [
+        "task-1761081740158-197"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081709341-153",
+      "primary_description": "Replace fuel filter (cartridge type)",
+      "duplicate_ids": [
+        "task-1761081672264-138"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081717674-167",
+      "primary_description": "Clean intake silencer (air cleaner) element",
+      "duplicate_ids": [
+        "task-1761081600434-74"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081660569-123",
+      "primary_description": "Clean the intake silencer (air cleaner) element.",
+      "duplicate_ids": [
+        "task-1761081526037-5"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081729263-183",
+      "primary_description": "Replace the Engine lube oil",
+      "duplicate_ids": [
+        "task-1761081593905-66"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081539405-24",
+      "primary_description": "Change engine oil and replace engine oil filter element",
+      "duplicate_ids": [
+        "task-1761081586425-54"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081526976-6",
+      "primary_description": "Cleaning the Exhaust/Water Mixing Elbow",
+      "duplicate_ids": [
+        "task-1761081661191-124"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081603155-77",
+      "primary_description": "Check the alarm and indicators",
+      "duplicate_ids": [
+        "task-1761081592040-62",
+        "task-1761081719577-170"
+      ],
+      "duplicate_count": 2
+    },
+    {
+      "primary_id": "task-1761081597272-70",
+      "primary_description": "Check coolant level",
+      "duplicate_ids": [
+        "task-1761081715086-163"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081542461-28",
+      "primary_description": "Check and adjust remote control cables",
+      "duplicate_ids": [
+        "task-1761081589228-57"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081540972-26",
+      "primary_description": "Check and adjust alternator V-ribbed belt tension",
+      "duplicate_ids": [
+        "task-1761081587038-55"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081718333-168",
+      "primary_description": "Clean or replace the exhaust/water mixing elbow",
+      "duplicate_ids": [
+        "task-1761081601060-75"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081597836-71",
+      "primary_description": "Check or replace the seawater pump impeller",
+      "duplicate_ids": [
+        "task-1761081715819-164"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081528750-8",
+      "primary_description": "Adjusting the Alternator V-ribbed belt Tension",
+      "duplicate_ids": [
+        "task-1761081662074-126"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081727618-181",
+      "primary_description": "Check the Engine lube oil level",
+      "duplicate_ids": [
+        "task-1761081593017-64"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081724676-177",
+      "primary_description": "Check the remote control cable operation",
+      "duplicate_ids": [
+        "task-1761081607715-84"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081734097-189",
+      "primary_description": "Drain water and sediment from fuel tank",
+      "duplicate_ids": [
+        "task-1761081551835-42"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081598420-72",
+      "primary_description": "Replace coolant",
+      "duplicate_ids": [
+        "task-1761081716446-165"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081595538-67",
+      "primary_description": "Replace the Marine Gear lube oil",
+      "duplicate_ids": [
+        "task-1761081730128-184"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081732889-187",
+      "primary_description": "Visual inspection of engine exterior",
+      "duplicate_ids": [
+        "task-1761081550762-40"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081587583-56",
+      "primary_description": "Inspect and Adjust Intake/Exhaust Valve Clearance",
+      "duplicate_ids": [
+        "task-1761081541990-27"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081585375-52",
+      "primary_description": "Check and refill Marine Gear Oil after initial operation",
+      "duplicate_ids": [
+        "task-1761081538777-23"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081554996-48",
+      "primary_description": "Replace the Marine Gear lube oil",
+      "duplicate_ids": [
+        "task-1761081737895-195"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081720725-172",
+      "primary_description": "Adjust the tension of the alternator V-ribbed belt or replace V-ribbed belt",
+      "duplicate_ids": [
+        "task-1761081604091-79"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081721458-173",
+      "primary_description": "Check the wiring connectors",
+      "duplicate_ids": [
+        "task-1761081605547-80"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081717032-166",
+      "primary_description": "Clean and check the seawater passages",
+      "duplicate_ids": [
+        "task-1761081599930-73"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081732109-186",
+      "primary_description": "Replace the Marine Gear oil filter element",
+      "duplicate_ids": [
+        "task-1761081596655-69"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081739633-196",
+      "primary_description": "Replace the Engine oil filter element",
+      "duplicate_ids": [
+        "task-1761081555440-49"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081553937-46",
+      "primary_description": "Check the Marine Gear lube oil level",
+      "duplicate_ids": [
+        "task-1761081736373-193"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081668797-134",
+      "primary_description": "Replace the engine oil filter",
+      "duplicate_ids": [
+        "task-1761081676678-145"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081737123-194",
+      "primary_description": "Replace the Engine lube oil",
+      "duplicate_ids": [
+        "task-1761081554442-47"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081553541-45",
+      "primary_description": "Check the Engine lube oil level",
+      "duplicate_ids": [
+        "task-1761081735872-192"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081714458-162",
+      "primary_description": "Inspect and clean oil pressure sensor",
+      "duplicate_ids": [
+        "task-1761081713872-161"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081722085-174",
+      "primary_description": "Check for leakage of fuel, engine oil and engine coolant",
+      "duplicate_ids": [
+        "task-1761081606149-81"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081530007-10",
+      "primary_description": "Tightening All Major Nuts and Bolts",
+      "duplicate_ids": [
+        "task-1761081722524-175"
+      ],
+      "duplicate_count": 1
+    },
+    {
+      "primary_id": "task-1761081710075-154",
+      "primary_description": "Replace lubricating oil filter (cartridge type)",
+      "duplicate_ids": [
+        "task-1761081672890-139"
+      ],
+      "duplicate_count": 1
+    }
+  ]
+}

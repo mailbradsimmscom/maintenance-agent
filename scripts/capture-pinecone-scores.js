@@ -26,28 +26,36 @@ async function captureAllPineconeScores() {
   console.log(`Score threshold: ${SCORE_THRESHOLD}`);
   console.log(`Batch size: ${BATCH_SIZE}\n`);
 
+  // Check for filter arguments
+  const args = process.argv.slice(2);
+  const systemIndex = args.indexOf('--system');
+  const assetUidIndex = args.indexOf('--asset-uid');
+  const isTestMode = args.includes('--test');
+
+  const systemFilter = systemIndex !== -1 ? args[systemIndex + 1] : null;
+  const assetUidFilter = assetUidIndex !== -1 ? args[assetUidIndex + 1] : null;
+
+  // Determine table name
+  const tableName = isTestMode ? 'pinecone_search_results_test' : 'pinecone_search_results';
+
+  if (isTestMode) {
+    console.log('🧪 TEST MODE - Writing to pinecone_search_results_test table\n');
+  }
+
   // Create table if it doesn't exist
-  console.log('Ensuring temp table exists...');
+  console.log(`Ensuring ${tableName} table exists...`);
   const { error: tableError } = await supabase
-    .from('pinecone_search_results')
+    .from(tableName)
     .select('count')
     .limit(0);
 
   if (tableError && tableError.message.includes('does not exist')) {
-    console.log('⚠️  Table does not exist. Please run the migration:');
+    console.log(`⚠️  Table does not exist. Please run the migration:`);
     console.log('   migrations/agent/002_create_pinecone_results_temp.sql');
     console.log('   in your Supabase SQL editor\n');
     return;
   }
   console.log('✅ Table ready\n');
-
-  // Check for filter arguments
-  const args = process.argv.slice(2);
-  const systemIndex = args.indexOf('--system');
-  const assetUidIndex = args.indexOf('--asset-uid');
-
-  const systemFilter = systemIndex !== -1 ? args[systemIndex + 1] : null;
-  const assetUidFilter = assetUidIndex !== -1 ? args[assetUidIndex + 1] : null;
 
   // Get systems (with optional filters)
   let query = supabase
@@ -145,7 +153,7 @@ async function captureAllPineconeScores() {
           }));
 
           const { error: insertError } = await supabase
-            .from('pinecone_search_results')
+            .from(tableName)
             .insert(records);
 
           if (insertError) {
@@ -176,7 +184,7 @@ async function captureAllPineconeScores() {
   // Get score distribution
   console.log('\n=== SCORE DISTRIBUTION ===');
   const { data: distribution } = await supabase
-    .from('pinecone_search_results')
+    .from(tableName)
     .select('relevance_score')
     .order('relevance_score', { ascending: false });
 
@@ -210,7 +218,7 @@ async function captureAllPineconeScores() {
     });
   }
 
-  console.log('\n✅ Done! Results stored in pinecone_search_results table\n');
+  console.log(`\n✅ Done! Results stored in ${tableName} table\n`);
 }
 
 captureAllPineconeScores().catch(console.error);

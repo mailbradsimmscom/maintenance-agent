@@ -2,7 +2,9 @@
  * Delete Tasks by Category
  * Removes tasks from Pinecone based on their task_category metadata
  *
- * Usage: node scripts/delete-tasks-by-category.js --categories "INSTALLATION,PRE_USE_CHECK,VAGUE"
+ * Usage:
+ *   node scripts/delete-tasks-by-category.js --categories "INSTALLATION,PRE_USE_CHECK,VAGUE"
+ *   node scripts/delete-tasks-by-category.js --categories "VAGUE" --asset-uid "abc-123"
  */
 
 import dotenv from 'dotenv';
@@ -15,14 +17,21 @@ const args = process.argv.slice(2);
 const categoriesFlag = args.findIndex(arg => arg === '--categories');
 const categoriesArg = categoriesFlag !== -1 ? args[categoriesFlag + 1] : null;
 
+const assetUidFlag = args.findIndex(arg => arg === '--asset-uid');
+const assetUidArg = assetUidFlag !== -1 ? args[assetUidFlag + 1] : null;
+
 if (!categoriesArg) {
   console.error('❌ Error: --categories flag required');
-  console.log('Usage: node scripts/delete-tasks-by-category.js --categories "INSTALLATION,PRE_USE_CHECK,VAGUE"');
+  console.log('Usage:');
+  console.log('  node scripts/delete-tasks-by-category.js --categories "INSTALLATION,PRE_USE_CHECK,VAGUE"');
+  console.log('  node scripts/delete-tasks-by-category.js --categories "VAGUE" --asset-uid "abc-123"');
   console.log('\nValid categories:');
   console.log('  - INSTALLATION');
   console.log('  - PRE_USE_CHECK');
   console.log('  - VAGUE');
   console.log('  - MAINTENANCE');
+  console.log('\nOptional filters:');
+  console.log('  --asset-uid "uid"  Only delete tasks for a specific asset');
   process.exit(1);
 }
 
@@ -31,17 +40,23 @@ const categoriesToDelete = categoriesArg.split(',').map(c => c.trim());
 async function deleteTasksByCategory() {
   console.log('🗑️  DELETE TASKS BY CATEGORY\n');
   console.log('='.repeat(80));
-  console.log(`Categories to delete: ${categoriesToDelete.join(', ')}\n`);
+  console.log(`Categories to delete: ${categoriesToDelete.join(', ')}`);
+  if (assetUidArg) {
+    console.log(`Asset UID filter: ${assetUidArg}`);
+  }
+  console.log();
 
   // Fetch all tasks
   console.log('📥 Fetching all tasks from Pinecone...\n');
   const allRecords = await pineconeRepository.listAllTasks();
   console.log(`✅ Found ${allRecords.length} total tasks\n`);
 
-  // Filter tasks that match categories
-  const tasksToDelete = allRecords.filter(record =>
-    categoriesToDelete.includes(record.metadata.task_category)
-  );
+  // Filter tasks that match categories AND asset_uid (if provided)
+  const tasksToDelete = allRecords.filter(record => {
+    const matchesCategory = categoriesToDelete.includes(record.metadata.task_category);
+    const matchesAsset = !assetUidArg || record.metadata.asset_uid === assetUidArg;
+    return matchesCategory && matchesAsset;
+  });
 
   console.log('='.repeat(80));
   console.log('\n📊 DELETION PREVIEW\n');
@@ -57,6 +72,14 @@ async function deleteTasksByCategory() {
   Object.entries(categoryCounts).forEach(([cat, count]) => {
     console.log(`  ${cat}: ${count} tasks`);
   });
+
+  // Show affected systems if filtering by asset
+  if (assetUidArg && tasksToDelete.length > 0) {
+    const systemNames = [...new Set(tasksToDelete.map(t => t.metadata.system_name))];
+    console.log(`\nAffected system(s):`);
+    systemNames.forEach(name => console.log(`  - ${name}`));
+  }
+
   console.log(`\nTotal: ${tasksToDelete.length} tasks will be deleted`);
   console.log(`Remaining: ${allRecords.length - tasksToDelete.length} tasks will be kept`);
 

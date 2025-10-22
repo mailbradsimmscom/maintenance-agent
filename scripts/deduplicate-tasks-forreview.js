@@ -239,21 +239,45 @@ async function analyzeDuplicates() {
   // Fetch all tasks with stored embeddings
   const allTasks = await fetchAllTasksFromPinecone();
 
+  // Parse filter arguments
+  const args = process.argv.slice(2);
+  const systemIndex = args.indexOf('--system');
+  const assetUidIndex = args.indexOf('--asset-uid');
+  const systemFilter = systemIndex !== -1 ? args[systemIndex + 1] : null;
+  const assetUidFilter = assetUidIndex !== -1 ? args[assetUidIndex + 1] : null;
+
+  // Filter tasks
+  let filteredTasks = allTasks;
+  if (systemFilter) {
+    console.log(`🔍 Filtering by system name: "${systemFilter}"\n`);
+    filteredTasks = filteredTasks.filter(t =>
+      t.system_name && t.system_name.toLowerCase().includes(systemFilter.toLowerCase())
+    );
+  }
+  if (assetUidFilter) {
+    console.log(`🔍 Filtering by asset_uid: "${assetUidFilter}"\n`);
+    filteredTasks = filteredTasks.filter(t => t.asset_uid === assetUidFilter);
+  }
+
+  if (systemFilter || assetUidFilter) {
+    console.log(`Filtered to ${filteredTasks.length} tasks (from ${allTasks.length} total)\n`);
+  }
+
   console.log('='.repeat(80));
   console.log('\n🧪 Performing pairwise comparison (in-memory)...\n');
 
   const duplicatePairs = [];
-  const totalComparisons = (allTasks.length * (allTasks.length - 1)) / 2;
+  const totalComparisons = (filteredTasks.length * (filteredTasks.length - 1)) / 2;
   let comparisonsProcessed = 0;
 
   console.log(`Total comparisons to perform: ${totalComparisons}\n`);
 
   // Pairwise comparison - O(n²) but in-memory (fast and free)
-  for (let i = 0; i < allTasks.length; i++) {
-    const taskA = allTasks[i];
+  for (let i = 0; i < filteredTasks.length; i++) {
+    const taskA = filteredTasks[i];
 
-    for (let j = i + 1; j < allTasks.length; j++) {
-      const taskB = allTasks[j];
+    for (let j = i + 1; j < filteredTasks.length; j++) {
+      const taskB = filteredTasks[j];
       comparisonsProcessed++;
 
       // Quick metadata filters before expensive similarity calculation
@@ -299,16 +323,16 @@ async function analyzeDuplicates() {
 
   // Count total duplicate tasks
   const totalDuplicateTasks = duplicateGroups.reduce((sum, group) => sum + group.duplicates.length, 0);
-  const uniqueTaskCount = allTasks.length - totalDuplicateTasks;
+  const uniqueTaskCount = filteredTasks.length - totalDuplicateTasks;
 
   console.log('='.repeat(80));
   console.log('\n🎯 DEDUPLICATION SUMMARY\n');
-  console.log(`Total tasks analyzed:     ${allTasks.length}`);
+  console.log(`Total tasks analyzed:     ${filteredTasks.length}`);
   console.log(`Duplicate pairs found:    ${duplicatePairs.length}`);
   console.log(`Duplicate groups:         ${duplicateGroups.length}`);
   console.log(`Total duplicate tasks:    ${totalDuplicateTasks}`);
   console.log(`Unique tasks:             ${uniqueTaskCount}`);
-  console.log(`Reduction:                ${((totalDuplicateTasks / allTasks.length) * 100).toFixed(1)}%\n`);
+  console.log(`Reduction:                ${((totalDuplicateTasks / filteredTasks.length) * 100).toFixed(1)}%\n`);
 
   // Group by reason
   console.log('='.repeat(80));
@@ -348,12 +372,12 @@ async function analyzeDuplicates() {
   // Save results to JSON
   const results = {
     analysis_date: new Date().toISOString(),
-    total_tasks: allTasks.length,
+    total_tasks: filteredTasks.length,
     duplicate_pairs_count: duplicatePairs.length,
     duplicate_groups_count: duplicateGroups.length,
     total_duplicate_tasks: totalDuplicateTasks,
     unique_tasks: uniqueTaskCount,
-    reduction_percent: ((totalDuplicateTasks / allTasks.length) * 100).toFixed(1),
+    reduction_percent: ((totalDuplicateTasks / filteredTasks.length) * 100).toFixed(1),
     thresholds: THRESHOLDS,
     duplicate_pairs: duplicatePairs.map(p => ({
       taskA: {

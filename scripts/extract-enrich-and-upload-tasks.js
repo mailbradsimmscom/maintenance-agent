@@ -145,6 +145,7 @@ async function extractEnrichAndUpload() {
   // Check for flags
   const args = process.argv.slice(2);
   const isDryRun = args.includes('--dry-run');
+  const isTestMode = args.includes('--test');
 
   const systemIndex = args.indexOf('--system');
   const assetUidIndex = args.indexOf('--asset-uid');
@@ -152,9 +153,15 @@ async function extractEnrichAndUpload() {
   const systemFilter = systemIndex !== -1 ? args[systemIndex + 1] : null;
   const assetUidFilter = assetUidIndex !== -1 ? args[assetUidIndex + 1] : null;
 
+  // Determine table name
+  const tableName = isTestMode ? 'pinecone_search_results_test' : 'pinecone_search_results';
+
   console.log('\n=== OPTIMIZED: EXTRACT, ENRICH & UPLOAD TASKS ===\n');
   if (isDryRun) {
     console.log('🔍 DRY RUN MODE - No uploads will be performed\n');
+  }
+  if (isTestMode) {
+    console.log(`🧪 TEST MODE - Reading from ${tableName} table\n`);
   }
   if (systemFilter) {
     console.log(`🔍 Filtering by system name: "${systemFilter}"\n`);
@@ -166,7 +173,7 @@ async function extractEnrichAndUpload() {
 
   // Get high-scoring chunks (with optional filters)
   let query = supabase
-    .from('pinecone_search_results')
+    .from(tableName)
     .select('*')
     .gte('relevance_score', SCORE_THRESHOLD)
     .order('relevance_score', { ascending: false });

@@ -18,14 +18,19 @@ dotenv.config();
 const config = getConfig();
 const openai = new OpenAI({ apiKey: config.openai.apiKey });
 
-// Get system name from command line args
+// Get system name and asset_uid from command line args
 const args = process.argv.slice(2);
 const systemFlag = args.findIndex(arg => arg === '--system');
-const systemName = systemFlag !== -1 ? args[systemFlag + 1] : null;
+const assetUidFlag = args.findIndex(arg => arg === '--asset-uid');
 
-if (!systemName) {
-  console.error('❌ Error: --system flag required');
+const systemName = systemFlag !== -1 ? args[systemFlag + 1] : null;
+const assetUid = assetUidFlag !== -1 ? args[assetUidFlag + 1] : null;
+
+if (!systemName && !assetUid) {
+  console.error('❌ Error: --system or --asset-uid flag required');
   console.log('Usage: node scripts/classify-and-discover.js --system "Schenker"');
+  console.log('   or: node scripts/classify-and-discover.js --asset-uid "abc-123"');
+  console.log('   or: node scripts/classify-and-discover.js --system "Schenker" --asset-uid "abc-123"');
   process.exit(1);
 }
 
@@ -35,23 +40,38 @@ if (!systemName) {
 async function classifyAndDiscover() {
   console.log('🔍 CLASSIFY & DISCOVER\n');
   console.log('='.repeat(80));
-  console.log(`System: ${systemName}\n`);
+  if (systemName) console.log(`System: ${systemName}`);
+  if (assetUid) console.log(`Asset UID: ${assetUid}`);
+  console.log('');
 
   // Step 1: Fetch all tasks for this system
   console.log('📥 Fetching tasks from Pinecone...\n');
   const allRecords = await pineconeRepository.listAllTasks();
 
-  // Filter to only this system (case-insensitive partial match)
-  const systemRecords = allRecords.filter(record =>
-    record.metadata.system_name?.toLowerCase().includes(systemName.toLowerCase())
-  );
+  // Filter by system name and/or asset_uid
+  let systemRecords = allRecords;
+
+  if (systemName) {
+    systemRecords = systemRecords.filter(record =>
+      record.metadata.system_name?.toLowerCase().includes(systemName.toLowerCase())
+    );
+  }
+
+  if (assetUid) {
+    systemRecords = systemRecords.filter(record =>
+      record.metadata.asset_uid === assetUid
+    );
+  }
 
   if (systemRecords.length === 0) {
-    console.error(`❌ No tasks found for system "${systemName}"`);
+    console.error(`❌ No tasks found for the specified filters`);
+    if (systemName) console.error(`   System: "${systemName}"`);
+    if (assetUid) console.error(`   Asset UID: "${assetUid}"`);
     process.exit(1);
   }
 
-  console.log(`✅ Found ${systemRecords.length} existing tasks for ${systemName}\n`);
+  const filterDesc = [systemName, assetUid].filter(Boolean).join(' / ');
+  console.log(`✅ Found ${systemRecords.length} existing tasks for ${filterDesc}\n`);
 
   // Transform to task format
   const existingTasks = systemRecords.map(record => ({
@@ -226,7 +246,7 @@ Return ONLY valid JSON in this EXACT format:
   // Summary
   console.log('='.repeat(80));
   console.log('\n✅ SUMMARY\n');
-  console.log(`System: ${systemName}`);
+  console.log(`Filters: ${filterDesc}`);
   console.log(`Existing tasks classified: ${classifiedCount}/${existingTasks.length}`);
   console.log(`New tasks discovered: ${uploadedCount}/${discoveredTasks.length}`);
   console.log(`Total tasks in Pinecone: ${existingTasks.length + uploadedCount}`);

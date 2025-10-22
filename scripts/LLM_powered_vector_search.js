@@ -107,9 +107,17 @@ async function llmPoweredSearch() {
   const args = process.argv.slice(2);
   const systemIndex = args.indexOf('--system');
   const assetUidIndex = args.indexOf('--asset-uid');
+  const isTestMode = args.includes('--test');
 
   const systemFilter = systemIndex !== -1 ? args[systemIndex + 1] : null;
   const assetUidFilter = assetUidIndex !== -1 ? args[assetUidIndex + 1] : null;
+
+  // Determine table name
+  const tableName = isTestMode ? 'pinecone_search_results_test' : 'pinecone_search_results';
+
+  if (isTestMode) {
+    console.log('🧪 TEST MODE - Writing to pinecone_search_results_test table\n');
+  }
 
   // Get systems (with optional filters)
   let query = supabase
@@ -206,7 +214,7 @@ async function llmPoweredSearch() {
           }));
 
           const { error: insertError } = await supabase
-            .from('pinecone_search_results')
+            .from(tableName)
             .insert(records);
 
           if (insertError) {
@@ -235,7 +243,7 @@ async function llmPoweredSearch() {
   // Get score distribution
   console.log('\n=== SCORE DISTRIBUTION ===');
   const { data: distribution } = await supabase
-    .from('pinecone_search_results')
+    .from(tableName)
     .select('relevance_score')
     .order('relevance_score', { ascending: false });
 
@@ -269,7 +277,7 @@ async function llmPoweredSearch() {
     });
   }
 
-  console.log('\n✅ Done! Results stored in pinecone_search_results table\n');
+  console.log(`\n✅ Done! Results stored in ${tableName} table\n`);
 }
 
 llmPoweredSearch().catch(console.error);

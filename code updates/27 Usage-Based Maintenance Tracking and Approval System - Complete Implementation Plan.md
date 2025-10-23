@@ -2,8 +2,8 @@
 
 **Date:** 2025-10-22
 **Session Duration:** Extended Planning Session
-**Status:** 🚧 PLANNING COMPLETE - READY FOR IMPLEMENTATION
-**Version:** 2.0 (Includes Approval System Integration)
+**Status:** ✅ PLANNING COMPLETE - READY FOR IMPLEMENTATION
+**Version:** 2.1.1 (Final architectural decisions integrated)
 
 ---
 
@@ -15,13 +15,47 @@
 3. Designed complete architecture for usage-based maintenance tracking
 4. Integrated approval workflow into existing system
 5. Created comprehensive 8-phase implementation plan
+6. **[v2.1]** Added 5 quick wins for Phase 1-7
+7. **[v2.1]** Added Phase 9 (Future Enhancements)
+8. **[v2.1]** Documented rejected suggestions with rationale
 
 ### **Critical Outcome:**
-- **APPROVED PLAN:** 7-8 day implementation
-- **4 new database tables**
-- **8 new API endpoints**
+- **APPROVED PLAN:** 7-8 day implementation (Phases 1-8)
+- **4 new database tables** (with v2.1 enhancements)
+- **9 new API endpoints** (added pending-count endpoint)
 - **Zero breaking changes** to existing system
 - **Render-ready** autonomous agent design
+- **Future roadmap** clearly defined (Phase 9+)
+
+---
+
+## 🔄 FINAL UPDATES (v2.1.1 - 2025-10-22)
+
+### **Changes from v2.1:**
+1. ✅ **Added `source_type` column** to `task_completions` table (Phase 1)
+   - Tracks provenance: `'manual' | 'ai_inferred' | 'sensor_trigger' | 'user_input'`
+   - Database column for audit/analytics (Pinecone metadata is retriever-focused)
+   - Added index: `idx_task_completions_source`
+
+2. ✅ **Moved `/system-maintenance/summary` endpoint** from Phase 9 → Phase 6
+   - Needed for frontend dashboard widgets (countdown timers, calendars)
+   - Required by AI agents to query system status
+   - Basic implementation in Phase 6, advanced features remain in Phase 9
+
+3. ✅ **Comprehensive Environment Configuration** (Phase 1 Part A)
+   - Added 18 new environment variables (no hardcoded operational values)
+   - Updated `config/env.js` with Zod validation for all settings
+   - Defaults provided for all optional configuration
+   - Covers: tracking intervals, approval thresholds, UI pagination, error handling
+
+### **Extensibility Audit Completed:**
+✅ **Schema:** 100% data-driven, uses `asset_uid` foreign keys
+✅ **Queries:** All parameterized, no hardcoded system names
+✅ **Frontend:** Dynamically loads systems from API (line 844 in maintenance-tasks-list.html)
+✅ **Configuration:** All thresholds/intervals in `.env` (18 new variables)
+✅ **Scalability:** Will work for 200+ systems with ZERO code changes
+
+**Status:** All architectural decisions finalized. System is fully extensible. Ready for Phase 1 implementation.
 
 ---
 
@@ -129,12 +163,19 @@ Following CLAUDE.md Rule #2: "Very Detailed Planning to Avoid Regression"
 
 Created comprehensive plan covering:
 - Database schema (4 new tables)
-- API design (8 endpoints)
+- API design (9 endpoints - added pending-count in v2.1)
 - Data flows (4 complete workflows)
 - Risk analysis (6 major risks identified)
 - Implementation phases (8 phases, 7-8 days)
 - Render deployment strategy
 - Testing scenarios (6 end-to-end scenarios)
+
+#### **Part 6: Architecture Review (v2.1)**
+External review identified additional enhancements:
+- Quick wins (low effort, high value) integrated into Phases 1-7
+- Future enhancements cataloged for Phase 9
+- Architectural concerns analyzed and addressed
+- Rejected suggestions documented with rationale
 
 ---
 
@@ -198,6 +239,20 @@ COMMENT ON TABLE system_maintenance IS
   'Current operational state for systems with usage-based maintenance';
 COMMENT ON COLUMN system_maintenance.installation_date IS
   'Auto-set on first hours entry if NULL';
+
+-- [v2.1] Add updated_at trigger
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER system_maintenance_updated_at
+  BEFORE UPDATE ON system_maintenance
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
 ```
 
 **Key Behaviors:**
@@ -205,6 +260,7 @@ COMMENT ON COLUMN system_maintenance.installation_date IS
 - `installation_date` auto-set on first hours update if NULL
 - `last_hours_update` tracks staleness for BoatOS prompts
 - Updated every time user enters hours
+- **[v2.1]** `updated_at` automatically maintained by trigger
 
 **Consumers:**
 - Hours update API (validation, update)
@@ -305,6 +361,12 @@ COMMENT ON TABLE boatos_tasks IS
   'System-generated prompts for user actions (autonomous BoatOS tasks)';
 COMMENT ON COLUMN boatos_tasks.task_type IS
   'Current: update_usage_hours. Future: check_spares, seasonal_checks';
+
+-- [v2.1] Add updated_at trigger
+CREATE TRIGGER boatos_tasks_updated_at
+  BEFORE UPDATE ON boatos_tasks
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
 ```
 
 **Key Behaviors:**
@@ -313,6 +375,7 @@ COMMENT ON COLUMN boatos_tasks.task_type IS
 - **Independent per system** (staggered, not synchronized)
 - **Dismissible** but re-prompts next day if still overdue
 - **Completed** when user updates hours → next_due = NOW() + 7 days
+- **[v2.1]** `updated_at` automatically maintained by trigger
 
 **Lifecycle:**
 ```
@@ -354,6 +417,8 @@ CREATE TABLE task_completions (
   completed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   hours_at_completion INTEGER CHECK (hours_at_completion >= 0),
   completed_by TEXT NOT NULL DEFAULT 'user',
+  source_type TEXT NOT NULL DEFAULT 'manual'
+    CHECK (source_type IN ('manual', 'ai_inferred', 'sensor_trigger', 'user_input')),
   notes TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -362,17 +427,22 @@ CREATE INDEX idx_task_completions_task
   ON task_completions(task_id, completed_at DESC);
 CREATE INDEX idx_task_completions_asset
   ON task_completions(asset_uid, completed_at DESC);
+CREATE INDEX idx_task_completions_source
+  ON task_completions(source_type, completed_at DESC);
 
 COMMENT ON TABLE task_completions IS
   'History of maintenance task completions for scheduling recurring tasks';
 COMMENT ON COLUMN task_completions.hours_at_completion IS
   'Hour meter reading when completed (NULL for calendar-based tasks)';
+COMMENT ON COLUMN task_completions.source_type IS
+  'Provenance for audit/analytics: manual, ai_inferred, sensor_trigger, user_input';
 ```
 
 **Key Behaviors:**
 - **Insert-only** (audit trail)
 - **task_id** matches Pinecone task ID (e.g., "task-1761081...")
 - **hours_at_completion** NULL for calendar-based tasks
+- **source_type** tracks provenance for audit/analytics (manual, ai_inferred, sensor_trigger, user_input)
 - Multiple completions per task (recurring tasks)
 - Used to calculate next due date
 
@@ -721,6 +791,7 @@ function detectIsRecurring(description, frequency_value) {
    - `reviewed_by`: "user"
    - `review_notes`: notes
 3. Re-upsert to Pinecone (same ID, same embeddings, updated metadata)
+   - **[v2.1]** Use updateMetadata wrapper (see Phase 2)
 
 **Response:**
 ```json
@@ -842,6 +913,27 @@ function detectIsRecurring(description, frequency_value) {
 
 ---
 
+### **F. Task Approval Stats** **[v2.1 NEW]**
+
+#### **GET /admin/api/maintenance-tasks/pending-count**
+**Purpose:** Get approval stats for UI badges
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "pending_review": 42,
+    "approved": 128,
+    "total": 170
+  }
+}
+```
+
+**Usage:** UI header badge "⚠️ 42 Pending Review"
+
+---
+
 ## 🔄 COMPLETE DATA FLOWS
 
 ### **Flow 1: Task Extraction → Approval → BoatOS Creation**
@@ -881,6 +973,7 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
 │    http://localhost:3000/public/maintenance-tasks-list  │
 │    Filter: "Review Status: Pending"                     │
 │    Shows: 50 pending tasks                              │
+│    [v2.1] Header shows: "⚠️ 50 Pending Review"         │
 └─────────────────────────────────────────────────────────┘
                           ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -902,6 +995,7 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
 │      review_status: "approved"                          │
 │      reviewed_at: NOW()                                 │
 │      reviewed_by: "user"                                │
+│    - [v2.1] Use updateMetadata() wrapper                │
 │    - Re-upsert to Pinecone                             │
 └─────────────────────────────────────────────────────────┘
                           ↓
@@ -909,6 +1003,7 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
 │ 8. TASKS NOW APPROVED                                   │
 │    Status: 30 approved, 5 pending, 10 deleted          │
 │    UI updates: Badges change to "✅ APPROVED"          │
+│    [v2.1] Header badge: "⚠️ 5 Pending Review"         │
 └─────────────────────────────────────────────────────────┘
                           ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -1017,9 +1112,11 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
 │    2. UPDATE system_maintenance                         │
 │       SET current_operating_hours = 275                 │
 │           last_hours_update = NOW()                     │
+│       [v2.1] updated_at auto-set by trigger             │
 │    3. UPDATE boatos_tasks                               │
 │       SET last_completed = NOW()                        │
 │           next_due = NOW() + 7 days (Oct 30)            │
+│       [v2.1] updated_at auto-set by trigger             │
 │    COMMIT                                               │
 └─────────────────────────────────────────────────────────┘
                           ↓
@@ -1102,6 +1199,7 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
 │    next_due_hours = 275 + 50 = 325                      │
 │                                                         │
 │ 4. Update Pinecone metadata:                            │
+│    - [v2.1] Use updateMetadata() wrapper                │
 │    - last_completed_at: NOW()                           │
 │    - last_completed_hours: 275                          │
 │    - next_due_hours: 325                                │
@@ -1179,6 +1277,7 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
 │    (one-time completion record)                         │
 │                                                         │
 │ 3. Update Pinecone metadata:                            │
+│    - [v2.1] Use updateMetadata() wrapper                │
 │    - is_completed: true                                 │
 │    - completed_at: NOW()                                │
 │    - completed_hours: 52                                │
@@ -1227,6 +1326,10 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
 3. `src/routes/admin/boatos-tasks.route.js`
 4. `src/routes/admin/todo.route.js`
 
+#### **Configuration Files** **[v2.1 NEW]:**
+5. `.env.example` (Phase 7)
+6. `scripts/check-env.js` (Phase 7)
+
 ---
 
 ### **MODIFIED FILES:**
@@ -1234,6 +1337,7 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
 #### **Main System:**
 1. **`src/routes/admin/maintenance-tasks.route.js`**
    - Add approval endpoints (PATCH /:taskId/approve, PATCH /bulk-approve)
+   - **[v2.1]** Add pending-count endpoint (GET /pending-count)
 
 2. **`src/routes/admin/index.js`**
    - Register 4 new route files
@@ -1244,6 +1348,7 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
    - Add bulk selection checkboxes
    - Add stats with approval counts
    - Add BoatOS filter option
+   - **[v2.1]** Add header badge showing pending count
 
 #### **Maintenance Agent:**
 4. **`maintenance-agent/scripts/extract-enrich-and-upload-tasks.js`**
@@ -1253,6 +1358,7 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
 
 5. **`maintenance-agent/src/repositories/pinecone.repository.js`**
    - Update task creation to include new metadata fields
+   - **[v2.1]** Add `updateMetadata()` wrapper function
 
 ---
 
@@ -1281,29 +1387,44 @@ node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"
 **Impact:** MEDIUM
 **Challenge:** Pinecone doesn't support partial updates - must re-upsert entire record
 
-**Pattern to Follow:**
+**Pattern to Follow** **[v2.1 ENHANCED]:**
 ```javascript
-// 1. Fetch full record with embeddings
-const fetchResponse = await namespace.fetch([taskId]);
-const existing = fetchResponse.records[taskId];
+// [v2.1] Wrapper function in pinecone.repository.js
+export async function updateMetadata(taskId, metadataUpdates) {
+  // 1. Fetch full record with embeddings
+  const fetchResponse = await namespace.fetch([taskId]);
+  const existing = fetchResponse.records[taskId];
 
-// 2. Merge metadata
-const updatedMetadata = {
-  ...existing.metadata,
+  if (!existing) {
+    throw new Error(`Task ${taskId} not found in Pinecone`);
+  }
+
+  // 2. Merge metadata
+  const updatedMetadata = {
+    ...existing.metadata,
+    ...metadataUpdates
+  };
+
+  // 3. Re-upsert (same ID, same embeddings, updated metadata)
+  await namespace.upsert([{
+    id: taskId,
+    values: existing.values,  // CRITICAL: Preserve embeddings
+    metadata: updatedMetadata
+  }]);
+
+  return updatedMetadata;
+}
+
+// Usage in service layer:
+await pineconeRepo.updateMetadata(taskId, {
   review_status: "approved",
   reviewed_at: new Date().toISOString(),
   reviewed_by: "user"
-};
-
-// 3. Re-upsert (same ID, same embeddings, updated metadata)
-await namespace.upsert([{
-  id: taskId,
-  values: existing.values,  // Same embeddings
-  metadata: updatedMetadata  // Updated metadata
-}]);
+});
 ```
 
 **Mitigation:**
+- **[v2.1]** Centralized wrapper prevents errors
 - Always fetch before update
 - Always preserve embeddings
 - Rate limit awareness (batch if >100 tasks)
@@ -1367,10 +1488,11 @@ if (meter_replaced === true) {
 - Cron jobs don't trigger
 - Logs not captured
 
-**Mitigation:**
+**Mitigation** **[v2.1 ENHANCED]:**
 - Comprehensive deployment guide (Phase 7)
 - Health check endpoint
-- Environment variable checklist
+- **[v2.1]** `.env.example` file with all required variables
+- **[v2.1]** `check-env.js` script validates env on startup
 - Test locally with Render-like env first
 - Staging deployment before production
 
@@ -1382,9 +1504,10 @@ if (meter_replaced === true) {
 
 **Challenge:** User might forget to approve tasks
 
-**Mitigation:**
+**Mitigation** **[v2.1 ENHANCED]:**
 - Clear badges: 🟡 PENDING REVIEW
 - Stats show: "42 pending review"
+- **[v2.1]** Header badge with pending count (always visible)
 - Filter defaults to "All" (see both pending and approved)
 - Training documentation
 
@@ -1398,20 +1521,22 @@ if (meter_replaced === true) {
 1. Run: `node scripts/extract-enrich-and-upload-tasks.js --system "Yanmar"`
 2. Verify: 50 tasks in Pinecone with `review_status: "pending"`
 3. Open: maintenance-tasks-list.html
-4. Filter: "Review Status: Pending"
-5. Approve: 30 tasks (bulk)
-6. Delete: 10 tasks (duplicates)
-7. Edit: 5 tasks (fix descriptions)
-8. Leave: 5 tasks pending
-9. Verify: 30 approved, 5 pending
-10. Run extraction again
-11. Verify: BoatOS task created
-12. Check: `boatos_tasks` table has entry
+4. **[v2.1]** Verify header shows: "⚠️ 50 Pending Review"
+5. Filter: "Review Status: Pending"
+6. Approve: 30 tasks (bulk)
+7. Delete: 10 tasks (duplicates)
+8. Edit: 5 tasks (fix descriptions)
+9. Leave: 5 tasks pending
+10. **[v2.1]** Verify header updates: "⚠️ 5 Pending Review"
+11. Run extraction again
+12. Verify: BoatOS task created
+13. Check: `boatos_tasks` table has entry
 
 **Expected:**
 - ✅ BoatOS task created only after approval
 - ✅ BoatOS task not duplicated on re-run
 - ✅ Approved tasks queryable separately
+- ✅ **[v2.1]** Pending count updates in real-time
 
 ---
 
@@ -1422,21 +1547,23 @@ if (meter_replaced === true) {
 2. Current: 0 hours (first time)
 3. Enter: 250 hours → Submit
 4. Verify: `system_maintenance` updated
-5. Verify: `system_hours_history` has entry
-6. Verify: `installation_date` auto-set to today
-7. Enter: 275 hours → Submit (1 second later)
-8. Verify: ALLOWED (same day updates OK)
-9. Try: 270 hours → Submit
-10. Verify: REJECTED "Cannot be lower than 275h"
-11. Check "Meter replaced", add note: "New meter installed"
-12. Enter: 0 hours → Submit
-13. Verify: ALLOWED (`meter_replaced = true`)
-14. Check history: Shows all 3 entries with notes
+5. **[v2.1]** Verify: `updated_at` timestamp is recent
+6. Verify: `system_hours_history` has entry
+7. Verify: `installation_date` auto-set to today
+8. Enter: 275 hours → Submit (1 second later)
+9. Verify: ALLOWED (same day updates OK)
+10. Try: 270 hours → Submit
+11. Verify: REJECTED "Cannot be lower than 275h"
+12. Check "Meter replaced", add note: "New meter installed"
+13. Enter: 0 hours → Submit
+14. Verify: ALLOWED (`meter_replaced = true`)
+15. Check history: Shows all 3 entries with notes
 
 **Expected:**
 - ✅ Validation prevents accidental rollback
 - ✅ Meter replacement override works
 - ✅ History shows complete audit trail
+- ✅ **[v2.1]** Timestamps automatically maintained
 
 ---
 
@@ -1497,14 +1624,16 @@ if (meter_replaced === true) {
 7. Task reappears (still overdue)
 8. User updates hours to 300
 9. Verify: `next_due: Oct 29`
-10. Task disappears
-11. Check on Oct 29
-12. Task reappears
+10. **[v2.1]** Verify: `updated_at` reflects change
+11. Task disappears
+12. Check on Oct 29
+13. Task reappears
 
 **Expected:**
 - ✅ 7-day cycle works
 - ✅ Dismissal re-prompts tomorrow
 - ✅ Completion resets 7-day timer
+- ✅ **[v2.1]** Timestamps track all changes
 
 ---
 
@@ -1517,34 +1646,111 @@ if (meter_replaced === true) {
 4. Select 10 tasks → "Approve Selected"
 5. Verify: All 10 badges update
 6. Verify: Pinecone metadata for all 11 updated
-7. Filter: "Approved" → Shows 11 tasks
-8. Filter: "Pending" → Shows 39 tasks
-9. BoatOS check: Approved usage tasks found?
-10. If yes → BoatOS task created
+7. **[v2.1]** Verify: updateMetadata() wrapper used (check logs)
+8. Filter: "Approved" → Shows 11 tasks
+9. Filter: "Pending" → Shows 39 tasks
+10. BoatOS check: Approved usage tasks found?
+11. If yes → BoatOS task created
 
 **Expected:**
 - ✅ Bulk approval updates all tasks
 - ✅ UI reflects changes immediately
 - ✅ BoatOS creation triggered
+- ✅ **[v2.1]** No metadata/embedding corruption
+
+---
+
+### **Scenario 7: Environment Validation** **[v2.1 NEW]**
+
+**Steps:**
+1. Copy `.env.example` to `.env`
+2. Leave `SUPABASE_URL` blank
+3. Run: `npm start`
+4. Verify: Script exits with error: "Missing SUPABASE_URL"
+5. Set all required variables
+6. Run: `npm start`
+7. Verify: Server starts successfully
+8. Check logs: "✅ All environment variables validated"
+
+**Expected:**
+- ✅ Missing variables caught before startup
+- ✅ Clear error messages
+- ✅ No silent failures
 
 ---
 
 ## 🎯 IMPLEMENTATION PHASES
 
-### **Phase 1: Database Schema (Day 1 - 4 hours)**
+### **Phase 1: Database Schema + Configuration (Day 1 - 5 hours)**
+
+**Part A: Environment Configuration (1 hour)** **[v2.1.1 NEW]**
+
+1. **Update `src/config/env.js`** to add Zod schema for new variables:
+   ```javascript
+   import { z } from 'zod';
+
+   const envSchema = z.object({
+     // Existing fields...
+     SUPABASE_URL: z.string().url(),
+     SUPABASE_SERVICE_KEY: z.string().min(1),
+     PINECONE_API_KEY: z.string().min(1),
+     OPENAI_API_KEY: z.string().min(1),
+     ADMIN_TOKEN: z.string().min(1),
+     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+     LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+
+     // NEW - Operational Tracking
+     HOURS_UPDATE_PROMPT_INTERVAL_DAYS: z.coerce.number().int().positive().default(7),
+     HOURS_STALENESS_WARNING_DAYS: z.coerce.number().int().positive().default(30),
+     TASK_DUE_SOON_WARNING_DAYS: z.coerce.number().int().positive().default(7),
+     TASK_OVERDUE_WARNING_DAYS: z.coerce.number().int().positive().default(3),
+
+     // NEW - Approval Workflow
+     APPROVAL_AUTO_APPROVE_CONFIDENCE: z.coerce.number().min(0).max(1).default(0.95),
+     APPROVAL_REVIEW_REQUIRED_CONFIDENCE: z.coerce.number().min(0).max(1).default(0.70),
+     APPROVAL_BATCH_SIZE: z.coerce.number().int().positive().default(50),
+
+     // NEW - Agent Processing
+     AGENT_RUN_INTERVAL_MINUTES: z.coerce.number().int().positive().default(60),
+     AGENT_BATCH_SIZE: z.coerce.number().int().positive().default(5),
+     OPENAI_MAX_CONCURRENT_CALLS: z.coerce.number().int().positive().default(3),
+     OPENAI_RATE_LIMIT_RPM: z.coerce.number().int().positive().default(60),
+
+     // NEW - UI Defaults
+     UI_DEFAULT_PAGE_SIZE: z.coerce.number().int().positive().default(20),
+     UI_MAX_PAGE_SIZE: z.coerce.number().int().positive().default(100),
+     UI_NEW_TASK_BADGE_DAYS: z.coerce.number().int().positive().default(7),
+
+     // NEW - Error Handling
+     MAX_RETRY_ATTEMPTS: z.coerce.number().int().positive().default(3),
+     RETRY_DELAY_MS: z.coerce.number().int().positive().default(1000),
+     API_TIMEOUT_MS: z.coerce.number().int().positive().default(30000),
+   });
+
+   export function getConfig() {
+     return envSchema.parse(process.env);
+   }
+   ```
+
+2. **Test with:** `node scripts/check-env.js` (should pass with defaults)
+
+**Part B: Database Schema (4 hours)**
 
 **Deliverables:**
 - 4 SQL files (numbered 001-004)
 - 1 rollback script (000)
 - Schema verification queries
+- **[v2.1]** Trigger functions for `updated_at`
 
 **Execution:**
 1. Copy SQL into Supabase SQL Editor
-2. Execute each numbered file in order
-3. Run verification queries
-4. Test insert/update/delete on each table
+2. Execute trigger function first
+3. Execute each numbered file in order
+4. Run verification queries
+5. Test insert/update/delete on each table
+6. **[v2.1]** Verify triggers fire on UPDATE
 
-**Approval Gate:** User reviews SQL, confirms execution success
+**Approval Gate:** User reviews SQL + env.js changes, confirms execution success
 
 ---
 
@@ -1561,6 +1767,13 @@ if (meter_replaced === true) {
 - Pure I/O functions (no business logic)
 - Throw errors with context
 - Return null for not-found
+
+**[v2.1] Additional Requirements:**
+4. Add to `maintenance-agent/src/repositories/pinecone.repository.js`:
+   - `updateMetadata(taskId, metadataUpdates)` wrapper function
+   - Handles fetch → merge → upsert internally
+   - Preserves embeddings automatically
+   - Throws clear errors if task not found
 
 **Testing:** Manual function calls with test data
 
@@ -1580,6 +1793,7 @@ if (meter_replaced === true) {
 - Business logic only
 - Use logger
 - Return structured data
+- **[v2.1]** Use `pineconeRepo.updateMetadata()` for all Pinecone updates
 
 ---
 
@@ -1593,6 +1807,7 @@ if (meter_replaced === true) {
 
 **File to Modify:**
 5. `src/routes/admin/maintenance-tasks.route.js` (add approval endpoints)
+   - **[v2.1]** Add `GET /pending-count` endpoint
 6. `src/routes/admin/index.js` (register routes)
 
 **Patterns:**
@@ -1613,18 +1828,46 @@ if (meter_replaced === true) {
 
 2. `maintenance-agent/src/repositories/pinecone.repository.js`
    - Include new metadata fields
+   - **[v2.1]** Add `updateMetadata()` wrapper
 
 ---
 
 ### **Phase 6: Frontend (Day 5-6 - 10 hours)**
 
-**File to Modify:**
+**Files to Create/Modify:**
 1. `src/public/maintenance-tasks-list.html`
    - Add review status filter
    - Add approval buttons/badges
    - Add bulk selection
    - Add stats with approval counts
    - Add BoatOS filter
+   - **[v2.1]** Add header badge with pending count from `/pending-count` API
+
+2. **[v2.1 MOVED FROM PHASE 9]** System Maintenance Summary Endpoint
+   - **File:** `src/routes/admin/system-maintenance.route.js`
+   - **Endpoint:** `GET /admin/api/system-maintenance/summary`
+   - **Purpose:** Aggregate per-system health for dashboard widgets
+   - **Response:**
+     ```javascript
+     {
+       "success": true,
+       "data": [
+         {
+           "system_name": "Engine Port",
+           "current_hours": 450,
+           "tasks_due": 2,
+           "tasks_overdue": 0,
+           "next_due_date": "2025-11-15",
+           "last_update": "2025-10-22T10:00:00Z"
+         }
+       ]
+     }
+     ```
+   - **Use cases:**
+     - System dashboard countdown timers
+     - Calendar widgets showing upcoming maintenance
+     - AI agent queries for system status
+     - "All Systems Overview" page
 
 ---
 
@@ -1635,15 +1878,316 @@ if (meter_replaced === true) {
 - Health check endpoint
 - Environment variable checklist
 - Deployment guide
+- **[v2.1 NEW]** `.env.example` with all variables documented
+- **[v2.1 NEW]** `scripts/check-env.js` validation script
+
+**[v2.1.1] .env.example Template (COMPREHENSIVE):**
+```bash
+#############################
+# Core Infrastructure
+#############################
+
+# Database
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_KEY=your-service-key
+
+# Vector Database
+PINECONE_API_KEY=your-api-key
+PINECONE_INDEX=reimaginedsv
+
+# LLM
+OPENAI_API_KEY=your-api-key
+
+# Admin
+ADMIN_TOKEN=your-secure-token
+
+# Environment
+NODE_ENV=development
+LOG_LEVEL=info
+
+#############################
+# Operational Tracking
+#############################
+
+# How often BoatOS prompts users to update hours (days)
+HOURS_UPDATE_PROMPT_INTERVAL_DAYS=7
+
+# Warn if hours haven't been updated in X days
+HOURS_STALENESS_WARNING_DAYS=30
+
+# Warn if task is due within X days (for calendar tasks)
+TASK_DUE_SOON_WARNING_DAYS=7
+
+# Warn if task is overdue by X days
+TASK_OVERDUE_WARNING_DAYS=3
+
+#############################
+# Approval Workflow
+#############################
+
+# Auto-approve tasks with confidence above this (0.0-1.0)
+# Set to 1.0 to disable auto-approval
+APPROVAL_AUTO_APPROVE_CONFIDENCE=0.95
+
+# Require manual review for tasks below this confidence
+APPROVAL_REVIEW_REQUIRED_CONFIDENCE=0.70
+
+# Max tasks to show in approval queue at once
+APPROVAL_BATCH_SIZE=50
+
+#############################
+# Agent Processing
+#############################
+
+# How often agent runs (minutes)
+AGENT_RUN_INTERVAL_MINUTES=60
+
+# Number of systems to process per batch
+AGENT_BATCH_SIZE=5
+
+# Max concurrent API calls to OpenAI
+OPENAI_MAX_CONCURRENT_CALLS=3
+
+# OpenAI rate limit (requests per minute)
+OPENAI_RATE_LIMIT_RPM=60
+
+#############################
+# UI Defaults
+#############################
+
+# Default pagination size
+UI_DEFAULT_PAGE_SIZE=20
+
+# Maximum results per page
+UI_MAX_PAGE_SIZE=100
+
+# Show "NEW" badge on tasks created within X days
+UI_NEW_TASK_BADGE_DAYS=7
+
+#############################
+# Error Handling
+#############################
+
+# Max retry attempts for failed operations
+MAX_RETRY_ATTEMPTS=3
+
+# Delay between retries (milliseconds)
+RETRY_DELAY_MS=1000
+
+# Timeout for external API calls (milliseconds)
+API_TIMEOUT_MS=30000
+```
+
+**[v2.1] check-env.js Script:**
+```javascript
+import { getConfig } from './config/env.js';
+
+try {
+  const config = getConfig();
+  console.log('✅ All environment variables validated');
+  process.exit(0);
+} catch (error) {
+  console.error('❌ Environment validation failed:', error.message);
+  process.exit(1);
+}
+```
 
 ---
 
 ### **Phase 8: Integration Testing (Day 7 - 6 hours)**
 
-**Execute all 6 test scenarios**
+**Execute all 7 test scenarios** (6 original + 1 new in v2.1)
 - Document results
 - Fix any issues found
 - Get user approval for production
+
+---
+
+### **Phase 9: Future Enhancements** **[v2.1 NEW]**
+
+**Status:** 📋 DEFERRED - Implement after Phase 1-8 complete
+
+**Priority 1 - High Value (Implement next):**
+
+1. **Task Health Monitor** (2 days)
+   - Daily cron job checking system health
+   - Detects overdue BoatOS tasks
+   - Finds systems with stale hour readings
+   - Identifies tasks missing `next_due_*`
+   - Logs anomalies to `maintenance_health_log` table
+   - Self-diagnostic endpoint for monitoring
+
+2. **Auto-Approval for High Confidence** (1 day)
+   - Tasks with `confidence > 0.95` auto-approved
+   - Still shown in UI with "🤖 AUTO-APPROVED" badge
+   - Reduces manual review burden
+   - Configurable threshold via env var
+
+3. **System Maintenance Summary Dashboard** ~~(1 day)~~
+   - **[v2.1 MOVED TO PHASE 6]** - Basic endpoint now in frontend phase
+   - Future enhancements:
+     - Add staleness warnings (tasks not updated in 30+ days)
+     - Add trend analysis (tasks completed vs. due over time)
+     - Add system health scoring algorithm
+
+**Priority 2 - Complex Features (Plan carefully):**
+
+4. **Composite Usage+Calendar Tasks** (3 days)
+   - Support "Every 100 hours OR annually, whichever comes first"
+   - Schema changes:
+     ```javascript
+     {
+       frequency_basis: ["usage", "calendar"],
+       frequency_values: { hours: 100, months: 12 }
+     }
+     ```
+   - Calculation: `next_due = Math.min(next_due_hours, next_due_date)`
+   - UI updates to show both conditions
+
+5. **Structured Logs to Supabase** (2 days)
+   - New table: `system_logs`
+   - Columns: subsystem, level, message, meta (JSONB)
+   - Enables health dashboards
+   - Incident trace capabilities
+   - Query logs via SQL for analytics
+
+**Priority 3 - Nice-to-Have:**
+
+6. **Webhook for Approvals** (1 day)
+   - Real-time sync to external tools (Slack, Notion)
+   - Configurable webhook URL
+   - Payload includes task details, approval action
+
+7. **Usage Anomaly Detection** (2 days)
+   - Alerts if hour jump > 50% in 1 week
+   - Detects potential typos or meter issues
+   - Email/notification to user
+
+8. **Maintenance Forecast Report** (2 days)
+   - Predicts next 30-day workload per system
+   - Groups by week
+   - Helps plan parts ordering
+
+9. **Mini READMEs per Module** (1 day)
+   - `/repositories/README.md` - function signatures
+   - `/services/README.md` - business logic summary
+   - `/routes/README.md` - endpoint list
+   - Onboarding documentation
+
+10. **Offline Pinecone Metadata Cache** (3 days)
+    - Local Supabase cache of Pinecone metadata
+    - Safety net if Pinecone API throttles
+    - Periodic sync job
+    - Fallback queries
+
+**Estimated Total:** 18 days (3.6 weeks) for all Phase 9 features
+
+---
+
+## 🚫 REJECTED SUGGESTIONS (With Rationale)
+
+**[v2.1 NEW SECTION]**
+
+The following suggestions were considered but rejected for architectural or technical reasons:
+
+### **1. Add Pinecone Metadata Mirror Table**
+
+**Suggestion:** Create `maintenance_tasks_meta` table in Supabase to mirror all Pinecone metadata.
+
+**Why Rejected:**
+- **Dual-write problem:** Every update must succeed in BOTH systems
+- **Data sync complexity:** Metadata can drift between systems
+- **Maintenance burden:** Two sources of truth to keep aligned
+- **Already solved:** Pinecone metadata is queryable and Supabase has relational data in `task_completions` and `boatos_tasks`
+
+**Alternative:** Use Pinecone as source of truth for task metadata. Use Supabase only for relational queries (completions, hours history).
+
+---
+
+### **2. Add Postgres Indexes on review_status and is_recurring**
+
+**Suggestion:**
+```sql
+CREATE INDEX idx_task_review_status ON maintenance_tasks((metadata->>'review_status'));
+CREATE INDEX idx_task_is_recurring ON maintenance_tasks((metadata->>'is_recurring'));
+```
+
+**Why Rejected:**
+- **Wrong system:** `review_status` and `is_recurring` are Pinecone metadata fields, not Postgres columns
+- **Not applicable:** You can't create Postgres indexes on data stored in Pinecone
+- **Already handled:** Pinecone supports filtering on metadata natively:
+  ```javascript
+  namespace.query({
+    filter: { review_status: { $eq: "pending" } }
+  });
+  ```
+
+---
+
+### **3. Add is_autonomous Flag to boatos_tasks Table**
+
+**Suggestion:** Add `is_autonomous BOOLEAN DEFAULT TRUE` to distinguish system-generated vs user tasks.
+
+**Why Rejected:**
+- **Logically redundant:** The `boatos_tasks` table BY DEFINITION only contains autonomous system-generated tasks
+- **No user tasks here:** Regular user-created tasks are stored in Pinecone, not in `boatos_tasks`
+- **Would always be true:** This flag would have the same value (true) for 100% of rows
+- **No query benefit:** No query would filter on this field
+
+**Alternative:** Table name `boatos_tasks` already indicates autonomy. If we add user tasks in future, create separate table.
+
+---
+
+## 📝 FOR DISCUSSION NEXT PHASE
+
+**[v2.1 NEW SECTION]**
+
+These ideas have merit but need more discussion before implementation:
+
+### **1. source_type + source_id Columns**
+
+**Suggestion:** Add to `task_completions`:
+```sql
+ALTER TABLE task_completions ADD COLUMN source_type TEXT DEFAULT 'manual';
+ALTER TABLE task_completions ADD COLUMN source_id TEXT;
+```
+
+**Question:** What information would this capture that isn't already in:
+- `task_id` (links to Pinecone task)
+- Pinecone `metadata.source: "manual" | "agent"`
+
+**Use case needed:** Please provide specific query pattern that requires this.
+
+**Status:** 📋 Deferred to Phase 9
+
+---
+
+### **2. Forward Compatibility Hooks for Discovery Agent**
+
+**Suggestions:**
+- `fingerprint_hash` column (SHA256 of description to prevent duplicates)
+- `maintenance_feedback` table (for learning system)
+- `confidence_score_history` (track per-system confidence over time)
+
+**Discussion Points:**
+- When will Discovery Agent be implemented?
+- Can we add these when needed vs. pre-building?
+- Risk of premature optimization?
+
+**Status:** 📋 Defer until Discovery Agent Phase begins (Post Phase 9)
+
+---
+
+### **3. Composite Frequency Tasks**
+
+**Example:** "Every 100 hours OR 12 months, whichever comes first"
+
+**Discussion:**
+- Is this a Phase 1 requirement or can it wait?
+- How common is this in marine maintenance?
+- Adds ~2 days to implementation
+
+**Status:** ⏸️ Awaiting user priority decision
 
 ---
 
@@ -1744,6 +2288,62 @@ export default router;
 
 ---
 
+### **4. Pinecone Update Wrapper** **[v2.1 NEW]**
+```javascript
+// maintenance-agent/src/repositories/pinecone.repository.js
+
+export async function updateMetadata(taskId, metadataUpdates) {
+  const requestLogger = logger.createRequestLogger();
+
+  try {
+    // 1. Fetch full record with embeddings
+    const fetchResponse = await namespace.fetch([taskId]);
+    const existing = fetchResponse.records[taskId];
+
+    if (!existing) {
+      throw new Error(`Task ${taskId} not found in Pinecone`);
+    }
+
+    // 2. Merge metadata (preserve existing + apply updates)
+    const updatedMetadata = {
+      ...existing.metadata,
+      ...metadataUpdates
+    };
+
+    // 3. Re-upsert (CRITICAL: preserve embeddings)
+    await namespace.upsert([{
+      id: taskId,
+      values: existing.values,  // Same embeddings
+      metadata: updatedMetadata  // Updated metadata
+    }]);
+
+    requestLogger.info('Pinecone metadata updated', {
+      taskId,
+      updatedFields: Object.keys(metadataUpdates)
+    });
+
+    return updatedMetadata;
+
+  } catch (error) {
+    requestLogger.error('Failed to update Pinecone metadata', {
+      taskId,
+      error: error.message
+    });
+    throw error;
+  }
+}
+
+// Usage in task-approval.service.js:
+await pineconeRepo.updateMetadata(taskId, {
+  review_status: "approved",
+  reviewed_at: new Date().toISOString(),
+  reviewed_by: "user",
+  review_notes: notes
+});
+```
+
+---
+
 ## 🚀 RENDER DEPLOYMENT CHECKLIST
 
 ### **Environment Variables:**
@@ -1783,6 +2383,21 @@ process.on('SIGTERM', async () => {
 });
 ```
 
+### **[v2.1] Environment Validation on Startup:**
+```javascript
+// Add to start of src/index.js
+import { getConfig } from './config/env.js';
+
+// Validate environment before starting server
+try {
+  const config = getConfig();
+  console.log('✅ Environment variables validated');
+} catch (error) {
+  console.error('❌ Environment validation failed:', error.message);
+  process.exit(1);
+}
+```
+
 ---
 
 ## ✅ IMPLEMENTATION CHECKLIST
@@ -1792,16 +2407,24 @@ process.on('SIGTERM', async () => {
 - [ ] All questions answered
 - [ ] Risk analysis understood
 - [ ] SQL scripts reviewed
+- [ ] **[v2.1]** Rejected suggestions rationale accepted
+- [ ] **[v2.1]** Phase 9 roadmap acknowledged
 
 ### **Phase Gates:**
 - [ ] Phase 1: Database schema executed and verified
+  - [ ] **[v2.1]** Triggers tested (updated_at auto-updates)
 - [ ] Phase 2: Repositories tested
+  - [ ] **[v2.1]** updateMetadata() wrapper tested
 - [ ] Phase 3: Services tested
 - [ ] Phase 4: Routes tested with curl/Postman
+  - [ ] **[v2.1]** /pending-count endpoint tested
 - [ ] Phase 5: Agent tested on dev system
 - [ ] Phase 6: Frontend tested in browser
+  - [ ] **[v2.1]** Pending count badge displays
 - [ ] Phase 7: Render config reviewed
-- [ ] Phase 8: All 6 test scenarios passed
+  - [ ] **[v2.1]** .env.example created
+  - [ ] **[v2.1]** check-env.js tested
+- [ ] Phase 8: All 7 test scenarios passed (6 + env validation)
 
 ### **Final Approval:**
 - [ ] User tested end-to-end workflow
@@ -1838,15 +2461,18 @@ process.on('SIGTERM', async () => {
 **Status:** ⏸️ **AWAITING USER APPROVAL TO BEGIN PHASE 1**
 
 **User must:**
-1. ✅ Read this entire document
+1. ✅ Read this entire document (v2.1)
 2. ✅ Confirm understanding of architecture
-3. ✅ Explicitly approve: "Plan approved, proceed with Phase 1"
+3. ✅ **[v2.1]** Review quick wins integrated into Phases 1-7
+4. ✅ **[v2.1]** Acknowledge Phase 9 future roadmap
+5. ✅ **[v2.1]** Confirm rejected suggestions rationale
+6. ✅ Explicitly approve: "Plan approved, proceed with Phase 1"
 
 **Then we:**
-1. Create SQL migration scripts
+1. Create SQL migration scripts (with v2.1 triggers)
 2. Execute on dev database (Supabase UI)
 3. Verify schema created correctly
-4. Proceed to Phase 2 (Repositories)
+4. Proceed to Phase 2 (Repositories with updateMetadata wrapper)
 
 ---
 
@@ -1865,6 +2491,8 @@ process.on('SIGTERM', async () => {
 3. Comprehensive testing plan
 4. Phase-gate approvals
 5. Complete rollback capability
+6. **[v2.1]** Quick wins reduce risk
+7. **[v2.1]** Clear future roadmap (Phase 9)
 
 ### **Success Criteria:**
 1. ✅ Users can track system hours
@@ -1874,12 +2502,14 @@ process.on('SIGTERM', async () => {
 5. ✅ Approval workflow prevents bad tasks
 6. ✅ Zero breaking changes to existing features
 7. ✅ Render agent runs autonomously
+8. ✅ **[v2.1]** Environment validation prevents misconfigurations
+9. ✅ **[v2.1]** Pinecone metadata updates never corrupt embeddings
 
 ---
 
-**END OF SESSION 27 DOCUMENTATION**
+**END OF SESSION 27 DOCUMENTATION (v2.1)**
 
-**This document contains everything needed to implement the complete system from scratch.**
+**This document contains everything needed to implement the complete system from scratch, including quick wins and a clear future roadmap.**
 
 ---
 
@@ -1890,6 +2520,16 @@ process.on('SIGTERM', async () => {
 -- File: 001_create_system_maintenance.sql
 -- Execute in Supabase SQL Editor
 
+-- [v2.1] Create trigger function first (reusable)
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create table
 CREATE TABLE system_maintenance (
   asset_uid UUID PRIMARY KEY
     REFERENCES systems(asset_uid) ON DELETE CASCADE,
@@ -1913,10 +2553,35 @@ COMMENT ON COLUMN system_maintenance.installation_date IS
 COMMENT ON COLUMN system_maintenance.current_operating_hours IS
   'Latest hour meter reading';
 
+-- [v2.1] Add trigger for automatic updated_at
+CREATE TRIGGER system_maintenance_updated_at
+  BEFORE UPDATE ON system_maintenance
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
 -- Verify
 SELECT tablename, schemaname
 FROM pg_tables
 WHERE tablename = 'system_maintenance';
+
+-- [v2.1] Test trigger
+INSERT INTO system_maintenance (asset_uid, current_operating_hours)
+VALUES (
+  (SELECT asset_uid FROM systems LIMIT 1),
+  100
+);
+
+UPDATE system_maintenance
+SET current_operating_hours = 150
+WHERE current_operating_hours = 100;
+
+-- Check updated_at changed
+SELECT asset_uid, current_operating_hours, created_at, updated_at
+FROM system_maintenance
+WHERE current_operating_hours = 150;
+
+-- Cleanup test
+DELETE FROM system_maintenance WHERE current_operating_hours = 150;
 ```
 
 ### **Script 002: system_hours_history**
@@ -1985,6 +2650,12 @@ CREATE INDEX idx_boatos_tasks_next_due
 COMMENT ON TABLE boatos_tasks IS
   'System-generated prompts for user actions (autonomous BoatOS tasks)';
 
+-- [v2.1] Add trigger for automatic updated_at
+CREATE TRIGGER boatos_tasks_updated_at
+  BEFORE UPDATE ON boatos_tasks
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
 -- Verify
 SELECT COUNT(*) as index_count
 FROM pg_indexes
@@ -2032,6 +2703,9 @@ DROP TABLE IF EXISTS boatos_tasks CASCADE;
 DROP TABLE IF EXISTS system_hours_history CASCADE;
 DROP TABLE IF EXISTS system_maintenance CASCADE;
 
+-- [v2.1] Also drop trigger function
+DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
+
 -- Verify cleanup
 SELECT tablename
 FROM pg_tables
@@ -2046,6 +2720,15 @@ WHERE tablename IN (
 
 ---
 
-**Document Version:** 1.0
+**Document Version:** 2.1
 **Last Updated:** 2025-10-22
+**Changes in v2.1:**
+- Added 5 quick wins (triggers, env validation, pending-count, updateMetadata wrapper)
+- Added Phase 9 future enhancements roadmap
+- Added rejected suggestions section with rationale
+- Added "For Discussion Next Phase" section
+- Enhanced SQL scripts with trigger functions
+- Enhanced test scenarios (7 total, was 6)
+- Enhanced data flows with v2.1 additions
+
 **Ready for Implementation:** YES ✅

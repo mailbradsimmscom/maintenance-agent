@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Agent - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .module-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 30px;
+        }
+
+        .module-card h2 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 22px;
+        }
+
+        .module-card p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .status-badge.ready {
+            background: #10b981;
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+            opacity: 0.9;
+        }
+
+        .api-status {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .api-status h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .api-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .api-indicator .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        .api-indicator .dot.loading {
+            background: #fbbf24;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Maintenance Agent</h1>
+            <p>Usage-Based Maintenance Tracking System</p>
+            <div class="api-status">
+                <h3>API Status</h3>
+                <div class="api-indicator">
+                    <div class="dot loading" id="apiDot"></div>
+                    <span id="apiStatus">Checking connection...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="modules">
+            <a href="hours-update.html" class="module-card">
+                <div class="module-icon">⏱️</div>
+                <h2>Hours Update</h2>
+                <p>Update operating hours for systems. View history and track hour meter readings.</p>
+                <span class="status-badge ready">Ready</span>
+            </a>
+
+            <a href="todos.html" class="module-card">
+                <div class="module-icon">📋</div>
+                <h2>To-Do List</h2>
+                <p>View all pending tasks including BoatOS prompts, maintenance tasks, and approvals.</p>
+                <span class="status-badge ready">Ready</span>
+            </a>
+
+            <a href="task-completion.html" class="module-card">
+                <div class="module-icon">✅</div>
+                <h2>Task Completion</h2>
+                <p>Mark maintenance tasks as complete. System automatically calculates next due dates.</p>
+                <span class="status-badge ready">Ready</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>Maintenance Agent v1.0.0 | Port 3001</p>
+            <p style="margin-top: 8px; font-size: 14px;">
+                NOTE: These pages will be migrated to main system (port 3000) for iOS integration
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Check API health on page load
+        async function checkAPI() {
+            const apiDot = document.getElementById('apiDot');
+            const apiStatus = document.getElementById('apiStatus');
+
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+
+                if (data.success && data.data.status === 'healthy') {
+                    apiDot.classList.remove('loading');
+                    apiStatus.textContent = `✅ Connected (HTTP + Cron Jobs Running)`;
+                } else {
+                    apiDot.style.background = '#ef4444';
+                    apiStatus.textContent = '❌ API Unhealthy';
+                }
+            } catch (error) {
+                apiDot.style.background = '#ef4444';
+                apiStatus.textContent = '❌ Cannot connect to API';
+            }
+        }
+
+        checkAPI();
+    </script>
+</body>
+</html>

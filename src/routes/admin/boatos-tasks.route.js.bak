@@ -1,0 +1,140 @@
+/**
+ * BoatOS Tasks Routes
+ * API endpoints for system-generated user prompts
+ */
+
+import express from 'express';
+import boatosTasksService from '../../services/boatos-tasks.service.js';
+import { createLogger } from '../../utils/logger.js';
+
+const router = express.Router();
+const logger = createLogger('boatos-tasks-route');
+
+/**
+ * GET /admin/api/boatos-tasks/due
+ * Get all due BoatOS tasks
+ */
+router.get('/due', async (req, res, next) => {
+  
+
+  try {
+    requestLogger.info('Fetching due BoatOS tasks');
+
+    const dueTasks = await boatosTasksService.getDueTasks();
+
+    return res.json({
+      success: true,
+      data: {
+        tasks: dueTasks,
+        count: dueTasks.length,
+      },
+    });
+
+  } catch (error) {
+    requestLogger.error('Error fetching due tasks', { error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * GET /admin/api/boatos-tasks/statistics
+ * Get BoatOS task statistics
+ */
+router.get('/statistics', async (req, res, next) => {
+  
+
+  try {
+    requestLogger.info('Fetching BoatOS task statistics');
+
+    const stats = await boatosTasksService.getTaskStatistics();
+
+    return res.json({
+      success: true,
+      data: stats,
+    });
+
+  } catch (error) {
+    requestLogger.error('Error fetching task statistics', { error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * POST /admin/api/boatos-tasks/:taskId/complete
+ * Mark a BoatOS task as completed
+ */
+router.post('/:taskId/complete', async (req, res, next) => {
+  
+  const { taskId } = req.params;
+
+  try {
+    requestLogger.info('Marking BoatOS task as completed', { taskId });
+
+    const updatedTask = await boatosTasksService.markTaskCompleted(taskId);
+
+    requestLogger.info('BoatOS task completed', { taskId, nextDue: updatedTask.next_due });
+
+    return res.json({
+      success: true,
+      data: updatedTask,
+    });
+
+  } catch (error) {
+    requestLogger.error('Error completing task', { taskId, error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * POST /admin/api/boatos-tasks/:taskId/dismiss
+ * Dismiss a BoatOS task (will reappear if still due)
+ */
+router.post('/:taskId/dismiss', async (req, res, next) => {
+  
+  const { taskId } = req.params;
+
+  try {
+    requestLogger.info('Dismissing BoatOS task', { taskId });
+
+    const updatedTask = await boatosTasksService.dismissTask(taskId);
+
+    requestLogger.info('BoatOS task dismissed', { taskId });
+
+    return res.json({
+      success: true,
+      data: updatedTask,
+    });
+
+  } catch (error) {
+    requestLogger.error('Error dismissing task', { taskId, error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * POST /admin/api/boatos-tasks/create/:assetUid
+ * Create a hours update task for a system
+ */
+router.post('/create/:assetUid', async (req, res, next) => {
+  
+  const { assetUid } = req.params;
+
+  try {
+    requestLogger.info('Creating hours update task', { assetUid });
+
+    const task = await boatosTasksService.createHoursUpdateTask(assetUid);
+
+    requestLogger.info('Hours update task created', { assetUid, taskId: task.id });
+
+    return res.json({
+      success: true,
+      data: task,
+    });
+
+  } catch (error) {
+    requestLogger.error('Error creating task', { assetUid, error: error.message });
+    return next(error);
+  }
+});
+
+export default router;

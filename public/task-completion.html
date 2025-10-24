@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Completion</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+        }
+        .form-group { margin-bottom: 20px; }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        button:hover { opacity: 0.9; }
+        .message { margin-top: 15px; font-weight: 600; }
+        .message.success { color: #10b981; }
+        .message.error { color: #ef4444; }
+        .info-box {
+            background: #e0e7ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        
+        <div class="card">
+            <h1>✅ Task Completion</h1>
+            <p style="color: #666; margin-bottom: 20px;">
+                Mark maintenance tasks as complete. For recurring tasks, the system automatically calculates the next due date.
+            </p>
+
+            <div class="info-box">
+                <strong>Note:</strong> For testing, use Task ID from Pinecone or maintenance tasks list.
+                System will automatically update next due dates for recurring tasks.
+            </div>
+
+            <div class="form-group">
+                <label for="taskId">Task ID</label>
+                <input type="text" id="taskId" placeholder="e.g., task-1234567890123-45" required>
+            </div>
+
+            <div class="form-group">
+                <label for="assetUid">System</label>
+                <select id="assetUid" required>
+                    <option value="00000000-0000-0000-0000-000000000999">Test System (Phase 1-5)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="hoursAtCompletion">Hours at Completion (for usage-based tasks)</label>
+                <input type="number" id="hoursAtCompletion" min="0" placeholder="Current hour meter reading">
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Completion Notes</label>
+                <textarea id="notes" rows="3" placeholder="Any notes about this completion..."></textarea>
+            </div>
+
+            <button onclick="completeTask()">Mark as Complete</button>
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/admin/api';
+        let currentTaskMetadata = null;
+
+        // Parse URL parameters
+        function getUrlParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Load systems from API
+        async function loadSystems(preSelectAssetUid = null) {
+            try {
+                const response = await fetch('/admin/api/system-maintenance');
+                const data = await response.json();
+
+                const select = document.getElementById('assetUid');
+
+                if (data.success && data.data.length > 0) {
+                    // Build options from real systems
+                    select.innerHTML = data.data.map(sys => {
+                        const displayName = sys.subsystem_norm || sys.description || sys.asset_uid;
+                        return `<option value="${sys.asset_uid}">${displayName}</option>`;
+                    }).join('');
+
+                    // Pre-select from parameter
+                    if (preSelectAssetUid && data.data.find(s => s.asset_uid === preSelectAssetUid)) {
+                        select.value = preSelectAssetUid;
+                    } else {
+                        select.value = data.data[0].asset_uid;
+                    }
+                } else {
+                    // Fallback to test system if no systems found
+                    select.innerHTML = '<option value="00000000-0000-0000-0000-000000000999">Test System (Phase 1-5)</option>';
+                }
+            } catch (error) {
+                console.error('Error loading systems:', error);
+            }
+        }
+
+        // Fetch task metadata from main app API
+        async function fetchTaskMetadata(taskId) {
+            try {
+                const response = await fetch(`${API_BASE}/maintenance-tasks/${taskId}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    return data.data;
+                } else {
+                    console.error('Failed to fetch task metadata:', data.error);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error fetching task metadata:', error);
+                return null;
+            }
+        }
+
+        // Initialize page on load
+        async function initializePage() {
+            const taskIdFromUrl = getUrlParam('taskId');
+            const assetUidFromUrl = getUrlParam('assetUid');
+
+            if (taskIdFromUrl) {
+                // Pre-fill task ID
+                document.getElementById('taskId').value = taskIdFromUrl;
+            }
+
+            // If assetUid is provided in URL, use it directly (no API call needed)
+            if (assetUidFromUrl) {
+                await loadSystems(assetUidFromUrl);
+            } else if (taskIdFromUrl) {
+                // Fallback: fetch task metadata from API if assetUid not in URL
+                currentTaskMetadata = await fetchTaskMetadata(taskIdFromUrl);
+
+                if (currentTaskMetadata) {
+                    // Load systems and pre-select based on task's asset_uid
+                    await loadSystems(currentTaskMetadata.asset_uid);
+                } else {
+                    // Task not found or error - just load systems without pre-selection
+                    await loadSystems();
+                }
+            } else {
+                // No taskId or assetUid in URL - just load systems
+                await loadSystems();
+            }
+        }
+
+        // Call initialization when page loads
+        window.addEventListener('DOMContentLoaded', initializePage);
+
+        async function completeTask() {
+            const taskId = document.getElementById('taskId').value.trim();
+            const assetUid = document.getElementById('assetUid').value;
+            const hoursValue = document.getElementById('hoursAtCompletion').value;
+            const notes = document.getElementById('notes').value;
+            const messageDiv = document.getElementById('message');
+
+            if (!taskId || !assetUid) {
+                messageDiv.innerHTML = '<p class="message error">Please fill in required fields</p>';
+                return;
+            }
+
+            const hoursAtCompletion = hoursValue ? parseInt(hoursValue) : null;
+
+            try {
+                const response = await fetch('/admin/api/task-completions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        task_id: taskId,
+                        asset_uid: assetUid,
+                        hours_at_completion: hoursAtCompletion,
+                        notes: notes || null,
+                        completed_by: 'user',
+                        source_type: 'manual'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    let msg = '✅ Task completed successfully!';
+
+                    if (data.data.next_due_calculated) {
+                        const nextDue = data.data.next_due_calculated;
+                        if (nextDue.is_recurring) {
+                            msg += `<br><br>📅 Next due: ${nextDue.next_due_hours ? nextDue.next_due_hours + ' hours' : nextDue.next_due_date}`;
+                        } else {
+                            msg += '<br><br>✓ One-time task - will not recur';
+                        }
+                    }
+
+                    messageDiv.innerHTML = `<p class="message success">${msg}</p>`;
+
+                    // Clear form
+                    document.getElementById('taskId').value = '';
+                    document.getElementById('notes').value = '';
+                } else {
+                    messageDiv.innerHTML = `<p class="message error">❌ ${data.error.message}</p>`;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = '<p class="message error">❌ Failed to complete task</p>';
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -362,7 +362,15 @@ async function extractEnrichAndUpload() {
             task_type: task.task_type,
             criticality: task.criticality,
             confidence: task.confidence,
-            source: task.source
+            source: task.source,
+            // NEW: Approval workflow fields (Pinecone doesn't support null - only add non-null values)
+            review_status: 'pending',        // Awaiting human approval
+            is_completed: false              // Will be set to true when one-time tasks are completed
+            // Note: Other fields added later when they have values:
+            // - is_recurring: Added by Step 6 (AI classification)
+            // - reviewed_at, reviewed_by, review_notes: Added when approved
+            // - last_completed_at, last_completed_hours: Added when completed
+            // - next_due_hours, next_due_date: Added after approval
           };
 
           // Add optional fields only if not null

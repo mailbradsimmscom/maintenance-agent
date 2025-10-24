@@ -11,6 +11,7 @@
 import dotenv from 'dotenv';
 import OpenAI from 'openai';
 import { pineconeRepository } from '../src/repositories/pinecone.repository.js';
+import boatosTasksService from '../src/services/boatos-tasks.service.js';
 import { getConfig } from '../src/config/env.js';
 
 dotenv.config();
@@ -90,13 +91,24 @@ async function classifyAndDiscover() {
 
   const systemPrompt = `You are a marine systems maintenance expert. You will:
 1. Classify existing maintenance tasks into categories
-2. Discover missing tasks based on industry best practices
+2. Determine if each task is recurring or one-time
+3. Discover missing tasks based on industry best practices
 
 Categories:
 - MAINTENANCE: Recurring preventive maintenance with clear schedule
 - INSTALLATION: One-time setup during commissioning
 - PRE_USE_CHECK: Operational check before using equipment
-- VAGUE: No clear frequency or actionable timeframe`;
+- VAGUE: No clear frequency or actionable timeframe
+
+Recurring vs One-Time:
+- RECURRING (is_recurring: true): Tasks that repeat indefinitely
+  - Keywords: "every", "each", "regularly", "periodically", "routine", "scheduled"
+  - Examples: "every 50 hours", "monthly inspection", "annual service"
+- ONE-TIME (is_recurring: false): Tasks that happen once
+  - Keywords: "first", "initial", "break-in", "commissioning", "after installation", "startup", "during setup"
+  - Examples: "after first 50 hours", "during break-in period", "initial setup"
+
+If unclear, default to RECURRING (safer assumption for maintenance).`;
 
   const userPrompt = `System: ${existingTasks[0]?.system_name || systemName}
 
@@ -108,7 +120,8 @@ ${existingTasks.map((t, i) => `${i + 1}. "${t.description}"
 
 INSTRUCTIONS:
 1. Classify each existing task above into ONE category (MAINTENANCE, INSTALLATION, PRE_USE_CHECK, VAGUE)
-2. Then, based on industry best practices, identify 3-5 MISSING maintenance tasks for this system that are:
+2. Determine if each task is_recurring (true/false)
+3. Then, based on industry best practices, identify 3-5 MISSING maintenance tasks for this system that are:
    - Not already listed above
    - Common in real-world operations
    - Often omitted from manuals
@@ -120,6 +133,7 @@ Return ONLY valid JSON in this EXACT format:
     {
       "task_number": 1,
       "category": "MAINTENANCE",
+      "is_recurring": true,
       "confidence": 0.95,
       "reasoning": "Brief explanation"
     }
@@ -168,16 +182,24 @@ Return ONLY valid JSON in this EXACT format:
     console.log(`[${i + 1}/${existingTasks.length}] ${task.id}`);
     console.log(`   Description: "${task.description.substring(0, 60)}..."`);
     console.log(`   Category: ${classification.category} (${(classification.confidence * 100).toFixed(0)}%)`);
+    console.log(`   Is Recurring: ${classification.is_recurring !== undefined ? classification.is_recurring : 'N/A'}`);
     console.log(`   Reasoning: ${classification.reasoning}`);
 
     // Update Pinecone metadata
     try {
-      await pineconeRepository.updateTaskMetadata(task.id, {
+      const metadataUpdate = {
         task_category: classification.category,
         task_category_confidence: classification.confidence,
         task_category_reasoning: classification.reasoning,
         classified_at: new Date().toISOString()
-      });
+      };
+
+      // Add is_recurring if provided by AI
+      if (classification.is_recurring !== undefined) {
+        metadataUpdate.is_recurring = classification.is_recurring;
+      }
+
+      await pineconeRepository.updateTaskMetadata(task.id, metadataUpdate);
       console.log(`   ✅ Metadata updated\n`);
       classifiedCount++;
     } catch (error) {
@@ -227,11 +249,19 @@ Return ONLY valid JSON in this EXACT format:
       criticality: task.criticality,
       confidence: task.confidence,
       source: 'real_world', // Mark as discovered
+      // Approval workflow fields (Pinecone doesn't support null - only add non-null values)
+      review_status: 'pending',
+      is_completed: false,
       task_category: 'MAINTENANCE', // All discovered tasks are maintenance
       task_category_confidence: task.confidence,
       task_category_reasoning: task.reasoning,
       classified_at: new Date().toISOString()
     };
+
+    // Add is_recurring if provided by AI (Pinecone doesn't support null)
+    if (task.is_recurring !== undefined && task.is_recurring !== null) {
+      metadata.is_recurring = task.is_recurring;
+    }
 
     // Upload to Pinecone
     try {
@@ -243,6 +273,44 @@ Return ONLY valid JSON in this EXACT format:
     }
   }
 
+  // Step 5: Check if system has usage-based tasks and create BoatOS task if needed
+  console.log('='.repeat(80));
+  console.log('\n🔔 BOATOS TASK CREATION\n');
+
+  // Check if ANY tasks for this system are usage-based
+  const hasUsageBasedTasks = existingTasks.some(t => t.frequency_basis === 'usage') ||
+                             discoveredTasks.some(t => t.frequency_basis === 'usage');
+
+  if (hasUsageBasedTasks) {
+    const systemAssetUid = existingTasks[0]?.asset_uid;
+
+    if (systemAssetUid) {
+      console.log(`System has usage-based maintenance tasks`);
+      console.log(`Checking if BoatOS prompt task exists for: ${systemAssetUid}`);
+
+      try {
+        const needsTask = await boatosTasksService.needsHoursUpdateTask(systemAssetUid);
+
+        if (needsTask) {
+          console.log('Creating BoatOS hours update prompt task...');
+          const boatosTask = await boatosTasksService.createHoursUpdateTask(systemAssetUid);
+          console.log(`✅ BoatOS task created (ID: ${boatosTask.id})`);
+          console.log(`   Next due: ${boatosTask.next_due}`);
+          console.log(`   Frequency: Every ${boatosTask.frequency_days} days`);
+        } else {
+          console.log('✓ BoatOS task already exists (skipping)');
+        }
+      } catch (error) {
+        console.error(`⚠️  Failed to create BoatOS task: ${error.message}`);
+      }
+    } else {
+      console.log('⚠️  Cannot create BoatOS task: No asset_uid found');
+    }
+  } else {
+    console.log('No usage-based tasks found - BoatOS task not needed');
+  }
+  console.log('');
+
   // Summary
   console.log('='.repeat(80));
   console.log('\n✅ SUMMARY\n');
@@ -250,6 +318,7 @@ Return ONLY valid JSON in this EXACT format:
   console.log(`Existing tasks classified: ${classifiedCount}/${existingTasks.length}`);
   console.log(`New tasks discovered: ${uploadedCount}/${discoveredTasks.length}`);
   console.log(`Total tasks in Pinecone: ${existingTasks.length + uploadedCount}`);
+  console.log(`Has usage-based tasks: ${hasUsageBasedTasks ? 'Yes' : 'No'}`);
   console.log('\n' + '='.repeat(80) + '\n');
 }
 

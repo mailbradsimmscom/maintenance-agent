@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Operating Hours</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        button:hover { opacity: 0.9; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+        }
+        .history-item {
+            padding: 15px;
+            border-left: 3px solid #667eea;
+            background: #f8f9fa;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .success { color: #10b981; font-weight: 600; margin-top: 10px; }
+        .error { color: #ef4444; font-weight: 600; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+        
+        <div class="card">
+            <h1>⏱️ Update Operating Hours</h1>
+            
+            <div class="form-group">
+                <label for="assetUid">System</label>
+                <select id="assetUid" required>
+                    <option value="">Loading systems...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="hours">Operating Hours</label>
+                <input type="number" id="hours" min="0" placeholder="Enter current hour meter reading" required>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes (optional)</label>
+                <textarea id="notes" rows="3" placeholder="Any notes about this update..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="meterReplaced"> Hour meter was replaced
+                </label>
+            </div>
+
+            <button onclick="updateHours()">Update Hours</button>
+            <div id="message"></div>
+        </div>
+
+        <div class="card">
+            <h2>📊 Hours History</h2>
+            <div id="history">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/admin/api';
+        let currentAssetUid = null;
+
+        // Get system from URL parameter
+        function getSystemFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('system');
+        }
+
+        // Load systems on page load
+        async function loadSystems() {
+            try {
+                const select = document.getElementById('assetUid');
+                const preSelectedSystem = getSystemFromUrl();
+
+                // Fetch systems with usage-based maintenance
+                const response = await fetch(`${API_BASE}/system-maintenance`);
+                const data = await response.json();
+
+                if (data.success && data.data.length > 0) {
+                    // Build options from real systems
+                    select.innerHTML = data.data.map(sys => {
+                        // Use subsystem_norm as the display name (e.g., "Watermaker")
+                        const displayName = sys.subsystem_norm || sys.description || sys.asset_uid;
+                        return `<option value="${sys.asset_uid}">${displayName}</option>`;
+                    }).join('');
+
+                    // Pre-select from URL or first system
+                    if (preSelectedSystem && data.data.find(s => s.asset_uid === preSelectedSystem)) {
+                        select.value = preSelectedSystem;
+                    } else {
+                        select.value = data.data[0].asset_uid;
+                    }
+                } else {
+                    // Fallback: show message
+                    select.innerHTML = '<option value="">No systems with usage-based maintenance</option>';
+                }
+
+                currentAssetUid = select.value;
+
+                // Load history for selected system
+                loadHistory();
+
+                // Update history when system changes
+                select.addEventListener('change', () => {
+                    currentAssetUid = select.value;
+                    loadHistory();
+                });
+            } catch (error) {
+                console.error('Error loading systems:', error);
+                const select = document.getElementById('assetUid');
+                select.innerHTML = '<option value="">Error loading systems</option>';
+            }
+        }
+
+        // Load hours history
+        async function loadHistory() {
+            if (!currentAssetUid) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/system-maintenance/${currentAssetUid}/hours/history`);
+                const data = await response.json();
+                
+                const historyDiv = document.getElementById('history');
+                
+                if (data.success && data.data.history.length > 0) {
+                    historyDiv.innerHTML = data.data.history.map(entry => `
+                        <div class="history-item">
+                            <strong>${entry.hours} hours</strong> - 
+                            ${new Date(entry.submitted_at).toLocaleString()}
+                            ${entry.notes ? `<br><em>${entry.notes}</em>` : ''}
+                            ${entry.meter_replaced ? '<br>🔄 Meter replaced' : ''}
+                        </div>
+                    `).join('');
+                } else {
+                    historyDiv.innerHTML = '<p style="color: #666;">No history yet. Submit your first hours update!</p>';
+                }
+            } catch (error) {
+                document.getElementById('history').innerHTML = '<p class="error">Failed to load history</p>';
+            }
+        }
+
+        // Update hours
+        async function updateHours() {
+            const assetUid = document.getElementById('assetUid').value;
+            const hours = parseInt(document.getElementById('hours').value);
+            const notes = document.getElementById('notes').value;
+            const meterReplaced = document.getElementById('meterReplaced').checked;
+            const messageDiv = document.getElementById('message');
+
+            if (!assetUid || !hours) {
+                messageDiv.innerHTML = '<p class="error">Please fill in all required fields</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/system-maintenance/${assetUid}/hours`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        hours,
+                        notes: notes || null,
+                        meterReplaced,
+                        submittedBy: 'user'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    messageDiv.innerHTML = '<p class="success">✅ Hours updated successfully!</p>';
+                    document.getElementById('notes').value = '';
+                    document.getElementById('meterReplaced').checked = false;
+                    loadHistory();
+                } else {
+                    messageDiv.innerHTML = `<p class="error">❌ ${data.error.message}</p>`;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = '<p class="error">❌ Failed to update hours</p>';
+            }
+        }
+
+        // Change system selection
+        document.getElementById('assetUid').addEventListener('change', (e) => {
+            currentAssetUid = e.target.value;
+            loadHistory();
+        });
+
+        // Load on page load
+        loadSystems();
+    </script>
+</body>
+</html>

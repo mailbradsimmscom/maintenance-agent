@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>To-Do List</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 { color: #333; margin-bottom: 10px; }
+        h2 {
+            color: #333;
+            font-size: 20px;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        h2:first-of-type { margin-top: 20px; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .filter-tab {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.2s;
+        }
+        .filter-tab:hover {
+            background: #e9ecef;
+        }
+        .filter-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Todo Items */
+        .todo-item {
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .todo-item.overdue { border-left-color: #ef4444; }
+        .todo-item.due_soon { border-left-color: #fbbf24; }
+        .todo-item h3 { color: #333; margin-bottom: 8px; }
+        .todo-item p { color: #666; margin-bottom: 12px; }
+
+        .todo-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-complete {
+            background: #10b981;
+            color: white;
+        }
+        .btn-complete:hover {
+            background: #059669;
+        }
+        .btn-view {
+            background: #667eea;
+            color: white;
+        }
+        .btn-view:hover {
+            background: #5568d3;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        .badge.overdue { background: #ef4444; color: white; }
+        .badge.due_soon { background: #fbbf24; color: white; }
+        .badge.boatos_task { background: #667eea; color: white; }
+        .badge.maintenance_task { background: #10b981; color: white; }
+        .badge.approval_required { background: #f97316; color: white; }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .empty-state h3 {
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Dashboard</a>
+
+        <div class="card">
+            <h1>📋 To-Do List</h1>
+            <p style="color: #666; margin-bottom: 20px;">
+                Aggregated view of all pending tasks from BoatOS prompts, maintenance schedule, and approvals.
+            </p>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all" onclick="filterTodos('all')">All Tasks</button>
+                <button class="filter-tab" data-filter="today" onclick="filterTodos('today')">📅 Today</button>
+                <button class="filter-tab" data-filter="week" onclick="filterTodos('week')">📆 Next 7 Days</button>
+            </div>
+
+            <div id="todos">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        let allTodos = [];
+        let currentFilter = 'all';
+
+        async function loadTodos() {
+            try {
+                const response = await fetch('/admin/api/todo');
+                const data = await response.json();
+
+                if (data.success) {
+                    allTodos = data.data.todos || [];
+                    renderTodos();
+                }
+            } catch (error) {
+                document.getElementById('todos').innerHTML = '<p style="color: #ef4444;">Failed to load to-dos</p>';
+                console.error(error);
+            }
+        }
+
+        function filterTodos(filter) {
+            currentFilter = filter;
+
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.filter === filter);
+            });
+
+            renderTodos();
+        }
+
+        function getFilteredTodos() {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const weekFromNow = new Date(today);
+            weekFromNow.setDate(weekFromNow.getDate() + 7);
+
+            if (currentFilter === 'all') {
+                return allTodos;
+            }
+
+            return allTodos.filter(todo => {
+                // For maintenance tasks, use daysUntilDue
+                if (todo.type === 'maintenance_task') {
+                    const daysUntil = todo.daysUntilDue;
+                    if (daysUntil === null || daysUntil === undefined) return false;
+
+                    if (currentFilter === 'today') {
+                        return daysUntil <= 0;
+                    } else if (currentFilter === 'week') {
+                        return daysUntil > 0 && daysUntil <= 7;
+                    }
+                }
+
+                // Approval and BoatOS tasks always show (high priority)
+                return true;
+            });
+        }
+
+        function renderTodos() {
+            const todosDiv = document.getElementById('todos');
+            const filtered = getFilteredTodos();
+
+            if (filtered.length === 0) {
+                todosDiv.innerHTML = `
+                    <div class="empty-state">
+                        <h3>✅ All caught up!</h3>
+                        <p>No pending tasks in this timeframe.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group by timeframe
+            const today = [];
+            const thisWeek = [];
+            const later = [];
+
+            filtered.forEach(todo => {
+                if (todo.type === 'maintenance_task') {
+                    const days = todo.daysUntilDue;
+                    if (days !== null && days !== undefined) {
+                        if (days <= 0) today.push(todo);
+                        else if (days <= 7) thisWeek.push(todo);
+                        else later.push(todo);
+                    } else {
+                        later.push(todo);
+                    }
+                } else {
+                    // Approval and BoatOS tasks go to today
+                    today.push(todo);
+                }
+            });
+
+            let html = '';
+
+            // Render Today section
+            if (today.length > 0 && currentFilter === 'all') {
+                html += '<h2>🔴 Due Today</h2>';
+                html += today.map(renderTodoCard).join('');
+            } else if (currentFilter === 'today') {
+                html += today.map(renderTodoCard).join('');
+            }
+
+            // Render This Week section
+            if (thisWeek.length > 0 && currentFilter === 'all') {
+                html += '<h2>🟡 Next 7 Days</h2>';
+                html += thisWeek.map(renderTodoCard).join('');
+            } else if (currentFilter === 'week') {
+                html += thisWeek.map(renderTodoCard).join('');
+            }
+
+            // Render Later section
+            if (later.length > 0 && currentFilter === 'all') {
+                html += '<h2>📋 Later</h2>';
+                html += later.map(renderTodoCard).join('');
+            }
+
+            todosDiv.innerHTML = html || '<div class="empty-state"><h3>✅ All caught up!</h3></div>';
+        }
+
+        function renderTodoCard(todo) {
+            const isMaintenanceTask = todo.type === 'maintenance_task';
+            const canComplete = isMaintenanceTask && todo.metadata?.taskId;
+
+            return `
+                <div class="todo-item ${todo.priority}">
+                    <span class="badge ${todo.type}">${todo.source}</span>
+                    <span class="badge ${todo.priority}">${todo.priority.replace('_', ' ')}</span>
+                    <h3>${todo.title}</h3>
+                    <p>${todo.description}</p>
+                    <div class="todo-actions">
+                        ${canComplete ? `
+                            <button class="btn btn-complete" onclick="markComplete('${todo.metadata.taskId}', '${todo.metadata.assetUid || ''}')">
+                                ✓ Mark Complete
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-view" onclick="window.location.href='${todo.actionUrl || '#'}'">
+                            ${isMaintenanceTask ? 'View Details' : 'Take Action'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function markComplete(taskId, assetUid) {
+            if (!confirm('Mark this task as complete?')) return;
+
+            try {
+                const response = await fetch('/admin/api/task-completions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        task_id: taskId,
+                        asset_uid: assetUid,
+                        completion_notes: 'Completed from to-do list'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ Task marked as complete!');
+                    await loadTodos(); // Refresh list
+                } else {
+                    throw new Error(result.error?.message || 'Failed to mark complete');
+                }
+            } catch (error) {
+                alert('Failed to mark task complete: ' + error.message);
+                console.error(error);
+            }
+        }
+
+        loadTodos();
+    </script>
+</body>
+</html>

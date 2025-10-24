@@ -18,11 +18,17 @@ const prettyFormat = winston.format.combine(
 
     // Add metadata if present
     if (Object.keys(meta).length > 0) {
-      // Filter out empty objects and undefined values
+      // Filter out empty objects and undefined/null values
       const cleanMeta = Object.entries(meta).reduce((acc, [key, value]) => {
-        if (value !== undefined && !(typeof value === 'object' && Object.keys(value).length === 0)) {
-          acc[key] = value;
+        // Skip undefined and null values
+        if (value === undefined || value === null) {
+          return acc;
         }
+        // Skip empty objects
+        if (typeof value === 'object' && Object.keys(value).length === 0) {
+          return acc;
+        }
+        acc[key] = value;
         return acc;
       }, {});
 

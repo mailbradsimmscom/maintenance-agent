@@ -278,6 +278,19 @@ export const pineconeRepository = {
   },
 
   /**
+   * [v2.1] Generic wrapper for updating task metadata
+   * Recommended method for all metadata updates to ensure embeddings are preserved
+   * @param {string} taskId - Task ID
+   * @param {Object} metadataUpdates - Metadata fields to update (will be merged with existing)
+   * @returns {Promise<void>}
+   * @throws {Error} If task not found in Pinecone
+   */
+  async updateMetadata(taskId, metadataUpdates) {
+    // Wrapper around updateTaskMetadata for consistency with Phase 1 naming
+    return this.updateTaskMetadata(taskId, metadataUpdates);
+  },
+
+  /**
    * Get task by ID from Pinecone
    * @param {string} taskId - Task ID
    * @returns {Promise<Object|null>} Task data or null

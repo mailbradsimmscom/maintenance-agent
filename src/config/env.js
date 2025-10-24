@@ -44,6 +44,31 @@ const envSchema = z.object({
   ENABLE_DEPENDENCY_INFERENCE: z.string().default('false'),
   ENABLE_AUTO_LEARNING: z.string().default('false'),
 
+  // Operational Tracking (NEW - Phase 1)
+  HOURS_UPDATE_PROMPT_INTERVAL_DAYS: z.string().default('7'),
+  HOURS_STALENESS_WARNING_DAYS: z.string().default('30'),
+  TASK_DUE_SOON_WARNING_DAYS: z.string().default('7'),
+  TASK_OVERDUE_WARNING_DAYS: z.string().default('3'),
+
+  // Approval Workflow (NEW - Phase 1)
+  APPROVAL_AUTO_APPROVE_CONFIDENCE: z.string().default('0.95'),
+  APPROVAL_REVIEW_REQUIRED_CONFIDENCE: z.string().default('0.70'),
+  APPROVAL_BATCH_SIZE: z.string().default('50'),
+
+  // Agent Processing (NEW - Phase 1)
+  OPENAI_MAX_CONCURRENT_CALLS: z.string().default('3'),
+  OPENAI_RATE_LIMIT_RPM: z.string().default('60'),
+
+  // UI Defaults (NEW - Phase 1)
+  UI_DEFAULT_PAGE_SIZE: z.string().default('20'),
+  UI_MAX_PAGE_SIZE: z.string().default('100'),
+  UI_NEW_TASK_BADGE_DAYS: z.string().default('7'),
+
+  // Error Handling (NEW - Phase 1)
+  MAX_RETRY_ATTEMPTS: z.string().default('3'),
+  RETRY_DELAY_MS: z.string().default('1000'),
+  API_TIMEOUT_MS: z.string().default('30000'),
+
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
   LOG_FORMAT: z.enum(['json', 'pretty']).default('pretty'),
@@ -100,6 +125,41 @@ export function getConfig() {
       realWorldSearch: env.ENABLE_REAL_WORLD_SEARCH === 'true',
       dependencyInference: env.ENABLE_DEPENDENCY_INFERENCE === 'true',
       autoLearning: env.ENABLE_AUTO_LEARNING === 'true',
+    },
+
+    // Operational Tracking (NEW - Phase 1)
+    tracking: {
+      hoursUpdatePromptIntervalDays: parseInt(env.HOURS_UPDATE_PROMPT_INTERVAL_DAYS, 10),
+      hoursStalenessWarningDays: parseInt(env.HOURS_STALENESS_WARNING_DAYS, 10),
+      taskDueSoonWarningDays: parseInt(env.TASK_DUE_SOON_WARNING_DAYS, 10),
+      taskOverdueWarningDays: parseInt(env.TASK_OVERDUE_WARNING_DAYS, 10),
+    },
+
+    // Approval Workflow (NEW - Phase 1)
+    approval: {
+      autoApproveConfidence: parseFloat(env.APPROVAL_AUTO_APPROVE_CONFIDENCE),
+      reviewRequiredConfidence: parseFloat(env.APPROVAL_REVIEW_REQUIRED_CONFIDENCE),
+      batchSize: parseInt(env.APPROVAL_BATCH_SIZE, 10),
+    },
+
+    // API Rate Limiting (NEW - Phase 1)
+    rateLimits: {
+      openaiMaxConcurrentCalls: parseInt(env.OPENAI_MAX_CONCURRENT_CALLS, 10),
+      openaiRateLimitRpm: parseInt(env.OPENAI_RATE_LIMIT_RPM, 10),
+    },
+
+    // UI Configuration (NEW - Phase 1)
+    ui: {
+      defaultPageSize: parseInt(env.UI_DEFAULT_PAGE_SIZE, 10),
+      maxPageSize: parseInt(env.UI_MAX_PAGE_SIZE, 10),
+      newTaskBadgeDays: parseInt(env.UI_NEW_TASK_BADGE_DAYS, 10),
+    },
+
+    // Error Handling (NEW - Phase 1)
+    errorHandling: {
+      maxRetryAttempts: parseInt(env.MAX_RETRY_ATTEMPTS, 10),
+      retryDelayMs: parseInt(env.RETRY_DELAY_MS, 10),
+      apiTimeoutMs: parseInt(env.API_TIMEOUT_MS, 10),
     },
 
     // Logging

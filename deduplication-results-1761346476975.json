@@ -1,0 +1,45 @@
+{
+  "analysis_date": "2025-10-24T22:54:36.975Z",
+  "total_tasks": 32,
+  "duplicate_pairs_count": 1,
+  "duplicate_groups_count": 1,
+  "total_duplicate_tasks": 1,
+  "unique_tasks": 31,
+  "reduction_percent": "3.1",
+  "thresholds": {
+    "semantic": {
+      "min": 0.85,
+      "highConfidence": 0.95
+    },
+    "frequency": {
+      "tight": 0.1,
+      "medium": 0.15,
+      "loose": 0.2
+    }
+  },
+  "duplicate_pairs": [
+    {
+      "taskA": {
+        "id": "task-1761346372114-21",
+        "description": "Clean drip tray after each use to prevent possible fire."
+      },
+      "taskB": {
+        "id": "task-1761346377314-29",
+        "description": "Clean drip tray after each use to prevent possible fire."
+      },
+      "similarity_score": 0.9999991442286132,
+      "reason": "semantic_match_event_or_condition_based",
+      "warning": null
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_id": "task-1761346372114-21",
+      "primary_description": "Clean drip tray after each use to prevent possible fire.",
+      "duplicate_ids": [
+        "task-1761346377314-29"
+      ],
+      "duplicate_count": 1
+    }
+  ]
+}

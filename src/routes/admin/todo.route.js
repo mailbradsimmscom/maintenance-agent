@@ -1,0 +1,67 @@
+/**
+ * To-Do Routes
+ * API endpoints for aggregated to-do list
+ */
+
+import express from 'express';
+import todoService from '../../services/todo.service.js';
+import { createLogger } from '../../utils/logger.js';
+
+const router = express.Router();
+const logger = createLogger('todo-route');
+
+/**
+ * GET /admin/api/todo
+ * Get all to-do items
+ */
+router.get('/', async (req, res, next) => {
+  
+  const { assetUid, userId } = req.query;
+
+  try {
+    logger.info('Fetching all to-do items', { assetUid, userId });
+
+    const todos = await todoService.getAllTodos({
+      assetUid: assetUid || null,
+      userId: userId || null,
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        todos,
+        count: todos.length,
+      },
+    });
+
+  } catch (error) {
+    logger.error('Error fetching todos', { error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * GET /admin/api/todo/statistics
+ * Get to-do statistics
+ */
+router.get('/statistics', async (req, res, next) => {
+  
+  const { assetUid } = req.query;
+
+  try {
+    logger.info('Fetching to-do statistics', { assetUid });
+
+    const stats = await todoService.getTodoStatistics(assetUid || null);
+
+    return res.json({
+      success: true,
+      data: stats,
+    });
+
+  } catch (error) {
+    logger.error('Error fetching todo statistics', { error: error.message });
+    return next(error);
+  }
+});
+
+export default router;

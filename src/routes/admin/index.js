@@ -9,6 +9,7 @@ import taskCompletionsRouter from './task-completions.route.js';
 import boatosTasksRouter from './boatos-tasks.route.js';
 import todoRouter from './todo.route.js';
 import maintenanceTasksRouter from './maintenance-tasks.route.js';
+import userTasksRouter from './user-tasks.route.js';
 
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router.use('/task-completions', taskCompletionsRouter);
 router.use('/boatos-tasks', boatosTasksRouter);
 router.use('/todo', todoRouter);
 router.use('/maintenance-tasks', maintenanceTasksRouter);
+router.use('/user-tasks', userTasksRouter);
 
 export default router;

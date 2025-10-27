@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create User Task</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Two column layout for date and frequency */
+        .date-frequency-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Dynamic frequency fields */
+        .frequency-details {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            display: none;
+        }
+        .frequency-details.active {
+            display: block;
+        }
+        .frequency-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .frequency-input-group input {
+            width: 100px;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        /* Success/Error messages */
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        .message.show {
+            display: block;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/todos.html" class="back-link">← Back to To-Do List</a>
+
+        <div class="card">
+            <h1>
+                <span>📝</span>
+                Create User Task
+            </h1>
+            <p class="subtitle">Add your own custom maintenance tasks and reminders</p>
+
+            <div id="message" class="message"></div>
+
+            <form id="userTaskForm">
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="description">
+                        Description <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="description"
+                        name="description"
+                        placeholder="e.g., Check anchor chain for rust"
+                        required
+                    >
+                </div>
+
+                <!-- System/Equipment -->
+                <div class="form-group">
+                    <label for="system">System/Equipment</label>
+                    <select id="system" name="system">
+                        <option value="general">General (Not system-specific)</option>
+                        <!-- Systems will be loaded here dynamically -->
+                    </select>
+                </div>
+
+                <!-- Due Date and Frequency Type in same row -->
+                <div class="date-frequency-row">
+                    <!-- Due Date -->
+                    <div class="form-group">
+                        <label for="dueDate">Due Date</label>
+                        <input
+                            type="date"
+                            id="dueDate"
+                            name="dueDate"
+                        >
+                    </div>
+
+                    <!-- Frequency Type -->
+                    <div class="form-group">
+                        <label for="frequencyType">Frequency Type</label>
+                        <select id="frequencyType" name="frequencyType" onchange="toggleFrequencyDetails()">
+                            <option value="one-time" selected>One-time</option>
+                            <option value="recurring-calendar">Recurring (Calendar)</option>
+                            <option value="recurring-usage">Recurring (Usage Hours)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Dynamic frequency details -->
+                <div id="recurringCalendarDetails" class="frequency-details">
+                    <div class="frequency-input-group">
+                        <label style="margin-bottom: 0;">Repeat every</label>
+                        <input
+                            type="number"
+                            id="calendarInterval"
+                            name="calendarInterval"
+                            min="1"
+                            value="30"
+                        >
+                        <label style="margin-bottom: 0;">days</label>
+                    </div>
+                </div>
+
+                <div id="recurringUsageDetails" class="frequency-details">
+                    <div class="frequency-input-group">
+                        <label style="margin-bottom: 0;">Repeat every</label>
+                        <input
+                            type="number"
+                            id="usageInterval"
+                            name="usageInterval"
+                            min="1"
+                            value="50"
+                        >
+                        <label style="margin-bottom: 0;">hours</label>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-group">
+                    <label for="notes">Notes (Optional)</label>
+                    <textarea
+                        id="notes"
+                        name="notes"
+                        placeholder="Any additional details or instructions..."
+                    ></textarea>
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        Create Task
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="resetForm()">
+                        Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Set today as default due date
+        document.addEventListener('DOMContentLoaded', async function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dueDate').value = today;
+
+            // Load systems into dropdown
+            await loadSystems();
+        });
+
+        // Load systems from API
+        async function loadSystems() {
+            try {
+                const response = await fetch('/admin/api/system-maintenance');
+                const data = await response.json();
+
+                if (data.success && data.data.length > 0) {
+                    const select = document.getElementById('system');
+
+                    // Keep "General" as first option
+                    const generalOption = select.options[0];
+                    select.innerHTML = '';
+                    select.appendChild(generalOption);
+
+                    // Add systems
+                    data.data.forEach(sys => {
+                        const displayName = sys.subsystem_norm || sys.description ||
+                                          `System ${sys.asset_uid.substring(0, 8)}`;
+                        const option = document.createElement('option');
+                        option.value = sys.asset_uid;
+                        option.textContent = displayName;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to load systems:', error);
+            }
+        }
+
+        // Toggle frequency details based on type
+        function toggleFrequencyDetails() {
+            const frequencyType = document.getElementById('frequencyType').value;
+            const calendarDetails = document.getElementById('recurringCalendarDetails');
+            const usageDetails = document.getElementById('recurringUsageDetails');
+
+            // Hide all first
+            calendarDetails.classList.remove('active');
+            usageDetails.classList.remove('active');
+
+            // Show relevant one
+            if (frequencyType === 'recurring-calendar') {
+                calendarDetails.classList.add('active');
+            } else if (frequencyType === 'recurring-usage') {
+                usageDetails.classList.add('active');
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('userTaskForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const frequencyType = formData.get('frequencyType');
+
+            // Build task object
+            const task = {
+                description: formData.get('description'),
+                asset_uid: formData.get('system') === 'general' ? null : formData.get('system'),
+                due_date: formData.get('dueDate') + 'T09:00:00Z', // Default to 9am
+                notes: formData.get('notes') || null,
+                status: 'active',
+                created_by: 'user'
+            };
+
+            // Set frequency based on type
+            if (frequencyType === 'one-time') {
+                task.is_recurring = false;
+                task.frequency_basis = null;
+                task.frequency_value = null;
+                task.frequency_unit = null;
+            } else if (frequencyType === 'recurring-calendar') {
+                task.is_recurring = true;
+                task.frequency_basis = 'calendar';
+                task.frequency_value = parseInt(formData.get('calendarInterval'));
+                task.frequency_unit = 'days';
+            } else if (frequencyType === 'recurring-usage') {
+                task.is_recurring = true;
+                task.frequency_basis = 'usage';
+                task.frequency_value = parseInt(formData.get('usageInterval'));
+                task.frequency_unit = 'hours';
+            }
+
+            try {
+                const response = await fetch('/admin/api/user-tasks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(task)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showMessage('✅ Task created successfully!', 'success');
+
+                    // Reset form after short delay
+                    setTimeout(() => {
+                        resetForm();
+                        // Optionally redirect to todos page
+                        // window.location.href = '/todos.html';
+                    }, 2000);
+                } else {
+                    showMessage(`❌ Failed to create task: ${result.error?.message || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Error: ${error.message}`, 'error');
+                console.error('Failed to create task:', error);
+            }
+        });
+
+        // Show message
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type} show`;
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+            }, 5000);
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('userTaskForm').reset();
+
+            // Reset due date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dueDate').value = today;
+
+            // Reset frequency details visibility
+            toggleFrequencyDetails();
+
+            // Hide any messages
+            document.getElementById('message').classList.remove('show');
+        }
+    </script>
+</body>
+</html>

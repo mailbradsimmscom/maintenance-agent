@@ -104,9 +104,6 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:3000/admin/api';
-        let currentTaskMetadata = null;
-
         // Parse URL parameters
         function getUrlParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -143,24 +140,6 @@
             }
         }
 
-        // Fetch task metadata from main app API
-        async function fetchTaskMetadata(taskId) {
-            try {
-                const response = await fetch(`${API_BASE}/maintenance-tasks/${taskId}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    return data.data;
-                } else {
-                    console.error('Failed to fetch task metadata:', data.error);
-                    return null;
-                }
-            } catch (error) {
-                console.error('Error fetching task metadata:', error);
-                return null;
-            }
-        }
-
         // Initialize page on load
         async function initializePage() {
             const taskIdFromUrl = getUrlParam('taskId');
@@ -171,22 +150,12 @@
                 document.getElementById('taskId').value = taskIdFromUrl;
             }
 
-            // If assetUid is provided in URL, use it directly (no API call needed)
+            // Always load systems and pre-select if assetUid is provided
+            // Since todos.html always passes both taskId and assetUid, we don't need to fetch metadata
             if (assetUidFromUrl) {
                 await loadSystems(assetUidFromUrl);
-            } else if (taskIdFromUrl) {
-                // Fallback: fetch task metadata from API if assetUid not in URL
-                currentTaskMetadata = await fetchTaskMetadata(taskIdFromUrl);
-
-                if (currentTaskMetadata) {
-                    // Load systems and pre-select based on task's asset_uid
-                    await loadSystems(currentTaskMetadata.asset_uid);
-                } else {
-                    // Task not found or error - just load systems without pre-selection
-                    await loadSystems();
-                }
             } else {
-                // No taskId or assetUid in URL - just load systems
+                // No assetUid in URL - just load systems without pre-selection
                 await loadSystems();
             }
         }

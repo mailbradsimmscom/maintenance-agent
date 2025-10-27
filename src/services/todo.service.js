@@ -7,6 +7,7 @@ import boatosTasksService from './boatos-tasks.service.js';
 import taskCompletionsService from './task-completions.service.js';
 import taskApprovalService from './task-approval.service.js';
 import systemMaintenanceRepo from '../repositories/system-maintenance.repository.js';
+import userTasksRepository from '../repositories/user-tasks.repository.js';
 import { pineconeRepository } from '../repositories/pinecone.repository.js';
 import { createClient } from '@supabase/supabase-js';
 import { getConfig } from '../config/env.js';
@@ -61,9 +62,10 @@ export const todoService = {
       logger.info('Fetching all todos', { assetUid, userId });
 
       // Fetch all to-do sources in parallel
-      const [boatosTasks, maintenanceTasks, pendingApprovals] = await Promise.all([
+      const [boatosTasks, maintenanceTasks, userTasks, pendingApprovals] = await Promise.all([
         this._getBoatOSTodos(assetUid),
         this._getMaintenanceTodos(assetUid),
+        this._getUserTodos(assetUid),
         this._getApprovalTodos(assetUid),
       ]);
 
@@ -71,6 +73,7 @@ export const todoService = {
       const allTodos = [
         ...boatosTasks,
         ...maintenanceTasks,
+        ...userTasks,
         ...pendingApprovals,
       ];
 
@@ -85,6 +88,7 @@ export const todoService = {
         total: allTodos.length,
         boatos: boatosTasks.length,
         maintenance: maintenanceTasks.length,
+        user: userTasks.length,
         approvals: pendingApprovals.length,
       });
 
@@ -287,6 +291,84 @@ export const todoService = {
   },
 
   /**
+   * Get user-created to-do items
+   * @private
+   * @param {string} assetUid - Filter by system
+   * @returns {Promise<Array>} User to-do items
+   */
+  async _getUserTodos(assetUid = null) {
+    try {
+      // Get active user tasks
+      const userTasks = await userTasksRepository.getActiveTasks(assetUid);
+
+      if (userTasks.length === 0) {
+        return [];
+      }
+
+      // Convert to to-do format
+      const todos = await Promise.all(
+        userTasks.map(async task => {
+          const now = new Date();
+          const dueDate = new Date(task.due_date);
+          const daysUntilDue = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
+
+          let priority = 'upcoming';
+          let dueDescription = '';
+
+          if (daysUntilDue < 0) {
+            priority = 'overdue';
+            dueDescription = `Overdue by ${Math.abs(daysUntilDue)} days`;
+          } else if (daysUntilDue === 0) {
+            priority = 'due_soon';
+            dueDescription = 'Due today';
+          } else if (daysUntilDue <= 7) {
+            priority = 'due_soon';
+            dueDescription = `Due in ${daysUntilDue} days`;
+          } else {
+            dueDescription = `Due in ${daysUntilDue} days`;
+          }
+
+          // Get system name if linked to a system
+          let systemName = null;
+          if (task.asset_uid) {
+            systemName = await this._getSystemName(task.asset_uid);
+          }
+
+          const titlePrefix = systemName ? `${systemName}: ` : '[General] ';
+
+          return {
+            id: `user-task-${task.id}`,
+            type: 'user_task',
+            source: 'User Tasks',
+            title: `${titlePrefix}${task.description}`,
+            description: dueDescription,
+            assetUid: task.asset_uid,
+            priority,
+            dueDate: task.due_date,
+            daysUntilDue,
+            actionUrl: `/edit-user-task.html?id=${task.id}`, // Edit/reschedule page
+            canDismiss: false,
+            metadata: {
+              taskId: task.id,
+              assetUid: task.asset_uid,
+              isRecurring: task.is_recurring,
+              frequencyBasis: task.frequency_basis,
+              notes: task.notes,
+              createdBy: task.created_by,
+            },
+          };
+        })
+      );
+
+      return todos;
+
+    } catch (error) {
+      logger.error('Failed to get user todos', { error: error.message });
+      return [];
+    }
+  },
+
+  /**
    * Format due description based on frequency basis
    * @private
    * @param {Object} dueStatus - Due status from calculateDueStatus
@@ -327,6 +409,7 @@ export const todoService = {
         byType: {
           boatos_task: 0,
           maintenance_task: 0,
+          user_task: 0,
           approval_required: 0,
         },
         byPriority: {

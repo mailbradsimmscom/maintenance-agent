@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deduplication Review | Maintenance Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* Stats Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .stat-card.pending .stat-value { color: #f59e0b; }
+        .stat-card.reviewed .stat-value { color: #10b981; }
+
+        /* Filters */
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filters label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .filters select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Reviews Table */
+        .reviews-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h2 {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .bulk-actions button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .bulk-actions button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        th.checkbox-col {
+            width: 40px;
+        }
+
+        td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .task-description {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .task-metadata {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .similarity-score {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .similarity-high {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .similarity-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .similarity-low {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .match-reason {
+            font-size: 12px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-keep {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-keep:hover:not(:disabled) {
+            background: #059669;
+        }
+
+        .btn-merge {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-merge:hover:not(:disabled) {
+            background: #2563eb;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-delete:hover:not(:disabled) {
+            background: #dc2626;
+        }
+
+        .btn-dismiss {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-dismiss:hover:not(:disabled) {
+            background: #4b5563;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f4f6;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1f2937;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success {
+            background: #10b981;
+        }
+
+        .toast.error {
+            background: #ef4444;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal for notes */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 100px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .nav-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/todos.html" class="nav-link">← Back to Todos</a>
+
+        <h1>🔍 Deduplication Review</h1>
+        <p class="subtitle">Review and resolve duplicate maintenance tasks</p>
+
+        <!-- Stats Dashboard -->
+        <div class="stats-grid">
+            <div class="stat-card pending">
+                <div class="stat-value" id="stat-pending">-</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card reviewed">
+                <div class="stat-value" id="stat-keep">-</div>
+                <div class="stat-label">Keep Both</div>
+            </div>
+            <div class="stat-card reviewed">
+                <div class="stat-value" id="stat-merge">-</div>
+                <div class="stat-label">Merge</div>
+            </div>
+            <div class="stat-card reviewed">
+                <div class="stat-value" id="stat-delete">-</div>
+                <div class="stat-label">Deleted</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-total">-</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <label>System:</label>
+            <select id="system-filter" onchange="loadReviews()">
+                <option value="">All Systems</option>
+            </select>
+
+            <label>Sort by:</label>
+            <select id="sort-select">
+                <option value="similarity">Similarity (High to Low)</option>
+                <option value="date">Date Added</option>
+            </select>
+
+            <label>Show:</label>
+            <select id="status-filter">
+                <option value="pending">Pending Only</option>
+                <option value="all">All Reviews</option>
+            </select>
+
+            <span id="pending-commits-badge" style="margin-left: auto; font-size: 14px; color: #666; display: none;">
+                <strong id="pending-commits-count">0</strong> decisions ready to commit
+            </span>
+
+            <button class="btn btn-merge" onclick="commitDecisions()" id="commit-btn" style="display: none;">
+                ✓ Commit Decisions
+            </button>
+
+            <button class="btn btn-keep" onclick="loadReviews()">
+                🔄 Refresh
+            </button>
+        </div>
+
+        <!-- Reviews Table -->
+        <div class="reviews-container">
+            <div class="table-header">
+                <h2>Duplicate Pairs</h2>
+                <div class="bulk-actions">
+                    <span id="selected-count" style="font-size: 14px; color: #666;"></span>
+                    <button class="btn btn-keep" onclick="bulkAction('keep_both')" id="bulk-keep" disabled>Keep Both</button>
+                </div>
+            </div>
+
+            <div id="reviews-list">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading reviews...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Notes Modal -->
+    <div id="notes-modal" class="modal">
+        <div class="modal-content">
+            <h3>Add Review Notes (Optional)</h3>
+            <textarea id="review-notes" placeholder="Why are you making this decision?"></textarea>
+            <div class="modal-buttons">
+                <button class="btn btn-dismiss" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-keep" onclick="submitReview()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentReviews = [];
+        let selectedReviews = new Set();
+        let pendingReview = null;
+
+        // Load stats and reviews on page load
+        async function init() {
+            await loadStats();
+            await loadSystems();
+            await loadPendingCommits();
+            await loadReviews();
+        }
+
+        // Load pending commits count
+        async function loadPendingCommits() {
+            try {
+                const response = await fetch('/admin/api/dedup-reviews/pending-commits');
+                const result = await response.json();
+
+                if (result.success) {
+                    const count = result.data.count;
+                    document.getElementById('pending-commits-count').textContent = count;
+
+                    const badge = document.getElementById('pending-commits-badge');
+                    const btn = document.getElementById('commit-btn');
+
+                    if (count > 0) {
+                        badge.style.display = 'inline';
+                        btn.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                        btn.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load pending commits:', error);
+            }
+        }
+
+        // Commit all reviewed decisions
+        async function commitDecisions() {
+            const count = parseInt(document.getElementById('pending-commits-count').textContent);
+
+            if (!confirm(`Commit ${count} reviewed decisions to Pinecone?\n\nThis will mark duplicate tasks as hidden.`)) {
+                return;
+            }
+
+            const btn = document.getElementById('commit-btn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Committing...';
+
+            try {
+                const response = await fetch('/admin/api/dedup-reviews/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const { executed, failed, total } = result.data;
+                    showToast(`✓ Committed ${executed}/${total} decisions` +
+                             (failed > 0 ? ` (${failed} failed)` : ''),
+                             failed > 0 ? 'error' : 'success');
+
+                    // Refresh everything
+                    await loadStats();
+                    await loadPendingCommits();
+                    await loadReviews();
+                } else {
+                    throw new Error(result.error || 'Failed to commit decisions');
+                }
+            } catch (error) {
+                console.error('Failed to commit decisions:', error);
+                showToast(`Error: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '✓ Commit Decisions';
+            }
+        }
+
+        // Load systems for filter dropdown
+        async function loadSystems() {
+            try {
+                const response = await fetch('/admin/api/dedup-reviews/systems');
+                const result = await response.json();
+
+                if (result.success) {
+                    const select = document.getElementById('system-filter');
+                    result.data.forEach(system => {
+                        const option = document.createElement('option');
+                        option.value = system;
+                        option.textContent = system;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to load systems:', error);
+            }
+        }
+
+        // Load statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('/admin/api/dedup-reviews/stats');
+                const result = await response.json();
+
+                if (result.success) {
+                    const stats = result.data;
+                    document.getElementById('stat-pending').textContent = stats.pending;
+                    document.getElementById('stat-keep').textContent = stats.keep_both;
+                    document.getElementById('stat-merge').textContent = stats.merge;
+                    // Deleted includes delete_task1, delete_task2, and delete_both
+                    document.getElementById('stat-delete').textContent =
+                        stats.delete_task1 + stats.delete_task2 + (stats.delete_both || 0);
+                    document.getElementById('stat-total').textContent = stats.total;
+                }
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+                showToast('Failed to load statistics', 'error');
+            }
+        }
+
+        // Load reviews
+        async function loadReviews() {
+            const listContainer = document.getElementById('reviews-list');
+            listContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading reviews...</p></div>';
+
+            try {
+                const systemFilter = document.getElementById('system-filter')?.value || '';
+                const url = systemFilter
+                    ? `/admin/api/dedup-reviews/pending?limit=100&system=${encodeURIComponent(systemFilter)}`
+                    : '/admin/api/dedup-reviews/pending?limit=100';
+
+                const response = await fetch(url);
+                const result = await response.json();
+
+                if (result.success) {
+                    currentReviews = result.data;
+                    renderReviews(currentReviews);
+                } else {
+                    throw new Error(result.error || 'Failed to load reviews');
+                }
+            } catch (error) {
+                console.error('Failed to load reviews:', error);
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Error Loading Reviews</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Render reviews table
+        function renderReviews(reviews) {
+            const listContainer = document.getElementById('reviews-list');
+
+            if (reviews.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        <h3>✅ All Caught Up!</h3>
+                        <p>No pending duplicate reviews at this time.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">
+                                <input type="checkbox" id="select-all" onchange="toggleSelectAll(this)">
+                            </th>
+                            <th>Task 1</th>
+                            <th>Task 2</th>
+                            <th>Similarity</th>
+                            <th style="width: 200px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${reviews.map(review => renderReviewRow(review)).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            listContainer.innerHTML = tableHTML;
+        }
+
+        // Render single review row
+        function renderReviewRow(review) {
+            const similarity = (review.similarity_score * 100).toFixed(1);
+            const similarityClass = review.similarity_score >= 0.85 ? 'similarity-high' :
+                                   review.similarity_score >= 0.70 ? 'similarity-medium' : 'similarity-low';
+
+            return `
+                <tr>
+                    <td>
+                        <input type="checkbox"
+                               class="review-checkbox"
+                               data-review-id="${review.id}"
+                               onchange="toggleReviewSelection('${review.id}')">
+                    </td>
+                    <td>
+                        <div class="task-description">${escapeHtml(review.task1_description)}</div>
+                        <div class="task-metadata">
+                            <span class="metadata-item">📍 ${escapeHtml(review.task1_system || 'Unknown')}</span>
+                            <span class="metadata-item">⏱️ ${review.task1_frequency || 'N/A'}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="task-description">${escapeHtml(review.task2_description)}</div>
+                        <div class="task-metadata">
+                            <span class="metadata-item">📍 ${escapeHtml(review.task2_system || 'Unknown')}</span>
+                            <span class="metadata-item">⏱️ ${review.task2_frequency || 'N/A'}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="similarity-score ${similarityClass}">${similarity}%</span>
+                        <div class="match-reason">${formatReason(review.match_reason)}</div>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-keep" onclick="reviewTask('${review.id}', 'keep_both')" title="Keep both tasks">
+                                Keep Both
+                            </button>
+                            <button class="btn btn-delete" onclick="reviewTask('${review.id}', 'delete_task1')" title="Delete first task">
+                                Del #1
+                            </button>
+                            <button class="btn btn-delete" onclick="reviewTask('${review.id}', 'delete_task2')" title="Delete second task">
+                                Del #2
+                            </button>
+                            <button class="btn btn-delete" onclick="reviewTask('${review.id}', 'delete_both')" title="Delete both tasks (both are garbage)">
+                                Del Both
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        // Handle review decision
+        async function reviewTask(reviewId, status) {
+            pendingReview = { reviewId, status };
+            // For now, submit directly without notes
+            await submitReview();
+        }
+
+        // Submit review decision
+        async function submitReview() {
+            if (!pendingReview) return;
+
+            const { reviewId, status } = pendingReview;
+            const notes = document.getElementById('review-notes').value;
+
+            try {
+                const response = await fetch(`/admin/api/dedup-reviews/${reviewId}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        status,
+                        notes: notes || null,
+                        reviewedBy: 'user'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(`Review updated: ${formatStatus(status)}`, 'success');
+                    closeModal();
+                    await loadStats();
+                    await loadPendingCommits();
+                    await loadReviews();
+                    selectedReviews.clear();
+                    updateBulkButtons();
+                } else {
+                    throw new Error(result.error || 'Failed to update review');
+                }
+            } catch (error) {
+                console.error('Failed to submit review:', error);
+                showToast(`Error: ${error.message}`, 'error');
+            }
+
+            pendingReview = null;
+        }
+
+        // Bulk actions
+        async function bulkAction(status) {
+            if (selectedReviews.size === 0) return;
+
+            const confirmed = confirm(`Apply "${formatStatus(status)}" to ${selectedReviews.size} selected reviews?`);
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch('/admin/api/dedup-reviews/bulk-update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        reviewIds: Array.from(selectedReviews),
+                        status,
+                        reviewedBy: 'user'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(`Bulk updated ${result.data.updatedCount} reviews`, 'success');
+                    await loadStats();
+                    await loadPendingCommits();
+                    await loadReviews();
+                    selectedReviews.clear();
+                    updateBulkButtons();
+                } else {
+                    throw new Error(result.error || 'Failed to bulk update');
+                }
+            } catch (error) {
+                console.error('Failed to bulk update:', error);
+                showToast(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Selection management
+        function toggleReviewSelection(reviewId) {
+            if (selectedReviews.has(reviewId)) {
+                selectedReviews.delete(reviewId);
+            } else {
+                selectedReviews.add(reviewId);
+            }
+            updateBulkButtons();
+        }
+
+        function toggleSelectAll(checkbox) {
+            selectedReviews.clear();
+            const checkboxes = document.querySelectorAll('.review-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = checkbox.checked;
+                if (checkbox.checked) {
+                    selectedReviews.add(cb.dataset.reviewId);
+                }
+            });
+            updateBulkButtons();
+        }
+
+        function updateBulkButtons() {
+            const count = selectedReviews.size;
+            document.getElementById('selected-count').textContent =
+                count > 0 ? `${count} selected` : '';
+            document.getElementById('bulk-keep').disabled = count === 0;
+        }
+
+        // Modal management
+        function closeModal() {
+            document.getElementById('notes-modal').classList.remove('show');
+            document.getElementById('review-notes').value = '';
+        }
+
+        // Toast notifications
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatReason(reason) {
+            return reason.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatStatus(status) {
+            const labels = {
+                'keep_both': 'Keep Both',
+                'merge': 'Merge',
+                'delete_task1': 'Delete Task 1',
+                'delete_task2': 'Delete Task 2',
+                'delete_both': 'Delete Both'
+            };
+            return labels[status] || status;
+        }
+
+        // Initialize on page load
+        init();
+    </script>
+</body>
+</html>

@@ -10,6 +10,7 @@ import boatosTasksRouter from './boatos-tasks.route.js';
 import todoRouter from './todo.route.js';
 import maintenanceTasksRouter from './maintenance-tasks.route.js';
 import userTasksRouter from './user-tasks.route.js';
+import dedupReviewRouter from './dedup-review.route.js';
 
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router.use('/boatos-tasks', boatosTasksRouter);
 router.use('/todo', todoRouter);
 router.use('/maintenance-tasks', maintenanceTasksRouter);
 router.use('/user-tasks', userTasksRouter);
+router.use('/dedup-reviews', dedupReviewRouter);
 
 export default router;

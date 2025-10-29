@@ -7,3 +7,7 @@ yarn-debug.log*
 yarn-error.log*
 dist/
 build/
+
+# Deduplication result files (now stored in database)
+deduplication-results-*.json
+test-results-*.json

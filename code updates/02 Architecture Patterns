@@ -146,9 +146,97 @@ const validTransitions = {
 1. `extraction` - Pulling from manuals
 2. `discovery` - Real-world search
 3. `inference` - Dependency analysis
-4. `deduplication` - Removing duplicates
-5. `queueing` - Adding to review queue
-6. `completed` - All done
+4. `approval` - Human review of extracted tasks (Step 4)
+5. `deduplication` - Identifying duplicates (Step 5)
+6. `dedup_review` - Human review of duplicate pairs (Step 5)
+7. `dedup_execution` - Committing decisions to Pinecone (Step 5)
+8. `queueing` - Adding to active todo list
+9. `completed` - All done
+
+---
+
+## Two-Phase Workflow Pattern
+
+**Use Case:** Human review processes that need to happen asynchronously from decision execution.
+
+### Pattern Structure
+```
+Phase 1: Mark Decision          Phase 2: Execute Decision
+    (Async, multiple sessions)      (Batch, single operation)
+
+User reviews → Database         Review all → Commit to external system
+User reviews → Database
+    ... days later ...
+User reviews → Database         Click "Execute" → Update Pinecone
+User reviews → Database                        Update database
+```
+
+### Implementation (Step 5: Deduplication Review)
+
+**Database Schema:**
+```sql
+-- Review decisions stored persistently
+CREATE TABLE deduplication_reviews (
+  id UUID PRIMARY KEY,
+  task1_id TEXT,
+  task2_id TEXT,
+  similarity_score DECIMAL(5,4),
+
+  -- Phase 1: Decision marking
+  review_status TEXT DEFAULT 'pending',  -- keep_both, delete_task1, etc.
+  reviewed_by TEXT,
+  reviewed_at TIMESTAMPTZ,
+
+  -- Phase 2: Execution tracking
+  executed BOOLEAN DEFAULT false,
+  executed_at TIMESTAMPTZ,
+  execution_error TEXT
+);
+```
+
+**Phase 1 API (Mark Decision):**
+```javascript
+PATCH /admin/api/dedup-reviews/:id/status
+Body: { status: 'delete_task1', notes: '...' }
+Response: { success: true }
+
+// Only updates database, does NOT touch Pinecone
+```
+
+**Phase 2 API (Execute Batch):**
+```javascript
+POST /admin/api/dedup-reviews/execute
+Response: { executed: 5, failed: 0 }
+
+// Reads all where executed=false AND status!='pending'
+// Updates Pinecone metadata for each
+// Marks executed=true in database
+```
+
+### Benefits
+1. **Safety** - Review without commitment risk
+2. **Async review** - Continue over multiple sessions
+3. **Batch efficiency** - Execute 20+ decisions at once
+4. **Audit trail** - Separate "decided" vs "executed" timestamps
+5. **Error recovery** - Failed executions don't lose decisions
+6. **UI clarity** - "5 decisions ready to commit" indicator
+
+### When to Use This Pattern
+- Human review happens days/weeks after initial analysis
+- Execution is expensive or risky (external API calls)
+- Need audit trail of decisions vs actions
+- Want batch operations for efficiency
+- Review process can be interrupted and resumed
+
+### Alternative: Immediate Execution
+For simpler cases, execute on decision:
+```javascript
+// One-phase: Click button → Update database + Pinecone immediately
+PATCH /admin/api/tasks/:id/approve
+// Executes immediately, no separate commit step
+```
+
+**Trade-off:** Simpler code, but can't batch or review decisions before committing.
 
 ---
 
@@ -159,7 +247,16 @@ const validTransitions = {
 migrations/
 ├── agent/                    # Agent-only migrations
 │   ├── 001_create_memory_table.sql
-│   └── 002_add_retry_columns.sql
+│   ├── 002_add_retry_columns.sql
+│   ├── 003_create_boatos_tasks.sql
+│   ├── 004_update_boatos_tasks.sql
+│   ├── 005_system_maintenance.sql
+│   ├── 006_task_completions.sql
+│   ├── 007_add_agent_memory_fields.sql
+│   ├── 008_user_tasks.sql
+│   ├── 009_deduplication_reviews.sql       # Step 5: Core tables
+│   ├── 010_add_execution_tracking.sql      # Step 5: Execution tracking
+│   └── 011_add_delete_both_option.sql      # Step 5: Delete both status
 ├── shared/                   # Coordinate with main system
 │   └── 001_add_system_flags.sql
 └── README.md
@@ -282,8 +379,36 @@ const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
 ### Database Query Optimization
 - Use indexes on frequently queried columns
-- Batch inserts when possible
+- Batch inserts when possible (1000 rows at once for Supabase)
 - Connection pooling configured
+
+#### JavaScript Filtering Pattern
+When database-level filtering fails due to special characters or complex syntax:
+
+```javascript
+// ❌ PROBLEM: PostgREST can't handle special chars like parentheses
+query.or(`system_name.ilike.*57 hp diesel engine (PORT)*`)
+// Returns 0 results - parentheses break filter syntax
+
+// ✅ SOLUTION: Fetch all, filter in JavaScript
+const { data } = await supabase
+  .from('reviews')
+  .select('*');
+
+const filtered = data.filter(row => {
+  const name = (row.system_name || '').toLowerCase();
+  const filter = userInput.toLowerCase();
+  return name.includes(filter);
+});
+```
+
+**When to use:**
+- User input contains special characters (parentheses, commas, etc.)
+- Dataset is small enough (<5000 rows)
+- Filter complexity exceeds database capability
+- Need case-insensitive partial matching
+
+**Trade-off:** More data transfer, but handles all edge cases reliably.
 
 ### Memory Management
 - Process streams instead of loading all data

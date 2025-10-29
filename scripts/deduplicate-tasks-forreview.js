@@ -1,6 +1,6 @@
-import { writeFileSync } from 'fs';
 import dotenv from 'dotenv';
 import { pineconeRepository } from '../src/repositories/pinecone.repository.js';
+import deduplicationReviewRepository from '../src/repositories/deduplication-review.repository.js';
 
 dotenv.config();
 
@@ -229,6 +229,44 @@ function buildDuplicateGroups(duplicatePairs) {
 }
 
 /**
+ * Save deduplication results to database
+ */
+async function saveResultsToDatabase(results, systemFilter, assetUidFilter) {
+  try {
+    // Create analysis run record
+    const analysisId = await deduplicationReviewRepository.createAnalysisRun({
+      analysis_date: results.analysis_date,
+      total_tasks: results.total_tasks,
+      duplicate_pairs_found: results.duplicate_pairs_count,
+      duplicate_groups_found: results.duplicate_groups_count,
+      thresholds: results.thresholds,
+      filters: {
+        systemFilter: systemFilter || null,
+        assetUidFilter: assetUidFilter || null
+      }
+    });
+
+    console.log(`📊 Created analysis run: ${analysisId}`);
+
+    // Save all duplicate pairs
+    if (results.duplicate_pairs.length > 0) {
+      const count = await deduplicationReviewRepository.bulkSavePairs(
+        analysisId,
+        results.duplicate_pairs
+      );
+      console.log(`✅ Saved ${count} duplicate pairs for review`);
+    } else {
+      console.log(`ℹ️  No duplicate pairs to save`);
+    }
+
+    return analysisId;
+  } catch (error) {
+    console.error('❌ Failed to save results to database:', error.message);
+    throw error;
+  }
+}
+
+/**
  * Main deduplication analysis (in-memory pairwise comparison)
  */
 async function analyzeDuplicates() {
@@ -369,7 +407,7 @@ async function analyzeDuplicates() {
     console.log('');
   });
 
-  // Save results to JSON
+  // Save results to database
   const results = {
     analysis_date: new Date().toISOString(),
     total_tasks: filteredTasks.length,
@@ -418,11 +456,14 @@ async function analyzeDuplicates() {
     }))
   };
 
-  const outputFile = `deduplication-results-${Date.now()}.json`;
-  writeFileSync(outputFile, JSON.stringify(results, null, 2));
+  // Save to database
+  console.log('='.repeat(80));
+  console.log('\n💾 Saving results to database...\n');
+
+  const analysisId = await saveResultsToDatabase(results, systemFilter, assetUidFilter);
 
   console.log('='.repeat(80));
-  console.log(`\n📄 Results saved to: ${outputFile}\n`);
+  console.log(`\n✅ Results saved to database (Analysis ID: ${analysisId})\n`);
   console.log('='.repeat(80));
   console.log('\n✅ Deduplication analysis complete!\n');
 

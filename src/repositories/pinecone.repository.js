@@ -365,6 +365,37 @@ export const pineconeRepository = {
   },
 
   /**
+   * Count pending tasks for a specific asset
+   * @param {string} assetUid - Asset UID to filter by
+   * @returns {Promise<number>} Count of tasks with review_status='pending'
+   */
+  async countPendingTasksForAsset(assetUid) {
+    try {
+      logger.debug('Counting pending tasks for asset', { assetUid });
+
+      // Get all tasks
+      const allTasks = await this.listAllTasks();
+
+      // Filter by asset_uid and review_status='pending'
+      const pendingTasks = allTasks.filter(task =>
+        task.metadata?.asset_uid === assetUid &&
+        task.metadata?.review_status === 'pending'
+      );
+
+      logger.info('Counted pending tasks', {
+        assetUid,
+        pendingCount: pendingTasks.length,
+        totalCount: allTasks.length
+      });
+
+      return pendingTasks.length;
+    } catch (error) {
+      logger.error('Failed to count pending tasks', { assetUid, error: error.message });
+      throw error;
+    }
+  },
+
+  /**
    * Delete a task from Pinecone
    * @param {string} taskId - Task ID
    */

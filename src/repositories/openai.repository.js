@@ -280,6 +280,132 @@ Return a single number between 0.0 and 1.0`;
       return 0.5; // Default medium confidence
     }
   },
+
+  /**
+   * Classify and discover tasks using LLM
+   * @param {string} systemPrompt - System prompt
+   * @param {string} userPrompt - User prompt with tasks
+   * @returns {Promise<Object>} Classifications and discovered tasks
+   */
+  async classifyAndDiscoverTasks(systemPrompt, userPrompt) {
+    try {
+      const response = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0,
+        response_format: { type: "json_object" }
+      });
+
+      const result = JSON.parse(response.choices[0].message.content);
+      return result;
+    } catch (error) {
+      logger.error('Failed to classify and discover tasks', { error: error.message });
+      throw error;
+    }
+  },
+
+  /**
+   * Discover cross-system dependency maintenance tasks
+   * @param {string} systemName - System name
+   * @param {string} manufacturer - Manufacturer name
+   * @param {string} model - Model name
+   * @returns {Promise<Object>} Dependency tasks and system integration chain
+   */
+  async discoverDependencyTasks(systemName, manufacturer = 'Unknown', model = 'Unknown') {
+    const systemPrompt = `You are a marine systems maintenance expert with deep knowledge of yacht systems integration.
+
+Your specialty: Understanding how systems depend on each other and what maintenance prevents cascading failures.`;
+
+    const userPrompt = `System: ${systemName}
+Manufacturer: ${manufacturer}
+Model: ${model}
+
+Your task: Identify maintenance on OTHER systems that directly affects this system's reliability.
+
+Think about the complete system chain:
+- What upstream systems feed this one? (power, water, fuel, air, data)
+- What supporting infrastructure does it need? (pumps, filters, strainers, valves)
+- What environmental factors require maintenance? (seawater exposure, engine heat, vibration)
+- What shared resources could fail? (electrical panels, plumbing, cooling loops)
+
+Focus on HIGH-IMPACT dependencies:
+- Maintenance that if skipped, causes THIS system to fail
+- Tasks often overlooked because they're on a "different" system
+- Cross-system checks that prevent expensive repairs
+
+EXAMPLES to guide your thinking:
+
+Air Conditioner depends on:
+- "Clean seawater strainer for AC cooling loop" (strainer blockage → AC overheating)
+- "Inspect raw water pump impeller serving AC" (weak flow → poor cooling)
+- "Verify shore power voltage at AC breaker" (low voltage → compressor failure)
+- "Clear condensate drain line" (blockage → water damage to AC controls)
+
+Water Maker depends on:
+- "Service high-pressure pump seals" (leak → system shutdown)
+- "Clean pre-filter cartridges" (clogging → membrane damage)
+- "Test raw water intake strainer" (blockage → pump cavitation)
+- "Monitor DC voltage at water maker panel" (voltage drop → unreliable operation)
+
+Diesel Engine depends on:
+- "Service fuel polishing system filters" (dirty fuel → injector damage)
+- "Inspect raw water intake through-hull" (marine growth → overheating)
+- "Check engine room ventilation fans" (poor airflow → high temps)
+- "Test seawater strainer for engine cooling" (blockage → catastrophic overheat)
+
+Now identify 3-7 dependency maintenance tasks for: ${systemName}
+
+Return ONLY valid JSON:
+{
+  "dependency_tasks": [
+    {
+      "description": "Clear, specific task description including what system it's on",
+      "related_system": "Name of the system this task is performed on",
+      "impact": "What happens to ${systemName} if this maintenance is skipped",
+      "frequency_value": 14,
+      "frequency_type": "days",
+      "frequency_basis": "calendar",
+      "task_type": "inspection",
+      "criticality": "high",
+      "confidence": 0.85,
+      "reasoning": "Why this dependency is critical"
+    }
+  ],
+  "system_chain": "Brief description of how this system integrates with others"
+}`;
+
+    try {
+      logger.info('Discovering dependency tasks', { systemName, manufacturer, model });
+
+      const response = await openai.chat.completions.create({
+        model: config.openai.model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],
+        temperature: 0.4,
+        response_format: { type: 'json_object' },
+      });
+
+      const result = JSON.parse(response.choices[0].message.content);
+
+      logger.info('Dependency discovery complete', {
+        systemName,
+        tasksFound: result.dependency_tasks?.length || 0
+      });
+
+      return result;
+    } catch (error) {
+      logger.error('Failed to discover dependency tasks', {
+        systemName,
+        error: error.message
+      });
+      return { dependency_tasks: [], system_chain: '' };
+    }
+  },
 };
 
 export default openaiRepository;

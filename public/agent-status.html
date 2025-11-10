@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maintenance Agent Status</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .header {
+      background: #2c3e50;
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .connection-status {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .connection-status.connected {
+      background: #27ae60;
+      color: white;
+    }
+
+    .connection-status.disconnected {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .main-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .mode-selector {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .mode-button {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid #3498db;
+      background: white;
+      color: #3498db;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mode-button:hover:not(:disabled) {
+      background: #3498db;
+      color: white;
+    }
+
+    .mode-button.active {
+      background: #3498db;
+      color: white;
+    }
+
+    .mode-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      border-color: #95a5a6;
+      color: #95a5a6;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .refresh-button {
+      padding: 0.75rem 1.5rem;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .refresh-button:hover {
+      background: #2980b9;
+    }
+
+    .process-button {
+      padding: 0.75rem 2rem;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .process-button:hover {
+      background: #229954;
+    }
+
+    .process-button:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+    }
+
+    table {
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    thead {
+      background: #34495e;
+      color: white;
+    }
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    th:first-child {
+      width: 50px;
+    }
+
+    .filter-row th {
+      padding: 0.5rem 1rem;
+      background: #2c3e50;
+    }
+
+    .filter-input,
+    .filter-select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #7f8c8d;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      background: white;
+      color: #2c3e50;
+    }
+
+    .filter-input:focus,
+    .filter-select:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+
+    .filter-input::placeholder {
+      color: #95a5a6;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #ecf0f1;
+      transition: background 0.2s;
+    }
+
+    tbody tr:hover {
+      background: #f8f9fa;
+    }
+
+    td {
+      padding: 1rem;
+    }
+
+    td.grayed-out {
+      color: #95a5a6;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"]:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .status-not_started {
+      background: #ecf0f1;
+      color: #34495e;
+    }
+
+    .status-in_progress,
+    .status-processing {
+      background: #3498db;
+      color: white;
+    }
+
+    .status-completed {
+      background: #27ae60;
+      color: white;
+    }
+
+    .status-failed {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .status-paused {
+      background: #f39c12;
+      color: white;
+    }
+
+    .status-pending_review {
+      background: #ff9800;
+      color: white;
+    }
+
+    .status-pending_final_review {
+      background: #f1c40f;
+      color: #2c3e50;
+    }
+
+    .status-badge.clickable {
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .status-badge.clickable:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.hidden {
+      display: none;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #ecf0f1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #95a5a6;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-button:hover {
+      color: #34495e;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .progress-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-section h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: #34495e;
+    }
+
+    .current-step {
+      font-size: 1.125rem;
+      color: #3498db;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .progress-log {
+      background: #f8f9fa;
+      border: 1px solid #ecf0f1;
+      border-radius: 4px;
+      padding: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.875rem;
+    }
+
+    .log-entry {
+      padding: 0.25rem 0;
+      border-bottom: 1px solid #ecf0f1;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-entry.success {
+      color: #27ae60;
+    }
+
+    .log-entry.error {
+      color: #e74c3c;
+    }
+
+    .log-entry.info {
+      color: #34495e;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #95a5a6;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #95a5a6;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔧 Maintenance Agent Status</h1>
+    <div id="connection-status" class="connection-status disconnected">
+      Disconnected
+    </div>
+  </div>
+
+  <div class="main-container">
+    <!-- Mode Selector (UI only, Agent button disabled) -->
+    <div class="mode-selector">
+      <button class="mode-button active" data-mode="manual">
+        🖱️ Manual Mode
+      </button>
+      <button class="mode-button" data-mode="agent" disabled title="Phase 2: Coming Soon">
+        🤖 Agent Mode (Coming Soon)
+      </button>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div>
+        <span id="selected-count">0 systems selected</span>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button id="refresh-button" class="refresh-button" title="Refresh systems status">
+          🔄 Refresh
+        </button>
+        <button id="process-button" class="process-button" disabled>
+          Process Selected Systems
+        </button>
+      </div>
+    </div>
+
+    <!-- Systems Table -->
+    <table id="systems-table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="select-all"></th>
+          <th>System Name</th>
+          <th>Manufacturer</th>
+          <th>Model</th>
+          <th>Status</th>
+          <th>Last Processed</th>
+        </tr>
+        <tr class="filter-row">
+          <th></th>
+          <th><input type="text" id="filter-name" placeholder="Filter..." class="filter-input"></th>
+          <th><input type="text" id="filter-manufacturer" placeholder="Filter..." class="filter-input"></th>
+          <th><input type="text" id="filter-model" placeholder="Filter..." class="filter-input"></th>
+          <th>
+            <select id="filter-status" class="filter-select">
+              <option value="">All Statuses</option>
+              <option value="not_started">Not Started</option>
+              <option value="processing">Processing</option>
+              <option value="pending_review">Review Duplicates</option>
+              <option value="pending_final_review">Review Tasks</option>
+              <option value="completed">Completed</option>
+              <option value="failed">Failed</option>
+            </select>
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="systems-tbody">
+        <tr>
+          <td colspan="6" class="loading">Loading systems...</td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- Progress Modal -->
+    <div id="progress-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Processing Systems</h2>
+          <button class="close-button" id="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="progress-section">
+            <h3>Current Step:</h3>
+            <div id="current-step" class="current-step">Initializing...</div>
+          </div>
+          <div class="progress-section">
+            <h3>Activity Log:</h3>
+            <div id="progress-log" class="progress-log">
+              <div class="log-entry info">Waiting for updates...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class StatusPageClient {
+      constructor() {
+        this.ws = null;
+        this.isConnected = false;
+        this.selectedSystems = new Set();
+        this.currentRunId = null;
+        this.systems = [];
+        this.filters = {
+          name: '',
+          manufacturer: '',
+          model: '',
+          status: ''
+        };
+      }
+
+      connect() {
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}/api/ws`;
+
+        this.ws = new WebSocket(wsUrl);
+
+        this.ws.onopen = () => {
+          this.isConnected = true;
+          this.updateConnectionStatus(true);
+          this.addLog('WebSocket connected', 'success');
+        };
+
+        this.ws.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          this.handleMessage(data);
+        };
+
+        this.ws.onclose = () => {
+          this.isConnected = false;
+          this.updateConnectionStatus(false);
+          this.addLog('WebSocket disconnected. Reconnecting...', 'error');
+          setTimeout(() => this.connect(), 5000); // Reconnect after 5s
+        };
+
+        this.ws.onerror = (error) => {
+          this.addLog('WebSocket error occurred', 'error');
+        };
+      }
+
+      handleMessage(data) {
+        switch(data.type) {
+          case 'connection_established':
+            this.addLog(`Connected with client ID: ${data.clientId}`, 'info');
+            break;
+
+          case 'processing_started':
+            this.showProgress();
+            this.addLog(`Processing started for system`, 'info');
+            break;
+
+          case 'step_started':
+            this.updateProgress({ step: data.step, status: 'in_progress' });
+            this.addLog(`Step ${data.step} started`, 'info');
+            break;
+
+          case 'progress_update':
+            this.updateProgress(data);
+            if (data.message) {
+              this.addLog(data.message, 'info');
+            }
+            break;
+
+          case 'step_completed':
+            this.addLog(`✓ Step ${data.step} completed`, 'success');
+            break;
+
+          case 'step_failed':
+            this.addLog(`✗ Step ${data.step} failed: ${data.error}`, 'error');
+            break;
+
+          case 'manual_review_required':
+            this.hasPendingReview = true;
+            this.reviewUrl = data.reviewUrl;
+            this.addLog(`⚠ Manual review required: ${data.pendingReviews} duplicate pairs`, 'warning');
+            this.addLog(`📋 Click "Review Required" status in the table to review duplicates`, 'info');
+            break;
+
+          case 'processing_complete':
+            if (data.pendingReviews > 0) {
+              this.addLog('✅ Processing complete - Manual review required!', 'success');
+              this.addLog(`📋 ${data.pendingReviews} duplicate pairs need your review`, 'warning');
+              // Don't auto-close when manual review is required
+            } else {
+              this.addLog('✅ Processing complete!', 'success');
+              setTimeout(() => this.closeProgress(), 3000);
+            }
+            this.loadSystems(); // Refresh table
+            break;
+
+          case 'processing_failed':
+            this.addLog(`❌ Processing failed: ${data.error}`, 'error');
+            break;
+
+          case 'error':
+            this.addLog(`❌ Error: ${data.error || data.message}`, 'error');
+            break;
+
+          default:
+            // Ignore unknown message types
+            break;
+        }
+      }
+
+      async loadSystems() {
+        try {
+          console.log('Loading systems...');
+          const tbody = document.getElementById('systems-tbody');
+          tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading systems...</td></tr>';
+
+          const response = await fetch('/admin/api/pipeline/systems?limit=200', {
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            }
+          });
+          const result = await response.json();
+
+          if (result.success) {
+            this.systems = result.data?.systems || [];
+            // Apply current filters (if any) when rendering
+            this.applyFilters();
+          } else {
+            this.renderError('Failed to load systems: ' + (result.error || 'Unknown error'));
+          }
+        } catch (error) {
+          this.renderError('Failed to load systems: ' + error.message);
+        }
+      }
+
+      async checkAndAdvanceAll() {
+        try {
+          console.log('Checking systems for advancement...');
+
+          // Get systems that might need advancement
+          const systemsToCheck = this.systems.filter(s =>
+            s.processing_status?.overall_status === 'pending_review' ||
+            s.processing_status?.overall_status === 'pending_final_review'
+          );
+
+          if (systemsToCheck.length === 0) {
+            console.log('No systems need advancement check');
+            return;
+          }
+
+          console.log(`Checking ${systemsToCheck.length} systems...`);
+
+          // Check each system in parallel
+          const checks = systemsToCheck.map(system =>
+            fetch(`/admin/api/pipeline/check-and-advance/${system.asset_uid}`, {
+              method: 'POST'
+            })
+            .then(res => res.json())
+            .then(result => ({
+              system: system.system_name,
+              assetUid: system.asset_uid,
+              result: result.data
+            }))
+            .catch(error => ({
+              system: system.system_name,
+              assetUid: system.asset_uid,
+              error: error.message
+            }))
+          );
+
+          const results = await Promise.all(checks);
+
+          // Log results
+          results.forEach(({ system, result, error }) => {
+            if (error) {
+              console.error(`Check failed for ${system}:`, error);
+            } else if (result.action !== 'none') {
+              console.log(`${system}: ${result.message}`);
+            }
+          });
+
+          // Reload systems to show updated statuses
+          await this.loadSystems();
+
+        } catch (error) {
+          console.error('Failed to check and advance:', error);
+        }
+      }
+
+      applyFilters() {
+        let filtered = [...this.systems];
+
+        // Filter by name
+        if (this.filters.name) {
+          const nameFilter = this.filters.name.toLowerCase();
+          filtered = filtered.filter(s =>
+            (s.system_name || '').toLowerCase().includes(nameFilter)
+          );
+        }
+
+        // Filter by manufacturer
+        if (this.filters.manufacturer) {
+          const manuFilter = this.filters.manufacturer.toLowerCase();
+          filtered = filtered.filter(s =>
+            (s.manufacturer || '').toLowerCase().includes(manuFilter)
+          );
+        }
+
+        // Filter by model
+        if (this.filters.model) {
+          const modelFilter = this.filters.model.toLowerCase();
+          filtered = filtered.filter(s =>
+            (s.model || '').toLowerCase().includes(modelFilter)
+          );
+        }
+
+        // Filter by status
+        if (this.filters.status) {
+          filtered = filtered.filter(s =>
+            (s.processing_status?.overall_status || 'not_started') === this.filters.status
+          );
+        }
+
+        this.renderTable(filtered);
+      }
+
+      setupFilterListeners() {
+        const filterName = document.getElementById('filter-name');
+        const filterManu = document.getElementById('filter-manufacturer');
+        const filterModel = document.getElementById('filter-model');
+        const filterStatus = document.getElementById('filter-status');
+
+        filterName?.addEventListener('input', (e) => {
+          this.filters.name = e.target.value;
+          this.applyFilters();
+        });
+
+        filterManu?.addEventListener('input', (e) => {
+          this.filters.manufacturer = e.target.value;
+          this.applyFilters();
+        });
+
+        filterModel?.addEventListener('input', (e) => {
+          this.filters.model = e.target.value;
+          this.applyFilters();
+        });
+
+        filterStatus?.addEventListener('change', (e) => {
+          this.filters.status = e.target.value;
+          this.applyFilters();
+        });
+      }
+
+      renderTable(systems) {
+        const tbody = document.getElementById('systems-tbody');
+
+        if (systems.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No systems found</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = '';
+
+        systems.forEach(system => {
+          const status = system.processing_status?.overall_status || 'not_started';
+
+          // Determine if checkbox should be disabled (Clarification #3)
+          const isSelectable = status === 'not_started' || status === 'failed';
+          const isDisabled = !isSelectable;
+
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>
+              <input
+                type="checkbox"
+                value="${system.asset_uid}"
+                ${isDisabled ? 'disabled' : ''}
+                class="system-checkbox ${isDisabled ? 'disabled-checkbox' : ''}"
+              >
+            </td>
+            <td class="${isDisabled ? 'grayed-out' : ''}">${system.system_name || '-'}</td>
+            <td>${system.manufacturer || '-'}</td>
+            <td>${system.model || '-'}</td>
+            <td>
+              ${status === 'pending_review' && system.processing_status?.review_url ?
+                `<a href="${system.processing_status.review_url}" target="_blank" rel="noopener noreferrer" class="status-badge status-${status} clickable" title="Click to review ${system.processing_status.pending_review_count || 0} duplicates">
+                  ${this.formatStatus(status)} (${system.processing_status.pending_review_count || 0})
+                </a>` :
+              status === 'pending_final_review' ?
+                `<a href="/maintenance-tasks-list.html?asset_uid=${system.asset_uid}" target="_blank" rel="noopener noreferrer" class="status-badge status-${status} clickable" title="Click to review and edit tasks">
+                  ${this.formatStatus(status)}
+                </a>` :
+                `<span class="status-badge status-${status}">
+                  ${this.formatStatus(status)}
+                </span>`
+              }
+            </td>
+            <td>${system.processing_status?.last_processed_at ?
+              new Date(system.processing_status.last_processed_at).toLocaleString() :
+              'Never'}</td>
+          `;
+
+          tbody.appendChild(row);
+        });
+
+        // Attach event listeners
+        this.attachCheckboxListeners();
+      }
+
+      renderError(message) {
+        const tbody = document.getElementById('systems-tbody');
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-state">${message}</td></tr>`;
+      }
+
+      attachCheckboxListeners() {
+        const checkboxes = document.querySelectorAll('.system-checkbox');
+        checkboxes.forEach(cb => {
+          cb.addEventListener('change', (e) => {
+            if (e.target.checked) {
+              this.selectedSystems.add(e.target.value);
+            } else {
+              this.selectedSystems.delete(e.target.value);
+            }
+            this.updateSelectedCount();
+          });
+        });
+
+        // Select all functionality
+        const selectAll = document.getElementById('select-all');
+        selectAll.addEventListener('change', (e) => {
+          checkboxes.forEach(cb => {
+            if (!cb.disabled) {
+              cb.checked = e.target.checked;
+              if (e.target.checked) {
+                this.selectedSystems.add(cb.value);
+              } else {
+                this.selectedSystems.delete(cb.value);
+              }
+            }
+          });
+          this.updateSelectedCount();
+        });
+      }
+
+      updateSelectedCount() {
+        const count = this.selectedSystems.size;
+        document.getElementById('selected-count').textContent =
+          `${count} system${count !== 1 ? 's' : ''} selected`;
+
+        const processButton = document.getElementById('process-button');
+        processButton.disabled = count === 0;
+      }
+
+      formatStatus(status) {
+        const labels = {
+          'not_started': 'Not Started',
+          'in_progress': 'Processing...',
+          'processing': 'Processing...',
+          'completed': 'Completed',
+          'pending_review': 'Review Duplicates',
+          'pending_final_review': 'Review Tasks',
+          'failed': 'Failed',
+          'paused': 'Paused'
+        };
+        return labels[status] || status;
+      }
+
+      async processSelected() {
+        const selected = Array.from(this.selectedSystems);
+
+        if (selected.length === 0) {
+          alert('Please select systems to process');
+          return;
+        }
+
+        try {
+          this.showProgress();
+          this.addLog(`Starting processing for ${selected.length} system(s)...`, 'info');
+
+          const response = await fetch('/admin/api/pipeline/process', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ systems: selected })
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            this.addLog(data.message, 'success');
+          } else {
+            this.addLog(`Error: ${data.error}`, 'error');
+          }
+        } catch (error) {
+          this.addLog(`Failed to start processing: ${error.message}`, 'error');
+        }
+      }
+
+      showProgress() {
+        document.getElementById('progress-modal').classList.remove('hidden');
+      }
+
+      closeProgress() {
+        document.getElementById('progress-modal').classList.add('hidden');
+      }
+
+      updateProgress(data) {
+        const currentStep = document.getElementById('current-step');
+
+        if (data.step) {
+          const stepNames = {
+            1: 'Extract Tasks from Manuals',
+            2: 'Classify Tasks',
+            3: 'Discover Real-World Tasks',
+            4: 'Deduplicate Tasks',
+            5: 'Manual Review',
+            6: 'Setup BoatOS'
+          };
+
+          currentStep.textContent = `Step ${data.step}: ${stepNames[data.step] || 'Processing'}`;
+        }
+      }
+
+      addLog(message, type = 'info') {
+        const log = document.getElementById('progress-log');
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${type}`;
+
+        const timestamp = new Date().toLocaleTimeString();
+        entry.textContent = `[${timestamp}] ${message}`;
+
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight; // Auto-scroll to bottom
+      }
+
+      updateConnectionStatus(connected) {
+        const el = document.getElementById('connection-status');
+        el.textContent = connected ? 'Connected' : 'Disconnected';
+        el.className = `connection-status ${connected ? 'connected' : 'disconnected'}`;
+      }
+    }
+
+    // Initialize
+    const client = new StatusPageClient();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      client.connect();
+      client.loadSystems();
+      client.setupFilterListeners();
+
+      // Refresh button
+      const refreshButton = document.getElementById('refresh-button');
+      if (refreshButton) {
+        refreshButton.addEventListener('click', async () => {
+          console.log('Refresh button clicked');
+          await client.loadSystems();
+          await client.checkAndAdvanceAll();
+        });
+      } else {
+        console.error('Refresh button not found!');
+      }
+
+      // Process button
+      document.getElementById('process-button').addEventListener('click', () => {
+        client.processSelected();
+      });
+
+      // Close modal button
+      document.getElementById('close-modal').addEventListener('click', () => {
+        client.closeProgress();
+      });
+
+      // Close modal on outside click
+      document.getElementById('progress-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'progress-modal') {
+          client.closeProgress();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

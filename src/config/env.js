@@ -58,6 +58,7 @@ const envSchema = z.object({
   // Agent Processing (NEW - Phase 1)
   OPENAI_MAX_CONCURRENT_CALLS: z.string().default('3'),
   OPENAI_RATE_LIMIT_RPM: z.string().default('60'),
+  OPENAI_DELAY_MS: z.string().default('1200'),  // 1.2 seconds between calls
 
   // UI Defaults (NEW - Phase 1)
   UI_DEFAULT_PAGE_SIZE: z.string().default('20'),
@@ -111,6 +112,7 @@ export function getConfig() {
     openai: {
       apiKey: env.OPENAI_API_KEY,
       model: env.OPENAI_MODEL,
+      delayMs: parseInt(env.OPENAI_DELAY_MS, 10),
     },
 
     // Agent configuration

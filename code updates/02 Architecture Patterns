@@ -417,6 +417,177 @@ const filtered = data.filter(row => {
 
 ---
 
+## Pipeline Orchestration Pattern (Phase 1)
+
+### Event-Driven Architecture
+**Implemented:** 2025-10-29
+
+The pipeline orchestrator uses Node.js EventEmitter for real-time communication:
+
+```javascript
+// Pipeline Orchestrator
+class PipelineOrchestrator extends EventEmitter {
+  async processSystem(assetUid) {
+    this.emit('processing_started', { runId, assetUid });
+
+    // Execute 6 steps sequentially
+    await this.executeStep(1, assetUid, runId, extractFn);
+    await this.executeStep(2, assetUid, runId, classifyFn);
+    // ... steps 3-6
+
+    this.emit('processing_complete', { runId, results });
+  }
+}
+
+// Wire to WebSocket broadcasts
+orchestrator.on('processing_started', (data) => {
+  broadcastToWebSockets({ type: 'processing_started', ...data });
+});
+```
+
+### WebSocket Integration
+- **Same port strategy**: HTTP and WebSocket on port 3001
+- **Heartbeat mechanism**: 30s ping/pong to detect dead connections
+- **Client tracking**: Map of connected clients with subscriptions
+- **Graceful degradation**: UI shows warning if disconnected, data still visible
+
+```javascript
+// HTTP server upgrade to WebSocket
+server.on('upgrade', (request, socket, head) => {
+  if (pathname === '/api/ws') {
+    wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit('connection', ws, request);
+    });
+  }
+});
+```
+
+### Database Schema (Phase 1)
+```sql
+-- Per-system step tracking
+CREATE TABLE pipeline_processing_status (
+  asset_uid UUID REFERENCES systems(asset_uid),
+
+  -- Step 1-6 status columns
+  step1_extract_status TEXT,
+  step1_started_at TIMESTAMPTZ,
+  step1_completed_at TIMESTAMPTZ,
+  step1_error TEXT,
+  step1_tasks_extracted INTEGER,
+  step1_tasks_skipped INTEGER,  -- For idempotency
+
+  -- Overall status
+  overall_status TEXT DEFAULT 'not_started',
+  last_processed_at TIMESTAMPTZ,
+  total_processing_time_ms INTEGER
+);
+
+-- Historical run tracking
+CREATE TABLE pipeline_runs (
+  id UUID PRIMARY KEY,
+  systems_processed UUID[],
+  status TEXT,
+  errors JSONB,
+  total_tasks_extracted INTEGER
+);
+```
+
+### Simple Rate Limiter (Phase 1)
+In-memory rate limiting before Redis:
+
+```javascript
+class SimpleRateLimiter {
+  constructor() {
+    this.lastCallTimes = new Map();
+    this.delays = {
+      openai: 1200,   // 1.2s between calls
+      pinecone: 100,
+      supabase: 50
+    };
+  }
+
+  async waitForTurn(service) {
+    const delay = this.delays[service];
+    const timeSinceLastCall = Date.now() - this.lastCallTimes.get(service);
+
+    if (timeSinceLastCall < delay) {
+      await sleep(delay - timeSinceLastCall);
+    }
+
+    this.lastCallTimes.set(service, Date.now());
+  }
+}
+```
+
+**Phase 2 upgrade:** Replace with Redis for distributed workers.
+
+### Idempotent Step Executors
+Each step checks for existing data and skips:
+
+```javascript
+// Step 1: Extract
+async function extractTasks(assetUid) {
+  // 1. Check existing
+  const existing = await pinecone.query({ filter: { asset_uid } });
+  const existingHashes = new Set(existing.map(t => t.task_hash));
+
+  // 2. Extract new
+  const allTasks = await extractFromChunks();
+
+  // 3. Filter duplicates
+  const newTasks = allTasks.filter(t =>
+    !existingHashes.has(generateHash(t))
+  );
+
+  // 4. Upload only new
+  if (newTasks.length > 0) {
+    await pinecone.upsert(newTasks);
+  }
+
+  return {
+    tasksExtracted: newTasks.length,
+    tasksSkipped: existing.length  // For monitoring
+  };
+}
+```
+
+**Retry behavior:** Always retry from Step 1, but steps skip existing work (fast, <3s overhead).
+
+### Column Naming Convention
+Status columns use full names, other fields use step numbers:
+
+```javascript
+// Status column: full name
+step1_extract_status
+step2_classify_status
+step3_discover_status
+step4_dedupe_status
+step5_review_status
+step6_boatos_status
+
+// Other columns: step number only
+step1_started_at
+step1_completed_at
+step1_error
+step1_tasks_extracted
+```
+
+### API Endpoints
+```javascript
+GET  /admin/api/pipeline/systems           // List with status
+GET  /admin/api/pipeline/systems/:uid      // Detail view
+POST /admin/api/pipeline/process           // Start processing
+GET  /admin/api/pipeline/runs              // Run history
+```
+
+### System Selection Strategy
+Query `pinecone_search_results` (not `systems` table) because:
+- Only shows systems with processable manuals (17 vs 117)
+- Avoids showing 100 systems with no content
+- Already deduplicated by asset_uid
+
+---
+
 ## Testing Strategy
 
 ### Unit Tests
@@ -433,3 +604,4 @@ const filtered = data.filter(row => {
 - Test full system processing pipeline
 - Include retry logic
 - Verify state transitions
+- **Phase 1 tested**: Full 6-step pipeline with WebSocket broadcasts (2025-10-29)

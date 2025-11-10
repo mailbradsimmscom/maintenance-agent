@@ -11,6 +11,7 @@ import todoRouter from './todo.route.js';
 import maintenanceTasksRouter from './maintenance-tasks.route.js';
 import userTasksRouter from './user-tasks.route.js';
 import dedupReviewRouter from './dedup-review.route.js';
+import pipelineRouter from './pipeline.route.js';
 
 const router = express.Router();
 
@@ -25,5 +26,8 @@ router.use('/todo', todoRouter);
 router.use('/maintenance-tasks', maintenanceTasksRouter);
 router.use('/user-tasks', userTasksRouter);
 router.use('/dedup-reviews', dedupReviewRouter);
+
+// Pipeline processing routes (Phase 1: Agent Status Page)
+router.use('/pipeline', pipelineRouter);
 
 export default router;

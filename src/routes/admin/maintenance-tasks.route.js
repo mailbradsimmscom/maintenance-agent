@@ -259,4 +259,160 @@ router.post('/bulk-reject', async (req, res, next) => {
   }
 });
 
+/**
+ * GET /admin/api/maintenance-tasks/list
+ * Get ALL tasks (not just pending) - for main review UI
+ */
+router.get('/list', async (req, res, next) => {
+
+  const { assetUid } = req.query;
+
+  try {
+    logger.info('Fetching all tasks', { assetUid });
+
+    const tasks = await taskApprovalService.getAllTasks({
+      assetUid: assetUid || null,
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        tasks,
+        count: tasks.length,
+      },
+    });
+
+  } catch (error) {
+    logger.error('Error fetching all tasks', { error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * GET /admin/api/maintenance-tasks/stats
+ * Alias for /approval-stats (for compatibility with main app HTML)
+ */
+router.get('/stats', async (req, res, next) => {
+
+  const { assetUid } = req.query;
+
+  try {
+    logger.info('Fetching approval statistics', { assetUid });
+
+    const stats = await taskApprovalService.getApprovalStatistics(assetUid || null);
+
+    return res.json({
+      success: true,
+      data: stats,
+    });
+
+  } catch (error) {
+    logger.error('Error fetching stats', { error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * PATCH /admin/api/maintenance-tasks/:taskId
+ * Update task metadata
+ */
+router.patch('/:taskId', async (req, res, next) => {
+
+  const { taskId } = req.params;
+  const updates = req.body;
+
+  try {
+    logger.info('Updating task', { taskId, updates });
+
+    const result = await taskApprovalService.updateTask(taskId, updates);
+
+    logger.info('Task updated', { taskId });
+
+    return res.json({
+      success: true,
+      data: result,
+    });
+
+  } catch (error) {
+    logger.error('Error updating task', { taskId, error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * DELETE /admin/api/maintenance-tasks/:taskId
+ * Delete a task
+ */
+router.delete('/:taskId', async (req, res, next) => {
+
+  const { taskId } = req.params;
+
+  try {
+    logger.info('Deleting task', { taskId });
+
+    const result = await taskApprovalService.deleteTask(taskId);
+
+    logger.info('Task deleted', { taskId });
+
+    return res.json({
+      success: true,
+      data: result,
+    });
+
+  } catch (error) {
+    logger.error('Error deleting task', { taskId, error: error.message });
+    return next(error);
+  }
+});
+
+/**
+ * POST /admin/api/maintenance-tasks/bulk-update-status
+ * Bulk update review status for multiple tasks
+ */
+router.post('/bulk-update-status', async (req, res, next) => {
+
+  const { task_ids, review_status } = req.body;
+
+  try {
+    logger.info('Bulk updating task status', { count: task_ids?.length, review_status });
+
+    if (!task_ids || !Array.isArray(task_ids) || task_ids.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'INVALID_TASK_IDS',
+          message: 'task_ids must be a non-empty array',
+        },
+      });
+    }
+
+    if (!['pending', 'approved', 'rejected'].includes(review_status)) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'INVALID_STATUS',
+          message: 'review_status must be one of: pending, approved, rejected',
+        },
+      });
+    }
+
+    const result = await taskApprovalService.bulkUpdateStatus(task_ids, review_status);
+
+    logger.info('Bulk status update complete', {
+      total: task_ids.length,
+      successful: result.successful,
+      failed: result.failed,
+    });
+
+    return res.json({
+      success: true,
+      data: result,
+    });
+
+  } catch (error) {
+    logger.error('Error bulk updating status', { error: error.message });
+    return next(error);
+  }
+});
+
 export default router;

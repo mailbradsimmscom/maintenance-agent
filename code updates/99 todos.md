@@ -162,22 +162,81 @@ const queryResponse = await idx.namespace(config.pinecone.namespace).query({
 
 ## 🚀 Future Enhancements
 
-### 13. Real-time Updates
+### 13. Document Change Detection & Auto-Sync (Main App)
+**Status:** Not implemented (requires main app changes)
+**Location:** Main REIMAGINEDAPPV2 codebase (NOT maintenance-agent)
+
+**Problem:** When PDFs are uploaded/updated, `pinecone_search_results` becomes stale.
+
+**Recommended Solution - Processing Flag Pattern:**
+
+1. **Add column to documents table:**
+```sql
+ALTER TABLE documents
+ADD COLUMN search_results_synced BOOLEAN DEFAULT false;
+```
+
+2. **When document uploaded/updated (main app):**
+```javascript
+// After PDF vectorization completes
+await supabase
+  .from('documents')
+  .update({ search_results_synced: false })
+  .eq('doc_id', docId);
+```
+
+3. **Modify capture-pinecone-scores.js:**
+```bash
+# Add flag to only process unsynced systems
+node scripts/capture-pinecone-scores.js --unsynced-only
+
+# After success, mark as synced
+UPDATE documents SET search_results_synced = true WHERE asset_uid = '...';
+```
+
+4. **Trigger options:**
+- **Manual:** Admin clicks "Sync Search Results" button
+- **Cron:** Run nightly for any unsynced docs
+- **Event-driven:** Webhook/queue triggered after PDF ingestion
+
+**Query for systems needing sync:**
+```sql
+SELECT DISTINCT asset_uid, doc_id, last_ingested_at
+FROM documents
+WHERE search_results_synced = false;
+```
+
+**Benefits:**
+- Explicit state tracking (synced vs needs-sync)
+- No timestamp comparison edge cases
+- Easy manual re-triggering
+- Clear audit trail
+
+**Alternative approaches considered:**
+- Timestamp comparison (brittle, timezone issues)
+- Version tracking (more complex)
+- Database triggers (coupling concerns)
+
+**Action Required:** Implement in main app codebase after Phase 1 agent status page is complete.
+
+---
+
+### 14. Real-time Updates
 - WebSocket for live task updates
 - Push notifications for critical maintenance
 - Real-time approval notifications
 
-### 14. SignalK Integration
+### 15. SignalK Integration
 - Connect to boat's data network
 - Real-time sensor data
 - Condition-based maintenance triggers
 
-### 15. Inventory Management
+### 16. Inventory Management
 - Track parts inventory
 - Auto-order when low
 - Link tasks to required parts
 
-### 16. Calendar Integration
+### 17. Calendar Integration
 - Schedule maintenance tasks
 - Conflict detection
 - Reminder system

@@ -470,6 +470,119 @@ const deduplicationReviewRepository = {
 
     logger.info('Analysis deleted', { analysisId });
     return true;
+  },
+
+  /**
+   * Get count of pending reviews for a specific asset
+   * @param {string} assetUid - Asset UID
+   * @returns {Promise<number>} Count of pending reviews
+   */
+  async getPendingReviewCountForAsset(assetUid) {
+    // Fetch all pending reviews and filter in JavaScript
+    // (JSONB operators in .or() clause fail silently in Supabase)
+    const { data, error } = await supabase
+      .from('deduplication_reviews')
+      .select('task1_metadata, task2_metadata')
+      .eq('review_status', 'pending');
+
+    if (error) {
+      logger.error('Failed to get pending review count', {
+        assetUid,
+        error: error.message
+      });
+      throw error;
+    }
+
+    // Filter by asset_uid in JavaScript
+    const matchingReviews = (data || []).filter(review =>
+      review.task1_metadata?.asset_uid === assetUid ||
+      review.task2_metadata?.asset_uid === assetUid
+    );
+
+    logger.debug('Pending review count for asset', {
+      assetUid,
+      count: matchingReviews.length,
+      totalPending: data?.length || 0
+    });
+
+    return matchingReviews.length;
+  },
+
+  /**
+   * Check if all reviews for an asset are resolved and sync pipeline status
+   * @param {string} assetUid - Asset UID to check
+   * @returns {Promise<boolean>} True if status was updated to completed
+   */
+  async checkAndSyncPipelineStatus(assetUid) {
+    try {
+      // Get count of pending reviews for this asset
+      const { count, error: countError } = await supabase
+        .from('deduplication_reviews')
+        .select('*', { count: 'exact', head: true })
+        .eq('review_status', 'pending')
+        .or(`task1_metadata->asset_uid.eq.${assetUid},task2_metadata->asset_uid.eq.${assetUid}`);
+
+      if (countError) {
+        logger.error('Failed to check pending reviews', {
+          assetUid,
+          error: countError.message
+        });
+        return false;
+      }
+
+      logger.info('Checked pending reviews for asset', {
+        assetUid,
+        pendingCount: count
+      });
+
+      // If no pending reviews, update pipeline status to completed
+      if (count === 0) {
+        const { error: updateError } = await supabase
+          .from('pipeline_processing_status')
+          .update({
+            overall_status: 'completed',
+            pending_review_count: 0,
+            review_url: null,
+            updated_at: new Date().toISOString()
+          })
+          .eq('asset_uid', assetUid);
+
+        if (updateError) {
+          logger.error('Failed to update pipeline status', {
+            assetUid,
+            error: updateError.message
+          });
+          return false;
+        }
+
+        logger.info('Pipeline status updated to completed', { assetUid });
+        return true;
+      }
+
+      // If there are still pending reviews, update the count
+      const { error: updateError } = await supabase
+        .from('pipeline_processing_status')
+        .update({
+          pending_review_count: count,
+          updated_at: new Date().toISOString()
+        })
+        .eq('asset_uid', assetUid);
+
+      if (updateError) {
+        logger.error('Failed to update pending review count', {
+          assetUid,
+          error: updateError.message
+        });
+      }
+
+      return false;
+    } catch (error) {
+      logger.error('Error in checkAndSyncPipelineStatus', {
+        assetUid,
+        error: error.message
+      });
+      return false;
+    }
   }
 };
 

@@ -295,6 +295,7 @@ export const documentChunksRepository = {
 
 // Export all repositories as a single object for convenience
 export default {
+  client: supabase,  // Raw Supabase client for direct queries
   systems: systemsRepository,
   tasks: maintenanceTasksRepository,
   memory: agentMemoryRepository,

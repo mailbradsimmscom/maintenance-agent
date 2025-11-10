@@ -364,6 +364,132 @@ export const taskApprovalService = {
       throw error;
     }
   },
+
+  /**
+   * Get ALL tasks (not just pending)
+   * @param {Object} options - Query options
+   * @param {string} options.assetUid - Filter by system (optional)
+   * @returns {Promise<Array>} All tasks
+   */
+  async getAllTasks({ assetUid = null } = {}) {
+    try {
+      logger.info('Fetching all tasks', { assetUid });
+
+      // Get all tasks from Pinecone
+      const allTasks = await pineconeRepository.listAllTasks();
+
+      // Filter by assetUid if provided
+      let tasks = allTasks;
+      if (assetUid) {
+        tasks = tasks.filter(task => task.metadata?.asset_uid === assetUid);
+      }
+
+      // Format tasks for frontend
+      const formattedTasks = tasks.map(task => ({
+        id: task.id,
+        ...task.metadata,
+      }));
+
+      logger.info('Tasks fetched', { count: formattedTasks.length });
+
+      return formattedTasks;
+
+    } catch (error) {
+      logger.error('Failed to fetch all tasks', { error: error.message });
+      throw error;
+    }
+  },
+
+  /**
+   * Update task metadata
+   * @param {string} taskId - Task ID
+   * @param {Object} updates - Metadata updates
+   * @returns {Promise<Object>} Update result
+   */
+  async updateTask(taskId, updates) {
+    try {
+      logger.info('Updating task', { taskId });
+
+      await pineconeRepository.updateTaskMetadata(taskId, updates);
+
+      logger.info('Task updated successfully', { taskId });
+
+      return {
+        taskId,
+        updated: true,
+      };
+
+    } catch (error) {
+      logger.error('Failed to update task', { taskId, error: error.message });
+      throw error;
+    }
+  },
+
+  /**
+   * Delete a task
+   * @param {string} taskId - Task ID
+   * @returns {Promise<Object>} Delete result
+   */
+  async deleteTask(taskId) {
+    try {
+      logger.info('Deleting task', { taskId });
+
+      await pineconeRepository.deleteTask(taskId);
+
+      logger.info('Task deleted successfully', { taskId });
+
+      return {
+        taskId,
+        deleted: true,
+      };
+
+    } catch (error) {
+      logger.error('Failed to delete task', { taskId, error: error.message });
+      throw error;
+    }
+  },
+
+  /**
+   * Bulk update review status
+   * @param {Array<string>} taskIds - Array of task IDs
+   * @param {string} status - New review status (pending/approved/rejected)
+   * @returns {Promise<Object>} Bulk update result
+   */
+  async bulkUpdateStatus(taskIds, status) {
+    try {
+      logger.info('Bulk updating task status', { count: taskIds.length, status });
+
+      const results = {
+        successful: 0,
+        failed: 0,
+        errors: [],
+      };
+
+      for (const taskId of taskIds) {
+        try {
+          await pineconeRepository.updateTaskMetadata(taskId, {
+            review_status: status,
+            updated_at: new Date().toISOString(),
+          });
+          results.successful++;
+        } catch (error) {
+          results.failed++;
+          results.errors.push({
+            taskId,
+            error: error.message,
+          });
+        }
+      }
+
+      logger.info('Bulk status update complete', results);
+
+      return results;
+
+    } catch (error) {
+      logger.error('Bulk status update failed', { error: error.message });
+      throw error;
+    }
+  },
 };
 
 export default taskApprovalService;

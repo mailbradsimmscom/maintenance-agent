@@ -6,6 +6,7 @@
 import express from 'express';
 import deduplicationReviewRepository from '../../repositories/deduplication-review.repository.js';
 import { pineconeRepository } from '../../repositories/pinecone.repository.js';
+import db from '../../repositories/supabase.repository.js';
 import { createLogger } from '../../utils/logger.js';
 
 const router = express.Router();
@@ -385,6 +386,19 @@ router.patch('/:reviewId/status', async (req, res) => {
       requestId: res.locals.requestId
     });
 
+    // Check if all reviews for this asset are completed and sync pipeline status
+    const assetUid = updated.task1_metadata?.asset_uid;
+    if (assetUid) {
+      const completed = await deduplicationReviewRepository.checkAndSyncPipelineStatus(assetUid);
+      if (completed) {
+        logger.info('Pipeline status auto-synced to completed', {
+          assetUid,
+          reviewId,
+          requestId: res.locals.requestId
+        });
+      }
+    }
+
     res.json({
       success: true,
       data: updated,
@@ -431,6 +445,12 @@ router.post('/bulk-update', async (req, res) => {
       });
     }
 
+    // Get the reviews first to extract asset_uids
+    const { data: reviews } = await db.client
+      .from('deduplication_reviews')
+      .select('task1_metadata')
+      .in('id', reviewIds);
+
     const count = await deduplicationReviewRepository.bulkUpdateStatus(
       reviewIds,
       status,
@@ -443,6 +463,21 @@ router.post('/bulk-update', async (req, res) => {
       reviewedBy: reviewedBy || 'user',
       requestId: res.locals.requestId
     });
+
+    // Auto-sync pipeline status for all affected assets
+    if (reviews && reviews.length > 0) {
+      const assetUids = [...new Set(reviews.map(r => r.task1_metadata?.asset_uid).filter(Boolean))];
+      for (const assetUid of assetUids) {
+        try {
+          await deduplicationReviewRepository.checkAndSyncPipelineStatus(assetUid);
+        } catch (error) {
+          logger.error('Failed to sync pipeline status for asset', {
+            assetUid,
+            error: error.message
+          });
+        }
+      }
+    }
 
     res.json({
       success: true,

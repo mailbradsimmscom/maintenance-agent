@@ -1,0 +1,41 @@
+{
+  "name": "Maintenance Agent",
+  "short_name": "Maintenance",
+  "description": "Usage-based maintenance tracking for catamarans",
+  "start_url": "/app-mobile.html",
+  "display": "standalone",
+  "background_color": "#F2F2F7",
+  "theme_color": "#007AFF",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Create Task",
+      "short_name": "New Task",
+      "description": "Add a new maintenance task",
+      "url": "/user-tasks-mobile.html",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "To-Do List",
+      "short_name": "Tasks",
+      "description": "View pending tasks",
+      "url": "/todos-mobile.html",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

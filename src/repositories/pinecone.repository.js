@@ -1,11 +1,22 @@
 /**
  * Pinecone Repository
  * Vector search operations for the maintenance agent
+ *
+ * HYBRID SYNC ARCHITECTURE:
+ * - Pinecone = source of truth for embeddings and search
+ * - Supabase = source of truth for filtering and queries
+ * - All write operations dual-write to both systems
+ * - Retry logic (3x with exponential backoff) for Supabase sync
+ * - Sync errors logged to sync_errors table for reconciliation
  */
 
 import { Pinecone } from '@pinecone-database/pinecone';
 import { getConfig } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
+import {
+  maintenanceTasksIndexRepository,
+  syncErrorsRepository
+} from './supabase.repository.js';
 
 const config = getConfig();
 const logger = createLogger('pinecone-repository');
@@ -20,6 +31,79 @@ async function getIndex() {
   // Pinecone v2+ - use index name only, SDK handles host resolution
   logger.info('Getting Pinecone index', { indexName: config.pinecone.indexName });
   return pinecone.index(config.pinecone.indexName);
+}
+
+/**
+ * Sync helper: Retry sync operation to Supabase with exponential backoff
+ * @param {string} operation - Operation type ('upsert', 'update', 'delete')
+ * @param {Function} syncFn - Async function to execute
+ * @param {string} taskId - Task ID for logging
+ * @param {number} maxRetries - Max retry attempts
+ * @returns {Promise<boolean>} True if successful, false if all retries failed
+ */
+async function syncToSupabaseWithRetry(operation, syncFn, taskId, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await syncFn();
+      logger.info('Supabase sync successful', { taskId, operation, attempt });
+      return true;
+    } catch (error) {
+      logger.warn('Supabase sync attempt failed', {
+        taskId,
+        operation,
+        attempt,
+        error: error.message
+      });
+
+      if (attempt === maxRetries) {
+        // Log permanent failure to sync_errors table
+        await logSyncError(taskId, operation, error, true, false);
+        logger.error('Supabase sync failed after retries', {
+          taskId,
+          operation,
+          maxRetries,
+          error: error.message
+        });
+        return false;
+      }
+
+      // Exponential backoff: 1s, 2s, 4s
+      const delayMs = 1000 * Math.pow(2, attempt - 1);
+      logger.debug('Retrying sync after delay', { taskId, delayMs });
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Log sync error to sync_errors table
+ * @param {string} taskId - Task ID
+ * @param {string} operation - Operation type
+ * @param {Error} error - Error object
+ * @param {boolean} pineconeSuccess - Did Pinecone operation succeed?
+ * @param {boolean} supabaseSuccess - Did Supabase operation succeed?
+ */
+async function logSyncError(taskId, operation, error, pineconeSuccess, supabaseSuccess) {
+  try {
+    await syncErrorsRepository.logError({
+      taskId,
+      operation,
+      errorMessage: error.message,
+      errorStack: error.stack,
+      pineconeSuccess,
+      supabaseSuccess,
+      retryCount: 3
+    });
+  } catch (logError) {
+    // Don't throw - this is a best-effort logging function
+    logger.error('Failed to log sync error', {
+      taskId,
+      operation,
+      logError: logError.message
+    });
+  }
 }
 
 export const pineconeRepository = {
@@ -210,12 +294,14 @@ export const pineconeRepository = {
 
   /**
    * Upsert (insert or update) a task in Pinecone
+   * DUAL-WRITE: Also writes to Supabase maintenance_tasks_index
    * @param {string} taskId - Task ID
    * @param {Array<number>} embedding - Task embedding vector
    * @param {Object} metadata - Task metadata
    */
   async upsertTask(taskId, embedding, metadata) {
     try {
+      // 1. Write to Pinecone (source of truth for embeddings)
       const idx = await getIndex();
       await idx.namespace('MAINTENANCE_TASKS').upsert([
         {
@@ -225,7 +311,19 @@ export const pineconeRepository = {
         }
       ]);
 
-      logger.debug('Task upserted', { taskId });
+      logger.info('Task upserted to Pinecone', { taskId });
+
+      // 2. Sync to Supabase (best effort with retry)
+      await syncToSupabaseWithRetry(
+        'upsert',
+        () => maintenanceTasksIndexRepository.upsert({
+          id: taskId,
+          ...metadata
+        }),
+        taskId
+      );
+
+      return { id: taskId, metadata };
     } catch (error) {
       logger.error('Task upsert failed', {
         taskId,
@@ -237,8 +335,10 @@ export const pineconeRepository = {
 
   /**
    * Update task metadata without changing embedding
+   * DUAL-WRITE: Also updates Supabase maintenance_tasks_index
    * @param {string} taskId - Task ID
-   * @param {Object} metadata - Updated metadata
+   * @param {Object} metadata - Updated metadata (will be merged with existing)
+   * @returns {Promise<Object>} Merged metadata
    */
   async updateTaskMetadata(taskId, metadata) {
     try {
@@ -258,7 +358,7 @@ export const pineconeRepository = {
         ...metadata
       };
 
-      // Upsert with same embedding but updated metadata
+      // 1. Update Pinecone (source of truth)
       await idx.namespace('MAINTENANCE_TASKS').upsert([
         {
           id: taskId,
@@ -267,7 +367,17 @@ export const pineconeRepository = {
         }
       ]);
 
-      logger.debug('Task metadata updated', { taskId });
+      logger.info('Task metadata updated in Pinecone', { taskId, fields: Object.keys(metadata) });
+
+      // 2. Sync to Supabase (best effort with retry)
+      // Only sync the changed fields, not the full metadata
+      await syncToSupabaseWithRetry(
+        'update',
+        () => maintenanceTasksIndexRepository.update(taskId, metadata),
+        taskId
+      );
+
+      return updatedMetadata;
     } catch (error) {
       logger.error('Task metadata update failed', {
         taskId,
@@ -397,14 +507,23 @@ export const pineconeRepository = {
 
   /**
    * Delete a task from Pinecone
+   * DUAL-WRITE: Also deletes from Supabase maintenance_tasks_index
    * @param {string} taskId - Task ID
    */
   async deleteTask(taskId) {
     try {
+      // 1. Delete from Pinecone (source of truth)
       const idx = await getIndex();
       await idx.namespace('MAINTENANCE_TASKS').deleteOne(taskId);
 
       logger.info('Task deleted from Pinecone', { taskId });
+
+      // 2. Sync to Supabase (best effort with retry)
+      await syncToSupabaseWithRetry(
+        'delete',
+        () => maintenanceTasksIndexRepository.delete(taskId),
+        taskId
+      );
     } catch (error) {
       logger.error('Task deletion failed', { taskId, error: error.message });
       throw error;

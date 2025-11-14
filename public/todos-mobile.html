@@ -4,17 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
-    <script>
-        // Mobile detection and redirect
-        (function() {
-            if (window.location.pathname.includes('-mobile.html')) return;
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            const isSmallScreen = window.innerWidth <= 768;
-            if (isMobile || isSmallScreen) {
-                window.location.href = '/todos-mobile.html';
-            }
-        })();
-    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -146,6 +135,115 @@
             color: #10b981;
             margin-bottom: 10px;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 640px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+
+            h2 {
+                font-size: 18px;
+                margin: 20px 0 12px 0;
+            }
+
+            /* Back link */
+            .back-link {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+            /* Filter tabs - stack vertically */
+            .filter-tabs {
+                flex-direction: column;
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+
+            .filter-tab {
+                width: 100%;
+                padding: 12px 20px;
+                font-size: 15px;
+                border-radius: 6px;
+            }
+
+            /* Todo items */
+            .todo-item {
+                padding: 15px;
+                margin-bottom: 12px;
+            }
+
+            .todo-item h3 {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+
+            .todo-item p {
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+
+            /* Badges wrap on mobile */
+            .badge {
+                font-size: 11px;
+                padding: 3px 10px;
+                margin-bottom: 6px;
+                display: inline-block;
+            }
+
+            /* Todo actions - stack buttons */
+            .todo-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 12px 16px;
+                font-size: 15px;
+            }
+
+            /* Empty state */
+            .empty-state {
+                padding: 30px 15px;
+            }
+
+            .empty-state h3 {
+                font-size: 18px;
+            }
+
+            .empty-state p {
+                font-size: 14px;
+            }
+
+            /* Paragraphs */
+            p {
+                font-size: 14px;
+            }
+        }
+
+        /* Safe area support */
+        @supports (padding: env(safe-area-inset-left)) {
+            body {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
+                padding-bottom: max(15px, env(safe-area-inset-bottom));
+            }
+        }
     </style>
 </head>
 <body>
@@ -158,7 +256,7 @@
                 Aggregated view of all pending tasks from BoatOS prompts, maintenance schedule, user tasks, and approvals.
             </p>
             <p style="margin-bottom: 20px;">
-                <a href="/user-tasks.html" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                <a href="/user-tasks-mobile.html" style="color: #667eea; text-decoration: none; font-weight: 600;">
                     + Create New User Task
                 </a>
             </p>

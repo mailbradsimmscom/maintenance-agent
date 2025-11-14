@@ -12,41 +12,52 @@ const logger = createLogger('system-maintenance-route');
 
 /**
  * GET /admin/api/system-maintenance
- * Get all systems with usage-based maintenance tracking
+ * Get all systems (with optional usage-based maintenance tracking data)
  */
 router.get('/', async (req, res, next) => {
   try {
-    logger.info('Fetching all systems with maintenance tracking');
+    logger.info('Fetching all systems');
 
-    // Get all systems with maintenance state (directly from repo)
-    const { default: systemMaintenanceRepo } = await import('../../repositories/system-maintenance.repository.js');
-    const systems = await systemMaintenanceRepo.maintenance.getAllMaintenanceStates(100);
-
-    // Enrich with system info from Supabase
     const { createClient } = await import('@supabase/supabase-js');
     const { getConfig } = await import('../../config/env.js');
     const config = getConfig();
     const supabase = createClient(config.supabase.url, config.supabase.serviceKey);
 
-    const enrichedSystems = await Promise.all(
-      systems.map(async (sys) => {
-        try {
-          const { data } = await supabase
-            .from('systems')
-            .select('subsystem_norm, description')
-            .eq('asset_uid', sys.asset_uid)
-            .single();
+    // Get ALL systems from systems table
+    const { data: allSystems, error: systemsError } = await supabase
+      .from('systems')
+      .select('asset_uid, manufacturer_norm, model_norm, subsystem_norm, description')
+      .order('manufacturer_norm', { ascending: true });
 
-          return {
-            ...sys,
-            subsystem_norm: data?.subsystem_norm,
-            description: data?.description,
-          };
-        } catch (error) {
-          return sys; // Return without enrichment if lookup fails
-        }
-      })
-    );
+    if (systemsError) {
+      throw systemsError;
+    }
+
+    // Get usage tracking data (only exists for some systems)
+    const { default: systemMaintenanceRepo } = await import('../../repositories/system-maintenance.repository.js');
+    const trackingData = await systemMaintenanceRepo.maintenance.getAllMaintenanceStates(100);
+    const trackingMap = new Map(trackingData.map(t => [t.asset_uid, t]));
+
+    // Enrich systems with tracking data and display names
+    const enrichedSystems = allSystems.map(sys => {
+      const tracking = trackingMap.get(sys.asset_uid);
+      const display_name = `${sys.manufacturer_norm} ${sys.model_norm}`.trim();
+
+      return {
+        asset_uid: sys.asset_uid,
+        manufacturer_norm: sys.manufacturer_norm,
+        model_norm: sys.model_norm,
+        display_name: display_name,
+        subsystem_norm: sys.subsystem_norm,
+        description: sys.description,
+        // Usage tracking data (may be null for non-usage systems)
+        current_operating_hours: tracking?.current_operating_hours || null,
+        installation_date: tracking?.installation_date || null,
+        last_hours_update: tracking?.last_hours_update || null,
+        created_at: tracking?.created_at || null,
+        updated_at: tracking?.updated_at || null,
+      };
+    });
 
     return res.json({
       success: true,

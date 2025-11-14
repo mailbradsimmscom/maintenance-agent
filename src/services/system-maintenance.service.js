@@ -4,6 +4,7 @@
  */
 
 import systemMaintenanceRepo from '../repositories/system-maintenance.repository.js';
+import boatosTasksService from './boatos-tasks.service.js';
 import { getConfig } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
 
@@ -76,6 +77,25 @@ export const systemMaintenanceService = {
         previousHours: latestEntry?.hours || 0,
         historyEntryId: historyEntry.id,
       });
+
+      // Auto-complete BoatOS "Update Operating Hours" prompt
+      // This is a best-effort operation - don't fail if it doesn't work
+      try {
+        const boatosTask = await boatosTasksService.markTaskCompletedForSystem(assetUid);
+        if (boatosTask) {
+          logger.info('BoatOS prompt auto-completed', {
+            assetUid,
+            boatosTaskId: boatosTask.id,
+            newNextDue: boatosTask.next_due,
+          });
+        }
+      } catch (error) {
+        logger.warn('Failed to auto-complete BoatOS prompt (non-critical)', {
+          assetUid,
+          error: error.message,
+        });
+        // Don't throw - hours update succeeded, this is just a bonus
+      }
 
       return {
         success: true,

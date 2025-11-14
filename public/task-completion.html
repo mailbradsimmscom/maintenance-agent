@@ -71,9 +71,8 @@
                 Mark maintenance tasks as complete. For recurring tasks, the system automatically calculates the next due date.
             </p>
 
-            <div class="info-box">
-                <strong>Note:</strong> For testing, use Task ID from Pinecone or maintenance tasks list.
-                System will automatically update next due dates for recurring tasks.
+            <div class="info-box" id="taskInfo">
+                <strong>Task:</strong> <span id="taskDescription">Loading task details...</span>
             </div>
 
             <div class="form-group">
@@ -119,9 +118,9 @@
                 const select = document.getElementById('assetUid');
 
                 if (data.success && data.data.length > 0) {
-                    // Build options from real systems
+                    // Build options from real systems using display_name (Manufacturer Model)
                     select.innerHTML = data.data.map(sys => {
-                        const displayName = sys.subsystem_norm || sys.description || sys.asset_uid;
+                        const displayName = sys.display_name || sys.subsystem_norm || sys.description || sys.asset_uid;
                         return `<option value="${sys.asset_uid}">${displayName}</option>`;
                     }).join('');
 
@@ -140,6 +139,26 @@
             }
         }
 
+        // Fetch task details to display task name
+        async function loadTaskDetails(taskId) {
+            try {
+                const response = await fetch('/admin/api/maintenance-tasks/list');
+                const data = await response.json();
+
+                if (data.success) {
+                    const task = data.data.tasks.find(t => t.id === taskId);
+                    if (task) {
+                        document.getElementById('taskDescription').textContent = task.description || 'Task details unavailable';
+                    } else {
+                        document.getElementById('taskDescription').textContent = 'Task not found';
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load task details:', error);
+                document.getElementById('taskDescription').textContent = 'Unable to load task details';
+            }
+        }
+
         // Initialize page on load
         async function initializePage() {
             const taskIdFromUrl = getUrlParam('taskId');
@@ -148,6 +167,8 @@
             if (taskIdFromUrl) {
                 // Pre-fill task ID
                 document.getElementById('taskId').value = taskIdFromUrl;
+                // Load task details to show in info box
+                await loadTaskDetails(taskIdFromUrl);
             }
 
             // Always load systems and pre-select if assetUid is provided

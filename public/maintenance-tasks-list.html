@@ -974,8 +974,8 @@
         }
 
         function populateFilters() {
-            // Populate system filter
-            const systems = [...new Set(allTasks.map(t => t.system_name))].sort();
+            // Populate system filter using display_name (Manufacturer Model format)
+            const systems = [...new Set(allTasks.map(t => t.display_name || t.system_name))].sort();
             const systemSelect = document.getElementById('system-filter');
             systems.forEach(system => {
                 const option = document.createElement('option');
@@ -1007,7 +1007,7 @@
             filteredTasks = allTasks.filter(task => {
                 const matchesSearch = !searchTerm ||
                     task.description.toLowerCase().includes(searchTerm);
-                const matchesSystem = !systemFilter || task.system_name === systemFilter;
+                const matchesSystem = !systemFilter || (task.display_name || task.system_name) === systemFilter;
                 const matchesBasis = !basisFilter || task.frequency_basis === basisFilter;
                 const matchesType = !typeFilter || task.task_type === typeFilter;
 
@@ -1078,7 +1078,7 @@
                     <div class="task-meta">
                         <div class="meta-item">
                             <div class="meta-label">System</div>
-                            <div class="meta-value">${task.system_name}</div>
+                            <div class="meta-value">${task.display_name || task.system_name}</div>
                         </div>
 
                         <div class="meta-item">
@@ -1370,7 +1370,7 @@
                                     <div>${task.description}</div>
                                     <div class="timeline-task-freq">
                                         Every ${task.frequency_value} ${task.frequency_type} (${task.frequency_hours}h)
-                                        ${task.system_name ? `• ${task.system_name}` : ''}
+                                        ${(task.display_name || task.system_name) ? `• ${task.display_name || task.system_name}` : ''}
                                     </div>
                                 </div>
                             `).join('')}
@@ -1404,7 +1404,7 @@
                                     <div>${task.description}</div>
                                     <div class="timeline-task-freq">
                                         Every ${task.frequency_value} ${task.frequency_type}
-                                        ${task.system_name ? `• ${task.system_name}` : ''}
+                                        ${(task.display_name || task.system_name) ? `• ${task.display_name || task.system_name}` : ''}
                                     </div>
                                 </div>
                             `).join('')}
@@ -1463,7 +1463,7 @@
 
             // Populate modal
             document.getElementById('modal-description').textContent = task.description;
-            document.getElementById('modal-system').textContent = task.system_name || 'N/A';
+            document.getElementById('modal-system').textContent = task.display_name || task.system_name || 'N/A';
             document.getElementById('modal-freq-value').value = task.frequency_value || '';
             document.getElementById('modal-freq-type').value = task.frequency_type || 'hours';
             document.getElementById('modal-freq-basis').value = task.frequency_basis || 'calendar';

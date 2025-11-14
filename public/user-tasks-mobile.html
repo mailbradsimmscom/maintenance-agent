@@ -4,17 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create User Task</title>
-    <script>
-        // Mobile detection and redirect
-        (function() {
-            if (window.location.pathname.includes('-mobile.html')) return;
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            const isSmallScreen = window.innerWidth <= 768;
-            if (isMobile || isSmallScreen) {
-                window.location.href = '/user-tasks-mobile.html';
-            }
-        })();
-    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -162,11 +151,103 @@
         .required {
             color: #ef4444;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 640px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: 24px;
+                flex-wrap: wrap;
+            }
+
+            h1 span {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+                margin-bottom: 20px;
+            }
+
+            /* Stack date and frequency fields vertically */
+            .date-frequency-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            /* Button styling for mobile */
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            button {
+                width: 100%;
+                padding: 14px 24px;
+                font-size: 16px;
+            }
+
+            /* Prevent iOS zoom on inputs */
+            input[type="text"],
+            input[type="date"],
+            input[type="number"],
+            select,
+            textarea {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            /* Frequency details adjustments */
+            .frequency-details {
+                padding: 12px;
+            }
+
+            .frequency-input-group {
+                flex-wrap: wrap;
+            }
+
+            .frequency-input-group input {
+                width: 80px;
+            }
+
+            /* Better spacing for form groups */
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            /* Message styling */
+            .message {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+
+        /* Safe area support for notched devices */
+        @supports (padding: env(safe-area-inset-left)) {
+            body {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
+                padding-bottom: max(15px, env(safe-area-inset-bottom));
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="/todos.html" class="back-link">← Back to To-Do List</a>
+        <a href="/todos-mobile.html" class="back-link">← Back to To-Do List</a>
 
         <div class="card">
             <h1>

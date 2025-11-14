@@ -158,6 +158,58 @@ export const boatosTasksService = {
   },
 
   /**
+   * Mark task completed for a system (by asset_uid)
+   * Used when operating hours are updated to auto-complete the prompt
+   * @param {string} assetUid - System asset UID
+   * @returns {Promise<Object|null>} Updated task or null if no active task found
+   */
+  async markTaskCompletedForSystem(assetUid) {
+    try {
+      logger.info('Looking for active BoatOS task to complete', { assetUid });
+
+      // Find active "update_usage_hours" task for this system
+      const activeTask = await boatosTasksRepo.getActiveTask(assetUid, 'update_usage_hours');
+
+      if (!activeTask) {
+        logger.info('No active BoatOS task found for system', { assetUid });
+        return null;
+      }
+
+      // Check if task is actually due (don't complete future tasks)
+      const now = new Date();
+      const nextDue = new Date(activeTask.next_due);
+      if (nextDue > now) {
+        logger.info('BoatOS task is not yet due, skipping completion', {
+          assetUid,
+          taskId: activeTask.id,
+          nextDue: activeTask.next_due,
+        });
+        return null;
+      }
+
+      // Mark as completed (this updates next_due to future date)
+      const completedTask = await this.markTaskCompleted(activeTask.id);
+
+      logger.info('BoatOS task auto-completed after hours update', {
+        assetUid,
+        taskId: activeTask.id,
+        oldNextDue: activeTask.next_due,
+        newNextDue: completedTask.next_due,
+      });
+
+      return completedTask;
+
+    } catch (error) {
+      logger.error('Failed to mark BoatOS task completed for system', {
+        assetUid,
+        error: error.message,
+      });
+      // Don't throw - we don't want to fail hours update if this fails
+      return null;
+    }
+  },
+
+  /**
    * Check if system needs hours update task created
    * @param {string} assetUid - System asset UID
    * @returns {Promise<boolean>} True if task needs to be created

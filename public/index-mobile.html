@@ -4,24 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maintenance Agent - Dashboard</title>
-    <script>
-        // Mobile detection and redirect
-        (function() {
-            // Check if we're already on a mobile page to prevent redirect loops
-            if (window.location.pathname.includes('-mobile.html')) {
-                return;
-            }
-
-            // Detect mobile devices
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            const isSmallScreen = window.innerWidth <= 768;
-
-            // Redirect to mobile version if mobile device or small screen
-            if (isMobile || isSmallScreen) {
-                window.location.href = '/index-mobile.html';
-            }
-        })();
-    </script>
     <style>
         * {
             margin: 0;
@@ -166,6 +148,105 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 640px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .header {
+                padding: 25px 20px;
+                border-radius: 12px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            /* API status more compact */
+            .api-status {
+                padding: 15px;
+                margin-top: 15px;
+            }
+
+            .api-status h3 {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+
+            .api-indicator {
+                gap: 8px;
+            }
+
+            .api-indicator span {
+                font-size: 13px;
+            }
+
+            /* Module cards */
+            .modules {
+                gap: 16px;
+                grid-template-columns: 1fr;
+            }
+
+            .module-card {
+                padding: 20px;
+            }
+
+            .module-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+
+            .module-card h2 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .module-card p {
+                font-size: 13px;
+                line-height: 1.5;
+            }
+
+            .status-badge {
+                font-size: 11px;
+                padding: 3px 10px;
+                margin-top: 10px;
+            }
+
+            /* Footer */
+            .footer {
+                margin-top: 30px;
+            }
+
+            .footer p {
+                font-size: 13px;
+            }
+
+            .footer p:last-child {
+                font-size: 12px !important;
+            }
+        }
+
+        /* Safe area support */
+        @supports (padding: env(safe-area-inset-left)) {
+            body {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
+                padding-bottom: max(15px, env(safe-area-inset-bottom));
+            }
+        }
     </style>
 </head>
 <body>
@@ -183,7 +264,7 @@
         </div>
 
         <div class="modules">
-            <a href="agent-status.html" class="module-card">
+            <a href="agent-status-mobile.html" class="module-card">
                 <div class="module-icon">🤖</div>
                 <h2>Agent Status</h2>
                 <p>Monitor pipeline processing status. Process systems through extraction, deduplication, and classification steps.</p>
@@ -204,31 +285,38 @@
                 <span class="status-badge ready">Ready</span>
             </a>
 
-            <a href="user-tasks.html" class="module-card">
+            <a href="user-tasks-mobile.html" class="module-card">
                 <div class="module-icon">👤</div>
                 <h2>User Tasks</h2>
                 <p>View and manage user-specific maintenance tasks. Filter by system, status, and frequency.</p>
                 <span class="status-badge ready">Ready</span>
             </a>
 
-            <a href="edit-user-task.html" class="module-card">
+            <a href="edit-user-task-mobile.html" class="module-card">
                 <div class="module-icon">✏️</div>
                 <h2>Edit Task</h2>
                 <p>Edit individual user task details. Update descriptions, frequencies, and task metadata.</p>
                 <span class="status-badge ready">Ready</span>
             </a>
 
-            <a href="hours-update.html" class="module-card">
+            <a href="hours-update-mobile.html" class="module-card">
                 <div class="module-icon">⏱️</div>
                 <h2>Hours Update</h2>
                 <p>Update operating hours for systems. View history and track hour meter readings.</p>
                 <span class="status-badge ready">Ready</span>
             </a>
 
-            <a href="todos.html" class="module-card">
+            <a href="todos-mobile.html" class="module-card">
                 <div class="module-icon">📋</div>
                 <h2>To-Do List</h2>
                 <p>View all pending tasks including BoatOS prompts, maintenance tasks, and approvals.</p>
+                <span class="status-badge ready">Ready</span>
+            </a>
+
+            <a href="http://localhost:3000/public/index-mobile.html" class="module-card">
+                <div class="module-icon">💬</div>
+                <h2>AI Chat</h2>
+                <p>Ask questions about boat systems and equipment. Get intelligent answers from technical manuals.</p>
                 <span class="status-badge ready">Ready</span>
             </a>
 

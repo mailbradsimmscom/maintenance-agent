@@ -4,17 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Operating Hours</title>
-    <script>
-        // Mobile detection and redirect
-        (function() {
-            if (window.location.pathname.includes('-mobile.html')) return;
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            const isSmallScreen = window.innerWidth <= 768;
-            if (isMobile || isSmallScreen) {
-                window.location.href = '/hours-update-mobile.html';
-            }
-        })();
-    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -72,15 +61,102 @@
         }
         .success { color: #10b981; font-weight: 600; margin-top: 10px; }
         .error { color: #ef4444; font-weight: 600; margin-top: 10px; }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 640px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+
+            h2 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .form-group {
+                margin-bottom: 18px;
+            }
+
+            label {
+                font-size: 14px;
+                margin-bottom: 6px;
+            }
+
+            /* Prevent iOS zoom */
+            input,
+            select,
+            textarea {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            /* Checkbox styling for better touch */
+            input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                margin-right: 8px;
+                vertical-align: middle;
+            }
+
+            /* Full width button */
+            button {
+                width: 100%;
+                padding: 14px 24px;
+                font-size: 16px;
+            }
+
+            /* History items */
+            .history-item {
+                padding: 12px;
+                margin-bottom: 12px;
+                font-size: 14px;
+            }
+
+            /* Messages */
+            .success,
+            .error {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            /* Back link */
+            .back-link {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Safe area support */
+        @supports (padding: env(safe-area-inset-left)) {
+            body {
+                padding-left: max(15px, env(safe-area-inset-left));
+                padding-right: max(15px, env(safe-area-inset-right));
+                padding-bottom: max(15px, env(safe-area-inset-bottom));
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <a href="/" class="back-link">← Back to Dashboard</a>
-        
+
         <div class="card">
             <h1>⏱️ Update Operating Hours</h1>
-            
+
             <div class="form-group">
                 <label for="assetUid">System</label>
                 <select id="assetUid" required>
@@ -173,17 +249,17 @@
         // Load hours history
         async function loadHistory() {
             if (!currentAssetUid) return;
-            
+
             try {
                 const response = await fetch(`${API_BASE}/system-maintenance/${currentAssetUid}/hours/history`);
                 const data = await response.json();
-                
+
                 const historyDiv = document.getElementById('history');
-                
+
                 if (data.success && data.data.history.length > 0) {
                     historyDiv.innerHTML = data.data.history.map(entry => `
                         <div class="history-item">
-                            <strong>${entry.hours} hours</strong> - 
+                            <strong>${entry.hours} hours</strong> -
                             ${new Date(entry.submitted_at).toLocaleString()}
                             ${entry.notes ? `<br><em>${entry.notes}</em>` : ''}
                             ${entry.meter_replaced ? '<br>🔄 Meter replaced' : ''}

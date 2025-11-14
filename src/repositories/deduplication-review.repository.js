@@ -162,26 +162,49 @@ const deduplicationReviewRepository = {
 
   /**
    * Get unique list of systems from pending reviews
-   * @returns {Promise<Array>} List of system names
+   * Returns display names in "Manufacturer Model" format
+   * @returns {Promise<Array>} List of system display names
    */
   async getSystemsList() {
-    const { data, error } = await supabase
-      .from('deduplication_pending_reviews')
-      .select('task1_system, task2_system');
+    // Fetch review metadata with asset_uids from main table (not view)
+    const { data: reviews, error: reviewsError } = await supabase
+      .from('deduplication_reviews')
+      .select('task1_metadata, task2_metadata')
+      .eq('review_status', 'pending'); // Only get pending reviews
 
-    if (error) {
-      logger.error('Failed to fetch systems list', { error: error.message });
-      throw error;
+    if (reviewsError) {
+      logger.error('Failed to fetch systems list', { error: reviewsError.message });
+      throw reviewsError;
     }
 
-    // Extract unique system names
-    const systems = new Set();
-    data.forEach(row => {
-      if (row.task1_system) systems.add(row.task1_system);
-      if (row.task2_system) systems.add(row.task2_system);
+    // Extract unique asset UIDs
+    const assetUids = new Set();
+    reviews.forEach(row => {
+      if (row.task1_metadata?.asset_uid) assetUids.add(row.task1_metadata.asset_uid);
+      if (row.task2_metadata?.asset_uid) assetUids.add(row.task2_metadata.asset_uid);
     });
 
-    return Array.from(systems).sort();
+    if (assetUids.size === 0) {
+      return []; // No systems to look up
+    }
+
+    // Fetch systems data to build display names
+    const { data: systems, error: systemsError } = await supabase
+      .from('systems')
+      .select('asset_uid, manufacturer_norm, model_norm')
+      .in('asset_uid', Array.from(assetUids));
+
+    if (systemsError) {
+      logger.error('Failed to fetch systems for display names', { error: systemsError.message });
+      throw systemsError;
+    }
+
+    // Build display names (Manufacturer Model format)
+    const displayNames = systems.map(s =>
+      `${s.manufacturer_norm} ${s.model_norm}`.trim()
+    );
+
+    return Array.from(new Set(displayNames)).sort();
   },
 
   /**

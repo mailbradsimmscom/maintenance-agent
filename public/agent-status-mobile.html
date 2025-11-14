@@ -4,17 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maintenance Agent Status</title>
-  <script>
-    // Mobile detection and redirect
-    (function() {
-      if (window.location.pathname.includes('-mobile.html')) return;
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const isSmallScreen = window.innerWidth <= 768;
-      if (isMobile || isSmallScreen) {
-        window.location.href = '/agent-status-mobile.html';
-      }
-    })();
-  </script>
   <style>
     * {
       margin: 0;
@@ -408,6 +397,173 @@
       padding: 2rem;
       color: #95a5a6;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      /* Header adjustments */
+      .header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .header h1 {
+        font-size: 1.25rem;
+      }
+
+      /* Main container */
+      .main-container {
+        padding: 0 1rem;
+        margin: 1rem auto;
+      }
+
+      /* Mode selector buttons */
+      .mode-selector {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .mode-button {
+        width: 100%;
+        padding: 0.875rem 1.5rem;
+      }
+
+      /* Controls section */
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        margin-bottom: 1rem;
+      }
+
+      #selected-count {
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .controls > div:last-child {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .refresh-button,
+      .process-button {
+        width: 100%;
+        padding: 0.875rem 1.5rem;
+      }
+
+      /* Table container with horizontal scroll */
+      #systems-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table {
+        min-width: 600px;
+      }
+
+      /* Hide complex filter row on mobile */
+      .filter-row {
+        display: none;
+      }
+
+      /* Smaller table text */
+      th {
+        font-size: 12px;
+        padding: 0.75rem 0.5rem;
+      }
+
+      td {
+        font-size: 13px;
+        padding: 0.75rem 0.5rem;
+      }
+
+      /* Status badges */
+      .status-badge {
+        font-size: 11px;
+        padding: 0.2rem 0.5rem;
+      }
+
+      /* Modal adjustments */
+      .modal-content {
+        width: 95%;
+        max-width: none;
+        margin: 10px;
+        max-height: 90vh;
+      }
+
+      .modal-header {
+        padding: 1rem;
+      }
+
+      .modal-header h2 {
+        font-size: 1.125rem;
+      }
+
+      .modal-body {
+        padding: 1rem;
+      }
+
+      .progress-log {
+        max-height: 300px;
+        font-size: 0.75rem;
+      }
+    }
+
+    /* Add mobile filter button (to be added to HTML) */
+    .mobile-filter-button {
+      display: none;
+      width: 100%;
+      padding: 0.75rem;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-filter-button {
+        display: block;
+      }
+    }
+
+    /* Mobile filter panel */
+    .mobile-filters {
+      display: none;
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .mobile-filters.active {
+      display: block;
+    }
+
+    .mobile-filters .filter-group {
+      margin-bottom: 1rem;
+    }
+
+    .mobile-filters label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .mobile-filters input,
+    .mobile-filters select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -441,6 +597,35 @@
         <button id="process-button" class="process-button" disabled>
           Process Selected Systems
         </button>
+      </div>
+    </div>
+
+    <!-- Mobile Filter Button -->
+    <button id="mobile-filter-button" class="mobile-filter-button" onclick="toggleMobileFilters()">
+      🔍 Filter Systems
+    </button>
+
+    <!-- Mobile Filter Panel -->
+    <div id="mobile-filters" class="mobile-filters">
+      <div class="filter-group">
+        <label for="mobile-filter-name">System Name</label>
+        <input type="text" id="mobile-filter-name" placeholder="Filter by name...">
+      </div>
+      <div class="filter-group">
+        <label for="mobile-filter-manufacturer">Manufacturer</label>
+        <input type="text" id="mobile-filter-manufacturer" placeholder="Filter by manufacturer...">
+      </div>
+      <div class="filter-group">
+        <label for="mobile-filter-status">Status</label>
+        <select id="mobile-filter-status">
+          <option value="">All Statuses</option>
+          <option value="not_started">Not Started</option>
+          <option value="processing">Processing</option>
+          <option value="pending_review">Review Duplicates</option>
+          <option value="pending_final_review">Review Tasks</option>
+          <option value="completed">Completed</option>
+          <option value="failed">Failed</option>
+        </select>
       </div>
     </div>
 
@@ -757,6 +942,33 @@
         });
       }
 
+      setupMobileFilterListeners() {
+        const mobileFilterName = document.getElementById('mobile-filter-name');
+        const mobileFilterManu = document.getElementById('mobile-filter-manufacturer');
+        const mobileFilterStatus = document.getElementById('mobile-filter-status');
+
+        if (mobileFilterName) {
+          mobileFilterName.addEventListener('input', (e) => {
+            this.filters.name = e.target.value;
+            this.applyFilters();
+          });
+        }
+
+        if (mobileFilterManu) {
+          mobileFilterManu.addEventListener('input', (e) => {
+            this.filters.manufacturer = e.target.value;
+            this.applyFilters();
+          });
+        }
+
+        if (mobileFilterStatus) {
+          mobileFilterStatus.addEventListener('change', (e) => {
+            this.filters.status = e.target.value;
+            this.applyFilters();
+          });
+        }
+      }
+
       renderTable(systems) {
         const tbody = document.getElementById('systems-tbody');
 
@@ -945,6 +1157,12 @@
       }
     }
 
+    // Mobile filter functionality
+    function toggleMobileFilters() {
+      const filterPanel = document.getElementById('mobile-filters');
+      filterPanel.classList.toggle('active');
+    }
+
     // Initialize
     const client = new StatusPageClient();
 
@@ -952,6 +1170,7 @@
       client.connect();
       client.loadSystems();
       client.setupFilterListeners();
+      client.setupMobileFilterListeners();
 
       // Refresh button
       const refreshButton = document.getElementById('refresh-button');

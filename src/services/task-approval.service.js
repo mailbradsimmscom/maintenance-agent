@@ -4,6 +4,7 @@
  */
 
 import { pineconeRepository } from '../repositories/pinecone.repository.js';
+import { systemsRepository } from '../repositories/supabase.repository.js';
 import { getConfig } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
 
@@ -378,19 +379,33 @@ export const taskApprovalService = {
       // Get all tasks from Pinecone
       const allTasks = await pineconeRepository.listAllTasks();
 
+      // Get all systems to enrich with display names
+      const systems = await systemsRepository.getAllSystems();
+      const systemsMap = new Map(
+        systems.map(s => [s.asset_uid, s])
+      );
+
       // Filter by assetUid if provided
       let tasks = allTasks;
       if (assetUid) {
         tasks = tasks.filter(task => task.metadata?.asset_uid === assetUid);
       }
 
-      // Format tasks for frontend
-      const formattedTasks = tasks.map(task => ({
-        id: task.id,
-        ...task.metadata,
-      }));
+      // Format tasks for frontend and enrich with display_name
+      const formattedTasks = tasks.map(task => {
+        const system = systemsMap.get(task.metadata?.asset_uid);
+        const display_name = system
+          ? `${system.manufacturer_norm} ${system.model_norm}`.trim()
+          : task.metadata?.system_name || 'Unknown System';
 
-      logger.info('Tasks fetched', { count: formattedTasks.length });
+        return {
+          id: task.id,
+          ...task.metadata,
+          display_name, // Add computed display name for dropdowns
+        };
+      });
+
+      logger.info('Tasks fetched and enriched', { count: formattedTasks.length });
 
       return formattedTasks;
 

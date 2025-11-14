@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ffffff">
+    <title>Maintenance Agent</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-color: #007AFF;
+            --background: #F2F2F7;
+            --card-bg: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --safe-area-bottom: env(safe-area-inset-bottom);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            padding-bottom: calc(70px + var(--safe-area-bottom));
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header with blur effect */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 100;
+            padding: env(safe-area-inset-top) 0 0 0;
+            border-bottom: 0.5px solid var(--border-color);
+        }
+
+        .header-content {
+            padding: 16px 20px 12px 20px;
+        }
+
+        .header h1 {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #34C759;
+        }
+
+        .status-dot.loading {
+            background: #FF9500;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main content */
+        .main-content {
+            margin-top: calc(env(safe-area-inset-top) + 100px);
+            padding: 0 0 20px 0;
+        }
+
+        /* Quick Actions Section */
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            padding: 0 20px 12px 20px;
+            color: var(--text-primary);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 0 20px;
+            margin-bottom: 24px;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card:active {
+            transform: scale(0.97);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-color), #5AC8FA);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .action-card h3 {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .action-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Recent Tasks Section */
+        .task-list {
+            background: var(--card-bg);
+            margin: 0 20px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .task-item {
+            padding: 16px;
+            border-bottom: 0.5px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-item:active {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .task-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #F2F2F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .task-badge.overdue {
+            background: #FFEBEB;
+        }
+
+        .task-badge.due-soon {
+            background: #FFF5E6;
+        }
+
+        .task-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .task-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .task-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .task-chevron {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 0.5px solid var(--border-color);
+            padding-bottom: var(--safe-area-bottom);
+            z-index: 100;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 16px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            flex: 1;
+            max-width: 80px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:active .nav-icon {
+            transform: scale(0.9);
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Pull to Refresh Indicator */
+        .pull-indicator {
+            position: fixed;
+            top: calc(env(safe-area-inset-top) + 80px);
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            transition: transform 0.2s;
+            z-index: 99;
+        }
+
+        .pull-indicator.active {
+            transform: translateX(-50%) scale(1);
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1>🔧 Maintenance</h1>
+            <div class="api-status">
+                <div class="status-dot loading" id="statusDot"></div>
+                <span id="statusText">Checking connection...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pull to Refresh Indicator -->
+    <div class="pull-indicator" id="pullIndicator">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Quick Actions -->
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="quick-actions">
+            <a href="/user-tasks-mobile.html" class="action-card">
+                <div class="action-icon">📝</div>
+                <h3>Create Task</h3>
+                <p>Add new maintenance task</p>
+            </a>
+
+            <a href="/todos-mobile.html" class="action-card">
+                <div class="action-icon">📋</div>
+                <h3>To-Do List</h3>
+                <p>View pending tasks</p>
+            </a>
+
+            <a href="/hours-update-mobile.html" class="action-card">
+                <div class="action-icon">⏱️</div>
+                <h3>Hours Update</h3>
+                <p>Log system hours</p>
+            </a>
+
+            <a href="/agent-status-mobile.html" class="action-card">
+                <div class="action-icon">🤖</div>
+                <h3>Agent Status</h3>
+                <p>Monitor processing</p>
+            </a>
+        </div>
+
+        <!-- Recent Tasks -->
+        <h2 class="section-title">Recent Tasks</h2>
+        <div class="task-list" id="taskList">
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading tasks...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-items">
+            <a href="#" class="nav-item active" data-page="home">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </a>
+            <a href="/todos-mobile.html" class="nav-item" data-page="tasks">
+                <div class="nav-icon">📋</div>
+                <div class="nav-label">Tasks</div>
+            </a>
+            <a href="/agent-status-mobile.html" class="nav-item" data-page="agent">
+                <div class="nav-icon">🤖</div>
+                <div class="nav-label">Agent</div>
+            </a>
+            <a href="/hours-update-mobile.html" class="nav-item" data-page="hours">
+                <div class="nav-icon">⏱️</div>
+                <div class="nav-label">Hours</div>
+            </a>
+            <a href="#" class="nav-item" data-page="more">
+                <div class="nav-icon">⚙️</div>
+                <div class="nav-label">More</div>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // Check API health
+        async function checkAPI() {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+
+                if (data.success && data.data.status === 'healthy') {
+                    statusDot.classList.remove('loading');
+                    statusText.textContent = 'Connected';
+                } else {
+                    statusDot.style.background = '#FF3B30';
+                    statusText.textContent = 'API Unhealthy';
+                }
+            } catch (error) {
+                statusDot.style.background = '#FF3B30';
+                statusText.textContent = 'Offline';
+            }
+        }
+
+        // Load recent tasks
+        async function loadRecentTasks() {
+            const taskList = document.getElementById('taskList');
+
+            try {
+                const response = await fetch('/admin/api/todo');
+                const data = await response.json();
+
+                if (data.success && data.data.todos && data.data.todos.length > 0) {
+                    // Show only first 5 tasks
+                    const recentTasks = data.data.todos.slice(0, 5);
+
+                    taskList.innerHTML = recentTasks.map(task => {
+                        const badgeClass = task.priority === 'overdue' ? 'overdue' :
+                                         task.priority === 'due_soon' ? 'due-soon' : '';
+                        const icon = task.type === 'maintenance_task' ? '🔧' :
+                                    task.type === 'user_task' ? '📝' : '📋';
+
+                        return `
+                            <div class="task-item" onclick="window.location.href='${task.actionUrl || '#'}'">
+                                <div class="task-badge ${badgeClass}">${icon}</div>
+                                <div class="task-info">
+                                    <div class="task-title">${task.title}</div>
+                                    <div class="task-subtitle">${task.source}</div>
+                                </div>
+                                <div class="task-chevron">›</div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    taskList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">✅</div>
+                            <div class="empty-text">All caught up!</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                taskList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⚠️</div>
+                        <div class="empty-text">Unable to load tasks</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Pull to refresh functionality
+        let startY = 0;
+        let pulling = false;
+
+        window.addEventListener('touchstart', (e) => {
+            if (window.scrollY === 0) {
+                startY = e.touches[0].pageY;
+                pulling = true;
+            }
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (pulling && window.scrollY === 0) {
+                const currentY = e.touches[0].pageY;
+                const pullDistance = currentY - startY;
+
+                if (pullDistance > 0 && pullDistance < 100) {
+                    const indicator = document.getElementById('pullIndicator');
+                    indicator.classList.add('active');
+                }
+            }
+        });
+
+        window.addEventListener('touchend', async (e) => {
+            const indicator = document.getElementById('pullIndicator');
+
+            if (pulling && window.scrollY === 0) {
+                const pullDistance = e.changedTouches[0].pageY - startY;
+
+                if (pullDistance > 80) {
+                    // Trigger refresh
+                    await Promise.all([
+                        checkAPI(),
+                        loadRecentTasks()
+                    ]);
+
+                    setTimeout(() => {
+                        indicator.classList.remove('active');
+                    }, 500);
+                } else {
+                    indicator.classList.remove('active');
+                }
+            }
+
+            pulling = false;
+            startY = 0;
+        });
+
+        // Active nav state
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (this.getAttribute('data-page') === 'home' ||
+                    this.getAttribute('data-page') === 'more') {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-item').forEach(nav =>
+                        nav.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Haptic feedback simulation (if supported)
+        function vibrate() {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(10);
+            }
+        }
+
+        // Add haptic feedback to all clickable elements
+        document.querySelectorAll('.action-card, .task-item, .nav-item').forEach(el => {
+            el.addEventListener('touchstart', vibrate);
+        });
+
+        // Initialize
+        checkAPI();
+        loadRecentTasks();
+
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {
+                // Service worker not available yet
+            });
+        }
+    </script>
+</body>
+</html>

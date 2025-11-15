@@ -44,6 +44,9 @@ const envSchema = z.object({
   ENABLE_DEPENDENCY_INFERENCE: z.string().default('false'),
   ENABLE_AUTO_LEARNING: z.string().default('false'),
 
+  // Cross-service URL
+  CHAT_SERVICE_URL: z.string().default('http://localhost:3000'),
+
   // Operational Tracking (NEW - Phase 1)
   HOURS_UPDATE_PROMPT_INTERVAL_DAYS: z.string().default('7'),
   HOURS_STALENESS_WARNING_DAYS: z.string().default('30'),
@@ -172,6 +175,9 @@ export function getConfig() {
 
     // Security
     adminToken: env.ADMIN_TOKEN,
+
+    // Cross-service URLs
+    chatServiceUrl: env.CHAT_SERVICE_URL,
   };
 }
 

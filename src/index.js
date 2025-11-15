@@ -65,8 +65,26 @@ function createExpressApp() {
 
   // CORS configuration
   app.use(cors({
-    origin: process.env.CORS_ORIGIN || '*',
-    credentials: true,
+    origin: function(origin, callback) {
+      const allowedOrigins = config.nodeEnv === 'development'
+        ? [
+            'http://localhost:3000',
+            'http://localhost:3001',
+            'http://192.168.20.106:3000',  // Local IP for mobile
+            'http://192.168.20.106:3001'
+          ]
+        : [
+            'https://chat.catamaranos.com',
+            'https://admin.catamaranos.com'
+          ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true
   }));
 
   // Body parsing

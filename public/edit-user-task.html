@@ -208,6 +208,57 @@
             padding: 40px;
             color: #666;
         }
+
+        /* Task Selector Section */
+        .task-selector {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .task-selector h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .selector-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .selector-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .selector-group label {
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .selector-group select {
+            width: 100%;
+        }
+        .task-selector.hidden {
+            display: none;
+        }
+        .editing-header {
+            background: #e0e7ff;
+            border-left: 4px solid #667eea;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .editing-header.show {
+            display: block;
+        }
+        .editing-header p {
+            color: #333;
+            font-size: 14px;
+            margin: 0;
+        }
+        .editing-header strong {
+            color: #667eea;
+        }
     </style>
 </head>
 <body>
@@ -220,6 +271,30 @@
                 Edit User Task
             </h1>
             <p class="subtitle">Update task details or reschedule</p>
+
+            <!-- Task Selector (shows when no ?id= in URL) -->
+            <div id="taskSelector" class="task-selector">
+                <h3>Select a Task to Edit</h3>
+                <div class="selector-row">
+                    <div class="selector-group">
+                        <label for="systemSelect">1. Select System/Category</label>
+                        <select id="systemSelect" onchange="onSystemSelect()">
+                            <option value="">-- Select a system --</option>
+                        </select>
+                    </div>
+                    <div class="selector-group">
+                        <label for="taskSelect">2. Select Task</label>
+                        <select id="taskSelect" onchange="onTaskSelect()" disabled>
+                            <option value="">-- Select a system first --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Editing Header (shows when editing from URL) -->
+            <div id="editingHeader" class="editing-header">
+                <p>Editing: <strong id="editingTaskName"></strong></p>
+            </div>
 
             <div id="message" class="message"></div>
 
@@ -335,6 +410,10 @@
     <script>
         let currentTask = null;
         let taskId = null;
+        let allTodos = [];
+        let allSystems = [];
+        let tasksBySystem = new Map();
+        let isUrlMode = false;
 
         // Parse URL parameters
         function getUrlParam(param) {
@@ -342,12 +421,152 @@
             return urlParams.get(param);
         }
 
+        // Fetch all todos and group by system
+        async function fetchAndGroupTasks() {
+            try {
+                const response = await fetch('/admin/api/todo');
+                const data = await response.json();
+
+                if (data.success) {
+                    allTodos = data.data.todos || [];
+                    groupTasksBySystem();
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Failed to fetch todos:', error);
+                return false;
+            }
+        }
+
+        // Group tasks by system
+        function groupTasksBySystem() {
+            tasksBySystem.clear();
+
+            allTodos.forEach(todo => {
+                // FILTER: Only show user tasks (this page only edits user tasks)
+                if (todo.type !== 'user_task') {
+                    return;
+                }
+
+                // Determine system key
+                let systemKey;
+                let systemLabel;
+                let storeAssetUid;
+
+                if (!todo.assetUid || todo.assetUid === 'general') {
+                    // User Tasks (no system)
+                    systemKey = 'user-tasks';
+                    systemLabel = 'User Tasks';
+                    storeAssetUid = null; // Don't store assetUid for special category
+                } else {
+                    // Regular system with user task
+                    systemKey = todo.assetUid;
+                    systemLabel = null; // Will be filled from systems API
+                    storeAssetUid = todo.assetUid;
+                }
+
+                if (!tasksBySystem.has(systemKey)) {
+                    tasksBySystem.set(systemKey, {
+                        key: systemKey,
+                        label: systemLabel,
+                        assetUid: storeAssetUid,
+                        tasks: []
+                    });
+                }
+
+                tasksBySystem.get(systemKey).tasks.push(todo);
+            });
+        }
+
+        // Populate system dropdown
+        function populateSystemDropdown() {
+            const systemSelect = document.getElementById('systemSelect');
+            systemSelect.innerHTML = '<option value="">-- Select a system --</option>';
+
+            // Sort systems: User Tasks first, then alphabetically
+            const systemEntries = Array.from(tasksBySystem.entries());
+            systemEntries.sort(([keyA, groupA], [keyB, groupB]) => {
+                if (keyA === 'user-tasks') return -1;
+                if (keyB === 'user-tasks') return 1;
+
+                const labelA = groupA.label || keyA;
+                const labelB = groupB.label || keyB;
+                return labelA.localeCompare(labelB);
+            });
+
+            systemEntries.forEach(([key, group]) => {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = `${group.label || key} (${group.tasks.length})`;
+                systemSelect.appendChild(option);
+            });
+        }
+
+        // Handle system selection
+        function onSystemSelect() {
+            const systemKey = document.getElementById('systemSelect').value;
+            const taskSelect = document.getElementById('taskSelect');
+
+            if (!systemKey) {
+                taskSelect.disabled = true;
+                taskSelect.innerHTML = '<option value="">-- Select a system first --</option>';
+                return;
+            }
+
+            const group = tasksBySystem.get(systemKey);
+            if (!group) return;
+
+            // Enable and populate task dropdown
+            taskSelect.disabled = false;
+            taskSelect.innerHTML = '<option value="">-- Select a task --</option>';
+
+            group.tasks.forEach(todo => {
+                const option = document.createElement('option');
+                // Extract actual task ID from the todo id (e.g., "user-task-123" -> "123")
+                const actualTaskId = extractTaskId(todo);
+                option.value = actualTaskId;
+
+                // Format: "Task Title - Due: Nov 15"
+                let displayText = todo.title;
+                if (todo.dueDate) {
+                    const dueDate = new Date(todo.dueDate).toLocaleDateString();
+                    displayText += ` - Due: ${dueDate}`;
+                }
+                option.textContent = displayText;
+
+                taskSelect.appendChild(option);
+            });
+        }
+
+        // Extract actual task ID from todo object
+        function extractTaskId(todo) {
+            // todo.id format: "user-task-123", "maintenance-456", etc.
+            // We need to extract the UUID part
+            if (todo.metadata && todo.metadata.taskId) {
+                return todo.metadata.taskId;
+            }
+            // Fallback: parse from id string
+            const parts = todo.id.split('-');
+            return parts[parts.length - 1];
+        }
+
+        // Handle task selection
+        function onTaskSelect() {
+            const selectedTaskId = document.getElementById('taskSelect').value;
+            if (!selectedTaskId) return;
+
+            // Load the selected task
+            taskId = selectedTaskId;
+            loadTask();
+        }
+
         // Load task data
         async function loadTask() {
-            taskId = getUrlParam('id');
-
+            // taskId should already be set (either from URL or selector)
             if (!taskId) {
                 showMessage('No task ID provided', 'error');
+                document.getElementById('loadingMessage').style.display = 'none';
                 return;
             }
 
@@ -360,6 +579,12 @@
                     populateForm(currentTask);
                     document.getElementById('loadingMessage').style.display = 'none';
                     document.getElementById('editTaskForm').style.display = 'block';
+
+                    // If in URL mode, show editing header
+                    if (isUrlMode) {
+                        document.getElementById('editingTaskName').textContent = currentTask.description;
+                        document.getElementById('editingHeader').classList.add('show');
+                    }
                 } else {
                     showMessage('Task not found', 'error');
                     document.getElementById('loadingMessage').textContent = 'Task not found';
@@ -414,17 +639,34 @@
                 const data = await response.json();
 
                 if (data.success && data.data.length > 0) {
-                    const select = document.getElementById('system');
+                    allSystems = data.data;
 
-                    // Keep "General" as first option
+                    // Enrich tasksBySystem with display names (skip special categories)
+                    tasksBySystem.forEach((group, key) => {
+                        // Skip enrichment for special categories
+                        if (key === 'user-tasks') {
+                            return;
+                        }
+
+                        if (group.assetUid && group.assetUid !== 'general') {
+                            const system = allSystems.find(s => s.asset_uid === group.assetUid);
+                            if (system) {
+                                group.label = system.display_name || system.subsystem_norm || system.description ||
+                                             `System ${system.asset_uid.substring(0, 8)}`;
+                            }
+                        }
+                    });
+
+                    // Update the form's system dropdown
+                    const select = document.getElementById('system');
                     const generalOption = select.options[0];
-                    const currentValue = select.value; // Preserve current selection
+                    const currentValue = select.value;
 
                     select.innerHTML = '';
                     select.appendChild(generalOption);
 
                     // Add systems using display_name (Manufacturer Model)
-                    data.data.forEach(sys => {
+                    allSystems.forEach(sys => {
                         const displayName = sys.display_name || sys.subsystem_norm || sys.description ||
                                           `System ${sys.asset_uid.substring(0, 8)}`;
                         const option = document.createElement('option');
@@ -437,6 +679,9 @@
                     if (currentValue) {
                         select.value = currentValue;
                     }
+
+                    // Populate system selector dropdown
+                    populateSystemDropdown();
                 }
             } catch (error) {
                 console.error('Failed to load systems:', error);
@@ -599,8 +844,31 @@
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', async function() {
-            await loadSystems();
-            await loadTask();
+            // Check if we have a task ID in URL (URL mode)
+            const urlTaskId = getUrlParam('id');
+            isUrlMode = !!urlTaskId;
+
+            if (isUrlMode) {
+                // URL Mode: Hide selector, show editing header, load task directly
+                taskId = urlTaskId;
+                document.getElementById('taskSelector').classList.add('hidden');
+                document.getElementById('loadingMessage').style.display = 'block';
+
+                await loadSystems();
+                await loadTask();
+            } else {
+                // Selector Mode: Show selector, fetch tasks, wait for user selection
+                document.getElementById('loadingMessage').textContent = 'Loading tasks...';
+                document.getElementById('loadingMessage').style.display = 'block';
+
+                const success = await fetchAndGroupTasks();
+                if (success) {
+                    await loadSystems();
+                    document.getElementById('loadingMessage').style.display = 'none';
+                } else {
+                    document.getElementById('loadingMessage').textContent = 'Failed to load tasks';
+                }
+            }
         });
     </script>
 </body>

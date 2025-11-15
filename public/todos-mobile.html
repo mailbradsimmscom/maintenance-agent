@@ -29,12 +29,6 @@
             border-bottom: 2px solid #e0e0e0;
         }
         h2:first-of-type { margin-top: 20px; }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: white;
-            text-decoration: none;
-        }
 
         /* Filter Tabs */
         .filter-tabs {
@@ -241,15 +235,12 @@
             body {
                 padding-left: max(15px, env(safe-area-inset-left));
                 padding-right: max(15px, env(safe-area-inset-right));
-                padding-bottom: max(15px, env(safe-area-inset-bottom));
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="/" class="back-link">← Back to Dashboard</a>
-
         <div class="card">
             <h1>📋 To-Do List</h1>
             <p style="color: #666; margin-bottom: 10px;">
@@ -445,5 +436,6 @@
 
         loadTodos();
     </script>
+    <script src="/js/mobile-nav.js"></script>
 </body>
 </html>

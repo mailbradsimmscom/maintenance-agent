@@ -196,7 +196,7 @@
                 <div class="form-group">
                     <label for="system">System/Equipment</label>
                     <select id="system" name="system">
-                        <option value="general">General (Not system-specific)</option>
+                        <option value="0b04ac5e-b490-463f-93a9-dac29b585671">General (Not system-specific)</option>
                         <!-- Systems will be loaded here dynamically -->
                     </select>
                 </div>
@@ -343,7 +343,7 @@
             // Build task object
             const task = {
                 description: formData.get('description'),
-                asset_uid: formData.get('system') === 'general' ? null : formData.get('system'),
+                asset_uid: formData.get('system'),
                 due_date: formData.get('dueDate') + 'T09:00:00Z', // Default to 9am
                 notes: formData.get('notes') || null,
                 status: 'active',

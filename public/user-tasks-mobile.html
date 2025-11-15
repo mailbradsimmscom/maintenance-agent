@@ -31,12 +31,6 @@
             margin-bottom: 30px;
             font-size: 14px;
         }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: white;
-            text-decoration: none;
-        }
         .form-group {
             margin-bottom: 25px;
         }
@@ -240,15 +234,12 @@
             body {
                 padding-left: max(15px, env(safe-area-inset-left));
                 padding-right: max(15px, env(safe-area-inset-right));
-                padding-bottom: max(15px, env(safe-area-inset-bottom));
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="/todos-mobile.html" class="back-link">← Back to To-Do List</a>
-
         <div class="card">
             <h1>
                 <span>📝</span>
@@ -277,7 +268,7 @@
                 <div class="form-group">
                     <label for="system">System/Equipment</label>
                     <select id="system" name="system">
-                        <option value="general">General (Not system-specific)</option>
+                        <option value="0b04ac5e-b490-463f-93a9-dac29b585671">General (Not system-specific)</option>
                         <!-- Systems will be loaded here dynamically -->
                     </select>
                 </div>
@@ -360,6 +351,7 @@
     <script>
         // Set today as default due date
         document.addEventListener('DOMContentLoaded', async function() {
+
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('dueDate').value = today;
 
@@ -424,7 +416,7 @@
             // Build task object
             const task = {
                 description: formData.get('description'),
-                asset_uid: formData.get('system') === 'general' ? null : formData.get('system'),
+                asset_uid: formData.get('system'),
                 due_date: formData.get('dueDate') + 'T09:00:00Z', // Default to 9am
                 notes: formData.get('notes') || null,
                 status: 'active',
@@ -503,5 +495,6 @@
             document.getElementById('message').classList.remove('show');
         }
     </script>
+    <script src="/js/mobile-nav.js"></script>
 </body>
 </html>

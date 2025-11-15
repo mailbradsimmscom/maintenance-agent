@@ -472,7 +472,7 @@ export const todoService = {
           priority,
           dueDate: task.due_date,
           daysUntilDue,
-          actionUrl: `/edit-user-task.html?id=${task.id}`, // Edit/reschedule page
+          actionUrl: `http://localhost:3001/edit-user-task-mobile.html?id=${task.id}`, // Edit/reschedule page (mobile)
           canDismiss: false,
           metadata: {
             taskId: task.id,

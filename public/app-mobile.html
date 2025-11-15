@@ -223,58 +223,6 @@
             font-size: 14px;
         }
 
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 0.5px solid var(--border-color);
-            padding-bottom: var(--safe-area-bottom);
-            z-index: 100;
-        }
-
-        .nav-items {
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 6px 16px;
-            text-decoration: none;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-            flex: 1;
-            max-width: 80px;
-        }
-
-        .nav-item.active {
-            color: var(--primary-color);
-        }
-
-        .nav-icon {
-            font-size: 24px;
-            transition: transform 0.2s;
-        }
-
-        .nav-item:active .nav-icon {
-            transform: scale(0.9);
-        }
-
-        .nav-label {
-            font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 0.2px;
-        }
-
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -397,32 +345,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <div class="nav-items">
-            <a href="#" class="nav-item active" data-page="home">
-                <div class="nav-icon">🏠</div>
-                <div class="nav-label">Home</div>
-            </a>
-            <a href="/todos-mobile.html" class="nav-item" data-page="tasks">
-                <div class="nav-icon">📋</div>
-                <div class="nav-label">Tasks</div>
-            </a>
-            <a href="/agent-status-mobile.html" class="nav-item" data-page="agent">
-                <div class="nav-icon">🤖</div>
-                <div class="nav-label">Agent</div>
-            </a>
-            <a href="/hours-update-mobile.html" class="nav-item" data-page="hours">
-                <div class="nav-icon">⏱️</div>
-                <div class="nav-label">Hours</div>
-            </a>
-            <a href="#" class="nav-item" data-page="more">
-                <div class="nav-icon">⚙️</div>
-                <div class="nav-label">More</div>
-            </a>
-        </div>
-    </nav>
 
     <script>
         // Check API health
@@ -578,5 +500,6 @@
             });
         }
     </script>
+    <script src="/js/mobile-nav.js"></script>
 </body>
 </html>

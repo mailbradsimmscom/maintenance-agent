@@ -116,6 +116,10 @@
         if (hostname === 'admin.catamaranos.com') {
             port3000Url = 'https://chat.catamaranos.com';
         }
+        // Render production
+        else if (hostname === 'boatos-maintenance.onrender.com') {
+            port3000Url = 'https://boatos-main.onrender.com';
+        }
         // Localhost
         else if (hostname === 'localhost') {
             port3000Url = 'http://localhost:3000';

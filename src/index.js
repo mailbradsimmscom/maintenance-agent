@@ -75,7 +75,9 @@ function createExpressApp() {
           ]
         : [
             'https://chat.catamaranos.com',
-            'https://admin.catamaranos.com'
+            'https://admin.catamaranos.com',
+            'https://boatos-main.onrender.com',         // Render URL for main app
+            'https://boatos-maintenance.onrender.com'   // Render URL for maintenance agent
           ];
 
       if (!origin || allowedOrigins.includes(origin)) {

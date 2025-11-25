@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Areas - Marine Weather Monitoring</title>
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #cc2f27;
+        }
+
+        .btn-secondary {
+            background: var(--background-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5ea;
+        }
+
+        .areas-list {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .area-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .area-item:last-child {
+            border-bottom: none;
+        }
+
+        .area-info h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .area-info .coords {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', monospace;
+        }
+
+        .area-info .last-fetch {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
+        .area-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl) * 2;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-secondary);
+        }
+
+        .error-message {
+            background: #FFE5E5;
+            color: var(--error-color);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .credits-info {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .credits-info .label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .credits-info .value {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .credits-low {
+            color: var(--warning-color);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: var(--spacing-lg);
+            color: var(--text-secondary);
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        .footer .note {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🌊 Weather Areas</h1>
+                <p>Monitor marine weather at specific locations</p>
+            </div>
+            <a href="weather-area-add.html" class="btn btn-primary">+ Add Location</a>
+        </div>
+
+        <div id="credits-container" class="credits-info" style="display: none;">
+            <span class="label">Meteoblue Credits:</span>
+            <span id="credits-value" class="value">--</span>
+        </div>
+
+        <div id="error-container" class="error-message" style="display: none;"></div>
+
+        <div id="loading" class="loading">Loading weather areas...</div>
+
+        <div id="areas-container" class="areas-list" style="display: none;"></div>
+
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <h3>No Weather Areas</h3>
+            <p>Add your first location to start monitoring weather.</p>
+            <br>
+            <a href="weather-area-add.html" class="btn btn-primary">+ Add Location</a>
+        </div>
+
+        <div class="footer">
+            <p>Maintenance Agent v1.0.0 | Port 3001</p>
+            <p class="note">NOTE: These pages will be migrated to main system (port 3000) for iOS integration</p>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration - detect environment
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname.startsWith('192.168')
+            ? 'http://localhost:3001/api/weather'
+            : 'https://boatos-maintenance.onrender.com/api/weather';
+
+        async function loadAreas() {
+            const loading = document.getElementById('loading');
+            const container = document.getElementById('areas-container');
+            const emptyState = document.getElementById('empty-state');
+            const errorContainer = document.getElementById('error-container');
+
+            try {
+                const response = await fetch(`${API_BASE}/areas`);
+                const result = await response.json();
+
+                loading.style.display = 'none';
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to load areas');
+                }
+
+                const areas = result.data;
+
+                if (areas.length === 0) {
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                container.innerHTML = areas.map(area => `
+                    <div class="area-item">
+                        <div class="area-info">
+                            <h3>${escapeHtml(area.name)}</h3>
+                            <div class="coords">${formatCoords(area.latitude, area.longitude)}</div>
+                            <div class="last-fetch">${formatLastFetch(area.last_fetch)}</div>
+                        </div>
+                        <div class="area-actions">
+                            <a href="weather-area-view.html?id=${area.id}" class="btn btn-secondary">View</a>
+                            <button onclick="deleteArea('${area.id}', '${escapeHtml(area.name)}')" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                container.style.display = 'block';
+
+            } catch (error) {
+                loading.style.display = 'none';
+                errorContainer.textContent = error.message;
+                errorContainer.style.display = 'block';
+            }
+        }
+
+        async function loadCredits() {
+            try {
+                const response = await fetch(`${API_BASE}/credits`);
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const container = document.getElementById('credits-container');
+                    const valueEl = document.getElementById('credits-value');
+
+                    const remaining = result.data.credits_remaining || 0;
+                    const threshold = result.data.low_credit_threshold || 100;
+
+                    valueEl.textContent = `${remaining.toFixed(0)} remaining`;
+                    if (remaining < threshold) {
+                        valueEl.classList.add('credits-low');
+                    }
+                    container.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Failed to load credits:', error);
+            }
+        }
+
+        async function deleteArea(id, name) {
+            if (!confirm(`Delete "${name}"? This cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/areas/${id}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to delete');
+                }
+
+                loadAreas();
+            } catch (error) {
+                alert('Failed to delete: ' + error.message);
+            }
+        }
+
+        function formatCoords(lat, lon) {
+            const latDir = lat >= 0 ? 'N' : 'S';
+            const lonDir = lon >= 0 ? 'E' : 'W';
+            return `${Math.abs(lat).toFixed(4)}°${latDir}, ${Math.abs(lon).toFixed(4)}°${lonDir}`;
+        }
+
+        function formatLastFetch(timestamp) {
+            if (!timestamp) return 'Never fetched';
+
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins} min ago`;
+            if (diffHours < 24) return `${diffHours} hr ago`;
+            return `${diffDays} days ago`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        loadAreas();
+        loadCredits();
+    </script>
+</body>
+</html>

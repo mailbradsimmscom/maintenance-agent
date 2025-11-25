@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Details</title>
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --error-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --surface-color: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --border-color: #C6C6C8;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --border-radius-small: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .header {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header .coords {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', monospace;
+            margin-top: var(--spacing-xs);
+        }
+
+        .header .last-update {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-sm);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--background-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5ea;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .card h2 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+
+        .current-conditions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .condition-item {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+        }
+
+        .condition-item .icon {
+            font-size: 24px;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .condition-item .value {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .condition-item .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            font-weight: 600;
+            background: var(--background-color);
+        }
+
+        .comparison-table .agree {
+            color: var(--success-color);
+        }
+
+        .comparison-table .disagree {
+            color: var(--warning-color);
+        }
+
+        .marine-data {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .marine-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .marine-item:last-child {
+            border-bottom: none;
+        }
+
+        .marine-item .label {
+            color: var(--text-secondary);
+        }
+
+        .marine-item .value {
+            font-weight: 500;
+        }
+
+        .douglas-scale {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--spacing-xs);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .douglas-0, .douglas-1 { background: #E8F5E9; color: #2E7D32; }
+        .douglas-2, .douglas-3 { background: #FFF3E0; color: #EF6C00; }
+        .douglas-4, .douglas-5 { background: #FFEBEE; color: #C62828; }
+        .douglas-6, .douglas-7, .douglas-8, .douglas-9 { background: #880E4F; color: white; }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-secondary);
+        }
+
+        .error-message {
+            background: #FFE5E5;
+            color: var(--error-color);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .no-data {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: var(--spacing-lg);
+        }
+
+        .forecast-7day {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--spacing-sm);
+        }
+
+        .forecast-day {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: var(--background-color);
+            border-radius: var(--border-radius-small);
+        }
+
+        .forecast-day .day-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .forecast-day .icon {
+            font-size: 28px;
+            margin: var(--spacing-sm) 0;
+        }
+
+        .forecast-day .temp {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .forecast-day .wind {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
+        /* 3-Hour Forecast Tables */
+        .forecast-table-container {
+            overflow-x: auto;
+            margin-top: var(--spacing-md);
+        }
+
+        .forecast-table {
+            border-collapse: collapse;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .forecast-table th,
+        .forecast-table td {
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .forecast-table th {
+            background: var(--background-color);
+            font-weight: 600;
+            position: sticky;
+            left: 0;
+            z-index: 1;
+        }
+
+        .forecast-table th.field-header {
+            text-align: left;
+            min-width: 120px;
+        }
+
+        .forecast-table td.field-header {
+            text-align: left;
+            font-weight: 500;
+            background: var(--surface-color);
+            position: sticky;
+            left: 0;
+            z-index: 1;
+            border-right: 2px solid var(--border-color);
+        }
+
+        .forecast-table .date-header {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .forecast-table .time-header {
+            background: var(--background-color);
+            font-size: 11px;
+        }
+
+        .forecast-table tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .forecast-table tbody tr:hover {
+            background: #f0f0f5;
+        }
+
+        .wind-high {
+            color: var(--error-color);
+            font-weight: 600;
+        }
+
+        .wind-moderate {
+            color: var(--warning-color);
+        }
+
+        .wave-high {
+            color: var(--error-color);
+            font-weight: 600;
+        }
+
+        /* Sailing Conditions */
+        .sailing-category {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .sailing-category h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .sailing-category.ideal h4 {
+            color: var(--success-color);
+        }
+
+        .sailing-category.ok h4 {
+            color: var(--warning-color);
+        }
+
+        .sailing-windows-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+
+        .sailing-window {
+            background: var(--background-color);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-small);
+            font-size: 13px;
+            border-left: 3px solid;
+        }
+
+        .sailing-window.ideal {
+            border-color: var(--success-color);
+        }
+
+        .sailing-window.ok {
+            border-color: var(--warning-color);
+        }
+
+        .sailing-window .day {
+            font-weight: 600;
+        }
+
+        .sailing-window .time {
+            color: var(--text-secondary);
+        }
+
+        .sailing-window .conditions {
+            margin-top: 2px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: var(--spacing-lg);
+            color: var(--text-secondary);
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        .footer .note {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-top">
+                <div>
+                    <h1 id="area-name">Loading...</h1>
+                    <div id="area-coords" class="coords">--</div>
+                    <div id="last-update" class="last-update">--</div>
+                </div>
+                <div class="header-actions">
+                    <a href="weather-areas.html" class="btn btn-secondary">← Back</a>
+                    <button id="update-openmeteo-btn" onclick="triggerFetchOpenMeteo()" class="btn btn-primary">🔄 Update Open-Meteo (Free)</button>
+                    <button id="update-meteoblue-btn" onclick="triggerFetchMeteoblue()" class="btn btn-secondary">⭐ Update Meteoblue (Credits)</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="error-container" class="error-message" style="display: none;"></div>
+        <div id="loading" class="loading">Loading weather data...</div>
+
+        <div id="content" style="display: none;">
+            <!-- Current Conditions -->
+            <div class="card">
+                <h2>🌡️ Current Conditions</h2>
+                <div id="current-conditions" class="current-conditions">
+                    <div class="no-data">No data available</div>
+                </div>
+            </div>
+
+            <!-- Marine Data -->
+            <div class="card">
+                <h2>🌊 Marine Data</h2>
+                <div id="marine-data" class="marine-data">
+                    <div class="no-data">No marine data</div>
+                </div>
+
+                <!-- Sailing Conditions -->
+                <div id="sailing-conditions" style="margin-top: var(--spacing-lg); padding-top: var(--spacing-lg); border-top: 1px solid var(--border-color);">
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: var(--spacing-md);">⛵ Sailing Conditions (Next 7 Days)</h3>
+                    <div id="sailing-windows">
+                        <div class="no-data">Analyzing conditions...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meteoblue Premium -->
+            <div class="card" id="meteoblue-card" style="display: none;">
+                <h2>⭐ Premium Marine Data (Meteoblue)</h2>
+                <div id="meteoblue-data" class="marine-data"></div>
+            </div>
+
+            <!-- 7-Day Forecast -->
+            <div class="card">
+                <h2>📅 7-Day Forecast</h2>
+                <div id="forecast-7day" class="forecast-7day">
+                    <div class="no-data">No forecast data</div>
+                </div>
+            </div>
+
+            <!-- 3-Hour Forecast Table -->
+            <div class="card">
+                <h2>💨 7-Day Forecast Detail (3-Hour Intervals) <span id="forecast-updated" style="font-size: 13px; font-weight: normal; color: var(--text-secondary);"></span></h2>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+                    Wind in knots. Scroll horizontally to see all 56 time slots.
+                </p>
+                <div class="forecast-table-container">
+                    <div id="forecast-detail-table">
+                        <div class="no-data">Loading forecast data...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3-Hour Marine Table -->
+            <div class="card">
+                <h2>🌊 7-Day Marine Detail (3-Hour Intervals) <span id="marine-updated" style="font-size: 13px; font-weight: normal; color: var(--text-secondary);"></span></h2>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+                    Wave heights in meters, periods in seconds. Scroll horizontally to see all 56 time slots.
+                </p>
+                <div class="forecast-table-container">
+                    <div id="marine-detail-table">
+                        <div class="no-data">Loading marine data...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meteoblue Premium Table (only shows if data exists) -->
+            <div class="card" id="meteoblue-table-card" style="display: none;">
+                <h2>⭐ Premium Marine Data - Meteoblue (3-Hour Intervals) <span id="meteoblue-updated" style="font-size: 13px; font-weight: normal; color: var(--text-secondary);"></span></h2>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+                    Douglas sea state, salinity, currents. Uses API credits. Scroll horizontally to see all time slots.
+                </p>
+                <div class="forecast-table-container">
+                    <div id="meteoblue-detail-table">
+                        <div class="no-data">No Meteoblue data. Click "Update Meteoblue" to fetch.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Maintenance Agent v1.0.0 | Port 3001</p>
+            <p class="note">NOTE: These pages will be migrated to main system (port 3000) for iOS integration</p>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname.startsWith('192.168')
+            ? 'http://localhost:3001/api/weather'
+            : 'https://boatos-maintenance.onrender.com/api/weather';
+
+        // Get area ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const areaId = urlParams.get('id');
+
+        if (!areaId) {
+            window.location.href = 'weather-areas.html';
+        }
+
+        // Douglas Sea State descriptions
+        const douglasDescriptions = {
+            0: 'Calm (glassy)',
+            1: 'Calm (rippled)',
+            2: 'Smooth',
+            3: 'Slight',
+            4: 'Moderate',
+            5: 'Rough',
+            6: 'Very rough',
+            7: 'High',
+            8: 'Very high',
+            9: 'Phenomenal'
+        };
+
+        // Weather code to icon
+        const weatherIcons = {
+            0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+            45: '🌫️', 48: '🌫️',
+            51: '🌧️', 53: '🌧️', 55: '🌧️',
+            61: '🌧️', 63: '🌧️', 65: '🌧️',
+            80: '🌦️', 81: '🌦️', 82: '🌦️',
+            95: '⛈️', 96: '⛈️', 99: '⛈️'
+        };
+
+        async function loadArea() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}`);
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to load area');
+                }
+
+                const area = result.data;
+                document.getElementById('area-name').textContent = `🌊 ${area.name}`;
+                document.getElementById('area-coords').textContent = formatCoords(area.latitude, area.longitude);
+
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function loadCurrentConditions() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/current`);
+                const result = await response.json();
+
+                if (!result.success || !result.data) {
+                    return;
+                }
+
+                const conditions = result.data;
+                const container = document.getElementById('current-conditions');
+
+                const windKnots = conditions.wind_speed_10m ? (conditions.wind_speed_10m * 0.539957).toFixed(0) : '--';
+                container.innerHTML = `
+                    <div class="condition-item">
+                        <div class="icon">🌡️</div>
+                        <div class="value">${conditions.temperature_2m?.toFixed(1) || '--'}°C</div>
+                        <div class="label">Temperature</div>
+                    </div>
+                    <div class="condition-item">
+                        <div class="icon">💨</div>
+                        <div class="value">${windKnots} kn</div>
+                        <div class="label">Wind Speed</div>
+                    </div>
+                    <div class="condition-item">
+                        <div class="icon">🧭</div>
+                        <div class="value">${formatWindDirection(conditions.wind_direction_10m)}</div>
+                        <div class="label">Wind Dir</div>
+                    </div>
+                    <div class="condition-item">
+                        <div class="icon">🌊</div>
+                        <div class="value">${conditions.wave_height?.toFixed(1) || '--'} m</div>
+                        <div class="label">Wave Height</div>
+                    </div>
+                    <div class="condition-item">
+                        <div class="icon">🌡️</div>
+                        <div class="value">${conditions.sea_surface_temperature?.toFixed(1) || '--'}°C</div>
+                        <div class="label">Sea Temp</div>
+                    </div>
+                `;
+
+                document.getElementById('last-update').textContent = `Forecast time: ${formatDateTime(conditions.forecast_time)}`;
+
+            } catch (error) {
+                console.error('Failed to load current conditions:', error);
+            }
+        }
+
+        async function loadMarineData() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/current`);
+                const result = await response.json();
+
+                if (!result.success || !result.data) {
+                    return;
+                }
+
+                const data = result.data;
+                const container = document.getElementById('marine-data');
+
+                container.innerHTML = `
+                    <div>
+                        <div class="marine-item">
+                            <span class="label">Wave Height</span>
+                            <span class="value">${data.wave_height?.toFixed(1) || '--'} m</span>
+                        </div>
+                        <div class="marine-item">
+                            <span class="label">Wave Direction</span>
+                            <span class="value">${formatWindDirection(data.wave_direction)}</span>
+                        </div>
+                        <div class="marine-item">
+                            <span class="label">Wave Period</span>
+                            <span class="value">${data.wave_period?.toFixed(1) || '--'} s</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="marine-item">
+                            <span class="label">Sea Surface Temp</span>
+                            <span class="value">${data.sea_surface_temperature?.toFixed(1) || '--'}°C</span>
+                        </div>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Failed to load marine data:', error);
+            }
+        }
+
+        async function loadSailingConditions() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/forecast`);
+                const result = await response.json();
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    return;
+                }
+
+                // Get marine data (wave heights) and forecast data (wind)
+                const marineData = result.data
+                    .filter(d => d.data_source === 'open_meteo_marine')
+                    .reduce((acc, d) => {
+                        acc[d.forecast_time] = d;
+                        return acc;
+                    }, {});
+
+                const forecastData = result.data
+                    .filter(d => d.data_source === 'open_meteo_forecast' && d.model_name === 'gfs_seamless')
+                    .reduce((acc, d) => {
+                        acc[d.forecast_time] = d;
+                        return acc;
+                    }, {});
+
+                // Combine and categorize
+                const ideal = []; // < 1.1m
+                const ok = [];    // 1.1-1.4m
+
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                Object.keys(marineData).forEach(time => {
+                    const marine = marineData[time];
+                    const forecast = forecastData[time];
+                    const waveHeight = marine?.wave_height;
+
+                    if (waveHeight === null || waveHeight === undefined) return;
+
+                    const date = new Date(time);
+                    const dayName = dayNames[date.getUTCDay()];
+                    const dayNum = date.getUTCDate();
+                    const hour = date.getUTCHours().toString().padStart(2, '0') + ':00';
+
+                    const windSpeed = forecast?.wind_speed_10m;
+                    const windKnots = windSpeed ? (windSpeed * 0.539957).toFixed(0) : '--';
+                    const windDir = forecast?.wind_direction_10m;
+                    const windDirStr = windDir !== null && windDir !== undefined ? `${windDir}°` : '--';
+
+                    const entry = {
+                        day: `${dayName} ${dayNum}`,
+                        time: hour,
+                        waveHeight: waveHeight.toFixed(1),
+                        windKnots,
+                        windDir: windDirStr
+                    };
+
+                    if (waveHeight < 1.1) {
+                        ideal.push(entry);
+                    } else if (waveHeight <= 1.4) {
+                        ok.push(entry);
+                    }
+                });
+
+                // Render
+                const container = document.getElementById('sailing-windows');
+
+                if (ideal.length === 0 && ok.length === 0) {
+                    container.innerHTML = '<div class="no-data">No favorable sailing conditions in the next 7 days (waves > 1.4m)</div>';
+                    return;
+                }
+
+                const renderWindows = (windows, category) => {
+                    if (windows.length === 0) return '<p style="font-size: 13px; color: var(--text-secondary);">None in forecast period</p>';
+                    return `<div class="sailing-windows-list">
+                        ${windows.map(w => `
+                            <div class="sailing-window ${category}">
+                                <span class="day">${w.day}</span>
+                                <span class="time">${w.time}</span>
+                                <div class="conditions">${w.windKnots} kn ${w.windDir} · ${w.waveHeight}m</div>
+                            </div>
+                        `).join('')}
+                    </div>`;
+                };
+
+                container.innerHTML = `
+                    <div class="sailing-category ideal">
+                        <h4>✅ Ideal (< 1.1m waves)</h4>
+                        ${renderWindows(ideal, 'ideal')}
+                    </div>
+                    <div class="sailing-category ok">
+                        <h4>🟡 Ok (1.1-1.4m waves)</h4>
+                        ${renderWindows(ok, 'ok')}
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Failed to load sailing conditions:', error);
+            }
+        }
+
+        function displayMeteoblueData(data) {
+            const container = document.getElementById('meteoblue-data');
+            const card = document.getElementById('meteoblue-card');
+
+            if (!data.douglas_sea_state && !data.salinity) {
+                return;
+            }
+
+            card.style.display = 'block';
+
+            const douglasClass = `douglas-${data.douglas_sea_state || 0}`;
+            const douglasDesc = douglasDescriptions[data.douglas_sea_state] || 'Unknown';
+
+            container.innerHTML = `
+                <div>
+                    <div class="marine-item">
+                        <span class="label">Douglas Sea State</span>
+                        <span class="value">
+                            <span class="douglas-scale ${douglasClass}">
+                                ${data.douglas_sea_state || '--'} - ${douglasDesc}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="marine-item">
+                        <span class="label">Salinity</span>
+                        <span class="value">${data.salinity?.toFixed(1) || '--'} g/kg</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="marine-item">
+                        <span class="label">Current (East)</span>
+                        <span class="value">${data.current_velocity_u?.toFixed(2) || '--'} m/s</span>
+                    </div>
+                    <div class="marine-item">
+                        <span class="label">Current (North)</span>
+                        <span class="value">${data.current_velocity_v?.toFixed(2) || '--'} m/s</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function load7DayForecast() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/7day`);
+                const result = await response.json();
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    return;
+                }
+
+                const forecast = result.data;
+                const container = document.getElementById('forecast-7day');
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                container.innerHTML = forecast.map(day => {
+                    const date = new Date(day.date);
+                    const dayName = dayNames[date.getDay()];
+                    const icon = weatherIcons[day.weather_code] || '☁️';
+
+                    return `
+                        <div class="forecast-day">
+                            <div class="day-name">${dayName}</div>
+                            <div class="icon">${icon}</div>
+                            <div class="temp">${day.temp_high?.toFixed(0) || '--'}°/${day.temp_low?.toFixed(0) || '--'}°</div>
+                            <div class="wind">${day.wind_avg?.toFixed(0) || '--'} km/h</div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Failed to load 7-day forecast:', error);
+            }
+        }
+
+        // Convert km/h to knots
+        function toKnots(kmh) {
+            if (kmh === null || kmh === undefined) return null;
+            return kmh * 0.539957;
+        }
+
+        // Get wind class for coloring
+        function getWindClass(knots) {
+            if (knots === null) return '';
+            if (knots >= 25) return 'wind-high';
+            if (knots >= 15) return 'wind-moderate';
+            return '';
+        }
+
+        // Get wave class for coloring
+        function getWaveClass(meters) {
+            if (meters === null) return '';
+            if (meters >= 2.5) return 'wave-high';
+            return '';
+        }
+
+        // Format date header (Mon 25)
+        function formatDateHeader(timestamp) {
+            const date = new Date(timestamp);
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            return `${days[date.getUTCDay()]} ${date.getUTCDate()}`;
+        }
+
+        // Format time (00:00)
+        function formatTimeSlot(timestamp) {
+            const date = new Date(timestamp);
+            return `${date.getUTCHours().toString().padStart(2, '0')}:00`;
+        }
+
+        async function load3HourForecastTable() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/forecast`);
+                const result = await response.json();
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    return;
+                }
+
+                // Filter to GFS forecast data and take every 3rd hour
+                const forecastData = result.data
+                    .filter(d => d.data_source === 'open_meteo_forecast' && d.model_name === 'gfs_seamless')
+                    .sort((a, b) => new Date(a.forecast_time) - new Date(b.forecast_time))
+                    .filter((_, i) => i % 3 === 0);
+
+                if (forecastData.length === 0) return;
+
+                // Group by date for headers
+                const dateGroups = {};
+                forecastData.forEach(d => {
+                    const dateKey = new Date(d.forecast_time).toISOString().split('T')[0];
+                    if (!dateGroups[dateKey]) dateGroups[dateKey] = [];
+                    dateGroups[dateKey].push(d);
+                });
+
+                // Build date header row
+                let dateHeaderRow = '<tr><th class="field-header"></th>';
+                let timeHeaderRow = '<tr><th class="field-header">Field</th>';
+
+                Object.entries(dateGroups).forEach(([date, slots]) => {
+                    dateHeaderRow += `<th colspan="${slots.length}" class="date-header">${formatDateHeader(slots[0].forecast_time)}</th>`;
+                    slots.forEach(slot => {
+                        timeHeaderRow += `<th class="time-header">${formatTimeSlot(slot.forecast_time)}</th>`;
+                    });
+                });
+                dateHeaderRow += '</tr>';
+                timeHeaderRow += '</tr>';
+
+                // Build data rows
+                const fields = [
+                    { key: 'wind_speed_10m', label: 'Wind (kn)', convert: toKnots, decimals: 0, classFunc: getWindClass },
+                    { key: 'wind_gusts_10m', label: 'Gusts (kn)', convert: toKnots, decimals: 0, classFunc: getWindClass },
+                    { key: 'wind_direction_10m', label: 'Wind Dir (°)', convert: null, decimals: 0 },
+                    { key: 'temperature_2m', label: 'Temp (°C)', convert: null, decimals: 1 },
+                    { key: 'pressure_msl', label: 'Pressure (hPa)', convert: null, decimals: 0 },
+                    { key: 'precipitation', label: 'Precip (mm)', convert: null, decimals: 1 },
+                    { key: 'cloud_cover', label: 'Cloud (%)', convert: null, decimals: 0 }
+                ];
+
+                let dataRows = '';
+                fields.forEach(field => {
+                    dataRows += `<tr><td class="field-header">${field.label}</td>`;
+                    forecastData.forEach(d => {
+                        let value = d[field.key];
+                        if (field.convert) value = field.convert(value);
+                        const displayValue = value !== null ? value.toFixed(field.decimals) : '--';
+                        const cellClass = field.classFunc ? field.classFunc(value) : '';
+                        dataRows += `<td class="${cellClass}">${displayValue}</td>`;
+                    });
+                    dataRows += '</tr>';
+                });
+
+                const container = document.getElementById('forecast-detail-table');
+                container.innerHTML = `
+                    <table class="forecast-table">
+                        <thead>
+                            ${dateHeaderRow}
+                            ${timeHeaderRow}
+                        </thead>
+                        <tbody>
+                            ${dataRows}
+                        </tbody>
+                    </table>
+                `;
+
+                // Update the "Updated at" timestamp from the most recent fetched_at
+                const latestFetch = forecastData.reduce((latest, d) => {
+                    const fetchedAt = new Date(d.fetched_at);
+                    return fetchedAt > latest ? fetchedAt : latest;
+                }, new Date(0));
+                document.getElementById('forecast-updated').textContent = `— Updated: ${formatDateTimeEST(latestFetch)}`;
+
+            } catch (error) {
+                console.error('Failed to load 3-hour forecast table:', error);
+            }
+        }
+
+        async function load3HourMarineTable() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/forecast`);
+                const result = await response.json();
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    return;
+                }
+
+                // Filter to marine data and take every 3rd hour
+                const marineData = result.data
+                    .filter(d => d.data_source === 'open_meteo_marine')
+                    .sort((a, b) => new Date(a.forecast_time) - new Date(b.forecast_time))
+                    .filter((_, i) => i % 3 === 0);
+
+                if (marineData.length === 0) return;
+
+                // Group by date for headers
+                const dateGroups = {};
+                marineData.forEach(d => {
+                    const dateKey = new Date(d.forecast_time).toISOString().split('T')[0];
+                    if (!dateGroups[dateKey]) dateGroups[dateKey] = [];
+                    dateGroups[dateKey].push(d);
+                });
+
+                // Build date header row
+                let dateHeaderRow = '<tr><th class="field-header"></th>';
+                let timeHeaderRow = '<tr><th class="field-header">Field</th>';
+
+                Object.entries(dateGroups).forEach(([date, slots]) => {
+                    dateHeaderRow += `<th colspan="${slots.length}" class="date-header">${formatDateHeader(slots[0].forecast_time)}</th>`;
+                    slots.forEach(slot => {
+                        timeHeaderRow += `<th class="time-header">${formatTimeSlot(slot.forecast_time)}</th>`;
+                    });
+                });
+                dateHeaderRow += '</tr>';
+                timeHeaderRow += '</tr>';
+
+                // Build data rows
+                const fields = [
+                    { key: 'wave_height', label: 'Wave Ht (m)', decimals: 1, classFunc: getWaveClass },
+                    { key: 'wave_direction', label: 'Wave Dir (°)', decimals: 0 },
+                    { key: 'wave_period', label: 'Wave Per (s)', decimals: 1 },
+                    { key: 'swell_wave_height', label: 'Swell Ht (m)', decimals: 1, classFunc: getWaveClass },
+                    { key: 'swell_wave_direction', label: 'Swell Dir (°)', decimals: 0 },
+                    { key: 'swell_wave_period', label: 'Swell Per (s)', decimals: 1 },
+                    { key: 'wind_wave_height', label: 'Wind Wave (m)', decimals: 1 },
+                    { key: 'wind_wave_direction', label: 'Wind Wave Dir (°)', decimals: 0 },
+                    { key: 'wind_wave_period', label: 'Wind Wave Per (s)', decimals: 1 },
+                    { key: 'sea_surface_temperature', label: 'Sea Temp (°C)', decimals: 1 }
+                ];
+
+                let dataRows = '';
+                fields.forEach(field => {
+                    dataRows += `<tr><td class="field-header">${field.label}</td>`;
+                    marineData.forEach(d => {
+                        const value = d[field.key];
+                        const displayValue = value !== null ? value.toFixed(field.decimals) : '--';
+                        const cellClass = field.classFunc ? field.classFunc(value) : '';
+                        dataRows += `<td class="${cellClass}">${displayValue}</td>`;
+                    });
+                    dataRows += '</tr>';
+                });
+
+                const container = document.getElementById('marine-detail-table');
+                container.innerHTML = `
+                    <table class="forecast-table">
+                        <thead>
+                            ${dateHeaderRow}
+                            ${timeHeaderRow}
+                        </thead>
+                        <tbody>
+                            ${dataRows}
+                        </tbody>
+                    </table>
+                `;
+
+                // Update the "Updated at" timestamp from the most recent fetched_at
+                const latestFetch = marineData.reduce((latest, d) => {
+                    const fetchedAt = new Date(d.fetched_at);
+                    return fetchedAt > latest ? fetchedAt : latest;
+                }, new Date(0));
+                document.getElementById('marine-updated').textContent = `— Updated: ${formatDateTimeEST(latestFetch)}`;
+
+            } catch (error) {
+                console.error('Failed to load 3-hour marine table:', error);
+            }
+        }
+
+        async function load3HourMeteoblueTable() {
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/forecast`);
+                const result = await response.json();
+
+                if (!result.success || !result.data || result.data.length === 0) {
+                    return;
+                }
+
+                // Filter to Meteoblue data only
+                const meteoblueData = result.data
+                    .filter(d => d.data_source === 'meteoblue')
+                    .sort((a, b) => new Date(a.forecast_time) - new Date(b.forecast_time));
+
+                // Hide card if no Meteoblue data
+                const card = document.getElementById('meteoblue-table-card');
+                if (meteoblueData.length === 0) {
+                    card.style.display = 'none';
+                    return;
+                }
+
+                card.style.display = 'block';
+
+                // Group by date for headers
+                const dateGroups = {};
+                meteoblueData.forEach(d => {
+                    const dateKey = new Date(d.forecast_time).toISOString().split('T')[0];
+                    if (!dateGroups[dateKey]) dateGroups[dateKey] = [];
+                    dateGroups[dateKey].push(d);
+                });
+
+                // Build date header row
+                let dateHeaderRow = '<tr><th class="field-header"></th>';
+                let timeHeaderRow = '<tr><th class="field-header">Field</th>';
+
+                Object.entries(dateGroups).forEach(([date, slots]) => {
+                    dateHeaderRow += `<th colspan="${slots.length}" class="date-header">${formatDateHeader(slots[0].forecast_time)}</th>`;
+                    slots.forEach(slot => {
+                        timeHeaderRow += `<th class="time-header">${formatTimeSlot(slot.forecast_time)}</th>`;
+                    });
+                });
+                dateHeaderRow += '</tr>';
+                timeHeaderRow += '</tr>';
+
+                // Douglas sea state description helper
+                const douglasDesc = (val) => {
+                    const descs = ['Calm (glassy)', 'Calm (rippled)', 'Smooth', 'Slight', 'Moderate', 'Rough', 'Very rough', 'High', 'Very high', 'Phenomenal'];
+                    return val !== null ? `${val} (${descs[val] || '?'})` : '--';
+                };
+
+                // Build data rows
+                const fields = [
+                    { key: 'douglas_sea_state', label: 'Douglas State', decimals: 0, formatter: douglasDesc },
+                    { key: 'salinity', label: 'Salinity (g/kg)', decimals: 1 },
+                    { key: 'current_velocity_u', label: 'Current E (m/s)', decimals: 2 },
+                    { key: 'current_velocity_v', label: 'Current N (m/s)', decimals: 2 },
+                    { key: 'wave_steepness', label: 'Wave Steepness', decimals: 3 },
+                    { key: 'significant_wave_height', label: 'Sig Wave Ht (m)', decimals: 1 },
+                    { key: 'wave_height', label: 'Wave Height (m)', decimals: 1 },
+                    { key: 'swell_wave_height', label: 'Swell Height (m)', decimals: 1 },
+                    { key: 'sea_surface_temperature', label: 'Sea Temp (°C)', decimals: 1 }
+                ];
+
+                let dataRows = '';
+                fields.forEach(field => {
+                    dataRows += `<tr><td class="field-header">${field.label}</td>`;
+                    meteoblueData.forEach(d => {
+                        const value = d[field.key];
+                        let displayValue;
+                        if (field.formatter) {
+                            displayValue = field.formatter(value);
+                        } else {
+                            displayValue = value !== null ? value.toFixed(field.decimals) : '--';
+                        }
+                        dataRows += `<td>${displayValue}</td>`;
+                    });
+                    dataRows += '</tr>';
+                });
+
+                const container = document.getElementById('meteoblue-detail-table');
+                container.innerHTML = `
+                    <table class="forecast-table">
+                        <thead>
+                            ${dateHeaderRow}
+                            ${timeHeaderRow}
+                        </thead>
+                        <tbody>
+                            ${dataRows}
+                        </tbody>
+                    </table>
+                `;
+
+                // Update the "Updated at" timestamp
+                const latestFetch = meteoblueData.reduce((latest, d) => {
+                    const fetchedAt = new Date(d.fetched_at);
+                    return fetchedAt > latest ? fetchedAt : latest;
+                }, new Date(0));
+                document.getElementById('meteoblue-updated').textContent = `— Updated: ${formatDateTimeEST(latestFetch)}`;
+
+            } catch (error) {
+                console.error('Failed to load 3-hour Meteoblue table:', error);
+            }
+        }
+
+        // Format timestamp in EST
+        function formatDateTimeEST(timestamp) {
+            if (!timestamp) return '--';
+            const date = new Date(timestamp);
+            return date.toLocaleString('en-US', {
+                timeZone: 'America/New_York',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            }) + ' EST';
+        }
+
+        async function triggerFetchOpenMeteo() {
+            const btn = document.getElementById('update-openmeteo-btn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Updating...';
+
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/fetch`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sources: ['openmeteo'] })
+                });
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to update');
+                }
+
+                // Reload page to show fresh data
+                window.location.reload();
+
+            } catch (error) {
+                showError(error.message);
+                btn.textContent = '🔄 Update Open-Meteo (Free)';
+                btn.disabled = false;
+            }
+        }
+
+        async function triggerFetchMeteoblue() {
+            const btn = document.getElementById('update-meteoblue-btn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Updating...';
+
+            try {
+                const response = await fetch(`${API_BASE}/areas/${areaId}/fetch`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sources: ['meteoblue'] })
+                });
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to update');
+                }
+
+                // Reload page to show fresh data
+                window.location.reload();
+
+            } catch (error) {
+                showError(error.message);
+                btn.textContent = '⭐ Update Meteoblue (Credits)';
+                btn.disabled = false;
+            }
+        }
+
+        async function loadAllData() {
+            await Promise.all([
+                loadCurrentConditions(),
+                loadMarineData(),
+                loadSailingConditions(),
+                load7DayForecast(),
+                load3HourForecastTable(),
+                load3HourMarineTable(),
+                load3HourMeteoblueTable()
+            ]);
+        }
+
+        function showError(message) {
+            const container = document.getElementById('error-container');
+            container.textContent = message;
+            container.style.display = 'block';
+        }
+
+        function formatCoords(lat, lon) {
+            const latDir = lat >= 0 ? 'N' : 'S';
+            const lonDir = lon >= 0 ? 'E' : 'W';
+            return `${Math.abs(lat).toFixed(4)}°${latDir}, ${Math.abs(lon).toFixed(4)}°${lonDir}`;
+        }
+
+        function formatWindDirection(deg) {
+            if (deg === null || deg === undefined) return '--';
+            const dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+            const index = Math.round(deg / 22.5) % 16;
+            return `${deg}° (${dirs[index]})`;
+        }
+
+        function formatDateTime(timestamp) {
+            if (!timestamp) return '--';
+            const date = new Date(timestamp);
+            return date.toLocaleString();
+        }
+
+        function formatTime(timestamp) {
+            if (!timestamp) return '--';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffHours = Math.round((date - now) / (1000 * 60 * 60));
+
+            if (diffHours === 0) return 'Now';
+            if (diffHours > 0) return `+${diffHours}h`;
+            return `${diffHours}h`;
+        }
+
+        // Initialize
+        async function init() {
+            await loadArea();
+            await loadAllData();
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -22,6 +22,7 @@ import { orchestrator } from './services/pipeline-orchestrator.service.js';
 import { getConfig } from './config/env.js';
 import logger, { agentLogger } from './utils/logger.js';
 import adminRoutes from './routes/admin/index.js';
+import weatherRoutes from './routes/weather.route.js';
 import { requestLogger } from './middleware/request-logger.js';
 import { errorHandler, notFoundHandler } from './middleware/error-handler.js';
 
@@ -121,6 +122,9 @@ function createExpressApp() {
 
   // Admin API routes
   app.use('/admin/api', adminRoutes);
+
+  // Weather API routes (public - no admin token required)
+  app.use('/api/weather', weatherRoutes);
 
   // 404 handler
   app.use(notFoundHandler);

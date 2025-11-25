@@ -73,6 +73,10 @@ const envSchema = z.object({
   RETRY_DELAY_MS: z.string().default('1000'),
   API_TIMEOUT_MS: z.string().default('30000'),
 
+  // Weather APIs
+  METEOBLUE_API_KEY: z.string().optional(),
+  METEOBLUE_ENABLED: z.string().default('false'),
+
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
   LOG_FORMAT: z.enum(['json', 'pretty']).default('pretty'),
@@ -178,6 +182,12 @@ export function getConfig() {
 
     // Cross-service URLs
     chatServiceUrl: env.CHAT_SERVICE_URL,
+
+    // Weather APIs
+    meteoblue: {
+      apiKey: env.METEOBLUE_API_KEY,
+      enabled: env.METEOBLUE_ENABLED === 'true',
+    },
   };
 }
 

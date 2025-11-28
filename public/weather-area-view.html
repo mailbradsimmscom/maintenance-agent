@@ -432,6 +432,125 @@
             margin-top: 8px;
             font-size: 14px;
         }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .header {
+                padding: var(--spacing-md);
+            }
+
+            .header-top {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .header-actions {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+
+            .header-actions .btn {
+                flex: 1;
+                justify-content: center;
+                min-width: 120px;
+            }
+
+            .card {
+                padding: var(--spacing-md);
+            }
+
+            .card h2 {
+                font-size: 15px;
+            }
+
+            .current-conditions {
+                grid-template-columns: repeat(3, 1fr);
+                gap: var(--spacing-sm);
+            }
+
+            .condition-item {
+                padding: var(--spacing-sm);
+            }
+
+            .condition-item .value {
+                font-size: 16px;
+            }
+
+            .condition-item .label {
+                font-size: 10px;
+            }
+
+            .forecast-7day {
+                grid-template-columns: repeat(4, 1fr);
+                gap: var(--spacing-xs);
+            }
+
+            .forecast-day {
+                padding: var(--spacing-sm);
+            }
+
+            .forecast-day .day-name {
+                font-size: 11px;
+            }
+
+            .forecast-day .icon {
+                font-size: 20px;
+                margin: var(--spacing-xs) 0;
+            }
+
+            .forecast-day .temp {
+                font-size: 12px;
+            }
+
+            .forecast-day .wind {
+                font-size: 10px;
+            }
+
+            .sailing-window {
+                font-size: 12px;
+                padding: var(--spacing-xs) var(--spacing-sm);
+            }
+
+            .forecast-table {
+                font-size: 11px;
+            }
+
+            .forecast-table th,
+            .forecast-table td {
+                padding: 4px 6px;
+            }
+
+            .forecast-table td.field-header {
+                min-width: 80px;
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .current-conditions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .forecast-7day {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .header-actions {
+                flex-direction: column;
+            }
+
+            .header-actions .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -692,15 +811,17 @@
                     return;
                 }
 
-                // Get marine data (wave heights) and forecast data (wind)
-                const marineData = result.data
+                // Get marine data (wave heights) and forecast data (wind), from today onwards
+                const filteredData = filterFromToday(result.data);
+
+                const marineData = filteredData
                     .filter(d => d.data_source === 'open_meteo_marine')
                     .reduce((acc, d) => {
                         acc[d.forecast_time] = d;
                         return acc;
                     }, {});
 
-                const forecastData = result.data
+                const forecastData = filteredData
                     .filter(d => d.data_source === 'open_meteo_forecast' && d.model_name === 'gfs_seamless')
                     .reduce((acc, d) => {
                         acc[d.forecast_time] = d;
@@ -832,7 +953,12 @@
                     return;
                 }
 
-                const forecast = result.data;
+                // Filter to today and future dates
+                const todayStr = getTodayStart().toISOString().split('T')[0];
+                const forecast = result.data.filter(d => d.date >= todayStr);
+
+                if (forecast.length === 0) return;
+
                 const container = document.getElementById('forecast-7day');
                 const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -877,6 +1003,18 @@
             return '';
         }
 
+        // Get start of today (UTC midnight)
+        function getTodayStart() {
+            const now = new Date();
+            return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+        }
+
+        // Filter data to only include today and future
+        function filterFromToday(data, timeField = 'forecast_time') {
+            const todayStart = getTodayStart();
+            return data.filter(d => new Date(d[timeField]) >= todayStart);
+        }
+
         // Format date header (Mon 25)
         function formatDateHeader(timestamp) {
             const date = new Date(timestamp);
@@ -899,8 +1037,8 @@
                     return;
                 }
 
-                // Filter to GFS forecast data and take every 3rd hour
-                const forecastData = result.data
+                // Filter to GFS forecast data, from today onwards, take every 3rd hour
+                const forecastData = filterFromToday(result.data)
                     .filter(d => d.data_source === 'open_meteo_forecast' && d.model_name === 'gfs_seamless')
                     .sort((a, b) => new Date(a.forecast_time) - new Date(b.forecast_time))
                     .filter((_, i) => i % 3 === 0);
@@ -986,8 +1124,8 @@
                     return;
                 }
 
-                // Filter to marine data and take every 3rd hour
-                const marineData = result.data
+                // Filter to marine data, from today onwards, take every 3rd hour
+                const marineData = filterFromToday(result.data)
                     .filter(d => d.data_source === 'open_meteo_marine')
                     .sort((a, b) => new Date(a.forecast_time) - new Date(b.forecast_time))
                     .filter((_, i) => i % 3 === 0);
@@ -1075,8 +1213,8 @@
                     return;
                 }
 
-                // Filter to Meteoblue data only
-                const meteoblueData = result.data
+                // Filter to Meteoblue data only, from today onwards
+                const meteoblueData = filterFromToday(result.data)
                     .filter(d => d.data_source === 'meteoblue')
                     .sort((a, b) => new Date(a.forecast_time) - new Date(b.forecast_time));
 

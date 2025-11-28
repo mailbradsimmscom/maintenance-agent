@@ -68,7 +68,27 @@ router.post('/areas', async (req, res) => {
       description
     });
 
-    res.status(201).json({ success: true, data: area });
+    // Auto-fetch Open-Meteo data for new area (don't await - let it run in background)
+    logger.info('Auto-fetching Open-Meteo data for new area', { areaId: area.id, name });
+    weatherFetchService.fetchForArea(area.id, { sources: ['openmeteo'] })
+      .then(result => {
+        const forecastOk = result.openMeteoForecast?.success;
+        const marineOk = result.openMeteoMarine?.success;
+        if (forecastOk && marineOk) {
+          logger.info('Auto-fetch completed successfully', { areaId: area.id });
+        } else {
+          logger.warn('Auto-fetch partially failed', {
+            areaId: area.id,
+            forecast: result.openMeteoForecast,
+            marine: result.openMeteoMarine
+          });
+        }
+      })
+      .catch(err => {
+        logger.error('Auto-fetch failed', { areaId: area.id, error: err.message });
+      });
+
+    res.status(201).json({ success: true, data: area, message: 'Area created. Weather data is being fetched...' });
   } catch (error) {
     logger.error('Failed to create area', { error: error.message });
     res.status(500).json({ success: false, error: error.message });
@@ -180,7 +200,41 @@ router.post('/areas/:id/fetch', async (req, res) => {
     const sources = req.body?.sources || ['openmeteo', 'meteoblue'];
     logger.info('Manual fetch triggered', { areaId: req.params.id, sources });
     const result = await weatherFetchService.fetchForArea(req.params.id, { sources });
-    res.json({ success: true, data: result });
+
+    // Check for partial failures
+    const failures = [];
+    const successes = [];
+
+    if (result.openMeteoForecast?.success === false && !result.openMeteoForecast?.skipped) {
+      failures.push(`Forecast: ${result.openMeteoForecast.error}`);
+    } else if (result.openMeteoForecast?.success) {
+      successes.push(`Forecast: ${result.openMeteoForecast.count} records`);
+    }
+
+    if (result.openMeteoMarine?.success === false && !result.openMeteoMarine?.skipped) {
+      failures.push(`Marine: ${result.openMeteoMarine.error}`);
+    } else if (result.openMeteoMarine?.success) {
+      successes.push(`Marine: ${result.openMeteoMarine.count} records`);
+    }
+
+    if (result.meteoblue?.success === false && !result.meteoblue?.skipped) {
+      failures.push(`Meteoblue: ${result.meteoblue.error}`);
+    } else if (result.meteoblue?.success) {
+      successes.push(`Meteoblue: ${result.meteoblue.count} records`);
+    }
+
+    const hasFailures = failures.length > 0;
+    const hasSuccesses = successes.length > 0;
+
+    res.json({
+      success: !hasFailures || hasSuccesses, // true if at least some succeeded
+      partialFailure: hasFailures && hasSuccesses,
+      data: result,
+      message: hasFailures
+        ? `Partial failure: ${failures.join('; ')}`
+        : `Success: ${successes.join(', ')}`,
+      failures: hasFailures ? failures : undefined
+    });
   } catch (error) {
     logger.error('Failed to trigger fetch', { id: req.params.id, error: error.message });
     res.status(500).json({ success: false, error: error.message });

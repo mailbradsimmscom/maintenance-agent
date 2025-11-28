@@ -131,13 +131,17 @@ export const weatherRepository = {
   },
 
   async getForecastsByArea(areaId, { hours = 168 } = {}) {
-    const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
+    // Get forecasts from now onwards (into the future), limited to 'hours' worth
+    const now = new Date();
+    const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
+    const until = new Date(Date.now() + hours * 60 * 60 * 1000).toISOString();
 
     const { data, error } = await supabase
       .from('weather_forecasts')
       .select('*')
       .eq('area_id', areaId)
-      .gte('forecast_time', since)
+      .gte('forecast_time', todayStart)
+      .lte('forecast_time', until)
       .order('forecast_time', { ascending: true });
 
     if (error) {

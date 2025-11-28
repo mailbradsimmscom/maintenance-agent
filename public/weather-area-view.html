@@ -1336,11 +1336,16 @@
                 const result = await response.json();
 
                 if (!result.success) {
-                    throw new Error(result.error || 'Failed to update');
+                    throw new Error(result.error || result.message || 'Failed to update');
                 }
 
-                // Reload page to show fresh data
-                window.location.reload();
+                // Show warning for partial failures, then reload
+                if (result.partialFailure) {
+                    showWarning(result.message);
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    window.location.reload();
+                }
 
             } catch (error) {
                 showError(error.message);
@@ -1363,11 +1368,16 @@
                 const result = await response.json();
 
                 if (!result.success) {
-                    throw new Error(result.error || 'Failed to update');
+                    throw new Error(result.error || result.message || 'Failed to update');
                 }
 
-                // Reload page to show fresh data
-                window.location.reload();
+                // Show warning for partial failures, then reload
+                if (result.partialFailure) {
+                    showWarning(result.message);
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    window.location.reload();
+                }
 
             } catch (error) {
                 showError(error.message);
@@ -1392,6 +1402,14 @@
             const container = document.getElementById('error-container');
             container.textContent = message;
             container.style.display = 'block';
+        }
+
+        function showWarning(message) {
+            const container = document.getElementById('error-container');
+            container.textContent = '⚠️ ' + message;
+            container.style.display = 'block';
+            container.style.background = '#FFF3CD';
+            container.style.color = '#856404';
         }
 
         function formatCoords(lat, lon) {

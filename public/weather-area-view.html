@@ -846,7 +846,7 @@
                             <div class="day-name">${dayName}</div>
                             <div class="icon">${icon}</div>
                             <div class="temp">${day.temp_high?.toFixed(0) || '--'}°/${day.temp_low?.toFixed(0) || '--'}°</div>
-                            <div class="wind">${day.wind_avg?.toFixed(0) || '--'} km/h</div>
+                            <div class="wind">${day.wind_avg ? (day.wind_avg * 0.539957).toFixed(0) : '--'} kn</div>
                         </div>
                     `;
                 }).join('');

@@ -50,7 +50,7 @@ Build a weather areas system that:
 2. **Multi-Model Support**: GFS, ICON, ECMWF from Open-Meteo for comparison
 3. **Premium Marine Data**: Meteoblue for Douglas scale, salinity, currents
 4. **Forecast Window**: 7 days
-5. **Update Frequency**: Every 6 hours (4x daily)
+5. **Update Frequency**: Every 4 hours (6x daily)
 6. **Credit Management**: Track Meteoblue usage, configurable fetch frequency
 
 ---
@@ -813,26 +813,37 @@ export const weatherUpdateJob = {
 ```
 
 **Integration with Scheduler:**
-- Add to `scheduler.job.js`
-- Run every 6 hours: `0 */6 * * *` (00:00, 06:00, 12:00, 18:00)
+- Add to `scheduler.job.js` ✅ IMPLEMENTED
+- Run every 4 hours: `0 */4 * * *` (00:00, 04:00, 08:00, 12:00, 16:00, 20:00 UTC)
+- Only fetches Open-Meteo (free API); Meteoblue requires manual trigger
 
 ### File: `src/jobs/scheduler.job.js` (Update)
 
-**Add weather update job:**
+**Add weather update job:** ✅ IMPLEMENTED
 ```javascript
 // In setupCronJobs()
-const weatherUpdateSchedule = '0 */6 * * *'; // Every 6 hours
-const weatherUpdateTask = cron.schedule(weatherUpdateSchedule, () => {
-  agentLogger.cronJobExecuted('weather-update');
-  weatherUpdateJob.run();
+const weatherFetchSchedule = '0 */4 * * *'; // Every 4 hours
+const weatherFetchTask = cron.schedule(weatherFetchSchedule, () => {
+  agentLogger.cronJobExecuted('weather-fetch');
+  this.performWeatherFetch();
 });
 
 this.scheduledTasks.push({
-  name: 'weather-update',
-  schedule: weatherUpdateSchedule,
-  task: weatherUpdateTask,
+  name: 'weather-fetch',
+  schedule: weatherFetchSchedule,
+  task: weatherFetchTask,
 });
+
+// performWeatherFetch method added to schedulerJob:
+async performWeatherFetch() {
+  const results = await weatherFetchService.fetchAllAreas();
+  // Logs success/failure counts
+}
 ```
+
+**UI Enhancement:** ✅ IMPLEMENTED
+- Weather details page now shows "Last Downloaded" timestamp
+- `fetched_at` field added to `/current` API response
 
 ---
 

@@ -111,6 +111,7 @@ export const weatherForecastService = {
     // Merge data from different sources
     const conditions = {
       forecast_time: closest.forecast_time,
+      fetched_at: null,
       // From Open-Meteo Forecast (use GFS as primary)
       temperature_2m: null,
       wind_speed_10m: null,
@@ -129,7 +130,15 @@ export const weatherForecastService = {
       salinity: null
     };
 
+    // Track the most recent fetched_at time
+    let latestFetchedAt = null;
+
     for (const f of atTime) {
+      // Track most recent fetched_at
+      if (f.fetched_at && (!latestFetchedAt || new Date(f.fetched_at) > new Date(latestFetchedAt))) {
+        latestFetchedAt = f.fetched_at;
+      }
+
       if (f.data_source === 'open_meteo_forecast' && f.model_name === 'gfs_seamless') {
         conditions.temperature_2m = f.temperature_2m;
         conditions.wind_speed_10m = f.wind_speed_10m;
@@ -151,6 +160,7 @@ export const weatherForecastService = {
       }
     }
 
+    conditions.fetched_at = latestFetchedAt;
     return conditions;
   },
 

@@ -5,6 +5,7 @@
 
 import cron from 'node-cron';
 import { systemProcessorJob } from './system-processor.job.js';
+import { weatherFetchService } from '../services/weather-fetch.service.js';
 import { getConfig } from '../config/env.js';
 import { createLogger, agentLogger } from '../utils/logger.js';
 
@@ -65,6 +66,21 @@ export const schedulerJob = {
 
     agentLogger.cronJobScheduled('weekly-recheck', weeklyRecheckSchedule);
 
+    // Weather fetch - every 4 hours (Open-Meteo only, free API)
+    const weatherFetchSchedule = '0 */4 * * *';
+    const weatherFetchTask = cron.schedule(weatherFetchSchedule, () => {
+      agentLogger.cronJobExecuted('weather-fetch');
+      this.performWeatherFetch();
+    });
+
+    this.scheduledTasks.push({
+      name: 'weather-fetch',
+      schedule: weatherFetchSchedule,
+      task: weatherFetchTask,
+    });
+
+    agentLogger.cronJobScheduled('weather-fetch', weatherFetchSchedule);
+
     logger.info(`${this.scheduledTasks.length} cron jobs scheduled`);
   },
 
@@ -101,6 +117,27 @@ export const schedulerJob = {
       logger.info('Weekly re-check completed');
     } catch (error) {
       logger.error('Weekly re-check failed', { error: error.message });
+    }
+  },
+
+  /**
+   * Fetch weather data for all active areas (Open-Meteo only)
+   */
+  async performWeatherFetch() {
+    logger.info('Performing scheduled weather fetch for all areas');
+
+    try {
+      const results = await weatherFetchService.fetchAllAreas();
+      const successful = results.filter(r => !r.error).length;
+      const failed = results.filter(r => r.error).length;
+
+      logger.info('Scheduled weather fetch completed', {
+        total: results.length,
+        successful,
+        failed
+      });
+    } catch (error) {
+      logger.error('Scheduled weather fetch failed', { error: error.message });
     }
   },
 

@@ -755,7 +755,9 @@
                     </div>
                 `;
 
-                document.getElementById('last-update').textContent = `Forecast time: ${formatDateTime(conditions.forecast_time)}`;
+                const forecastTimeStr = `Forecast time: ${formatDateTime(conditions.forecast_time)}`;
+                const downloadedStr = conditions.fetched_at ? ` | Downloaded: ${formatDateTimeEST(conditions.fetched_at)}` : '';
+                document.getElementById('last-update').textContent = forecastTimeStr + downloadedStr;
 
             } catch (error) {
                 console.error('Failed to load current conditions:', error);

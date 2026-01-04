@@ -146,7 +146,7 @@ export const todoService = {
           priority: task.overdueDays > 7 ? 'overdue' : 'due',
           dueDate: task.next_due,
           overdueDays: task.overdueDays,
-          actionUrl: `http://localhost:3001/hours-update.html?system=${task.asset_uid}`,
+          actionUrl: `${config.maintenanceBaseUrl}/hours-update.html?system=${task.asset_uid}`,
           canDismiss: true,
           metadata: {
             taskId: task.id,
@@ -245,7 +245,7 @@ export const todoService = {
           dueHours: dueStatus.nextDueHours || null,
           hoursUntilDue: dueStatus.hoursUntilDue,
           daysUntilDue: dueStatus.daysUntilDue,
-          actionUrl: `http://localhost:3001/task-completion.html?taskId=${task.id}&assetUid=${metadata.asset_uid}`,
+          actionUrl: `${config.maintenanceBaseUrl}/task-completion.html?taskId=${task.id}&assetUid=${metadata.asset_uid}`,
           canDismiss: false,
           metadata: {
             taskId: task.id,
@@ -361,7 +361,7 @@ export const todoService = {
           dueHours: dueStatus.nextDueHours || null,
           hoursUntilDue: dueStatus.hoursUntilDue,
           daysUntilDue: dueStatus.daysUntilDue,
-          actionUrl: `http://localhost:3001/task-completion.html?taskId=${task.id}&assetUid=${metadata.asset_uid}`,
+          actionUrl: `${config.maintenanceBaseUrl}/task-completion.html?taskId=${task.id}&assetUid=${metadata.asset_uid}`,
           canDismiss: false,
           metadata: {
             taskId: task.id,
@@ -404,7 +404,7 @@ export const todoService = {
         description: 'Review and approve extracted maintenance tasks',
         assetUid: assetUid || 'all',
         priority: 'action_required',
-        actionUrl: 'http://localhost:3000/public/maintenance-tasks-list.html',
+        actionUrl: `${config.mainAppBaseUrl}/public/maintenance-tasks-list.html`,
         canDismiss: false,
         metadata: {
           pendingCount,
@@ -472,7 +472,7 @@ export const todoService = {
           priority,
           dueDate: task.due_date,
           daysUntilDue,
-          actionUrl: `http://localhost:3001/edit-user-task-mobile.html?id=${task.id}`, // Edit/reschedule page (mobile)
+          actionUrl: `${config.maintenanceBaseUrl}/edit-user-task-mobile.html?id=${task.id}`, // Edit/reschedule page (mobile)
           canDismiss: false,
           metadata: {
             taskId: task.id,

@@ -44,8 +44,10 @@ const envSchema = z.object({
   ENABLE_DEPENDENCY_INFERENCE: z.string().default('false'),
   ENABLE_AUTO_LEARNING: z.string().default('false'),
 
-  // Cross-service URL
+  // Cross-service URLs
   CHAT_SERVICE_URL: z.string().default('http://localhost:3000'),
+  MAINTENANCE_BASE_URL: z.string().default('http://localhost:3001'),
+  MAIN_APP_BASE_URL: z.string().default('http://localhost:3000'),
 
   // Operational Tracking (NEW - Phase 1)
   HOURS_UPDATE_PROMPT_INTERVAL_DAYS: z.string().default('7'),
@@ -182,6 +184,8 @@ export function getConfig() {
 
     // Cross-service URLs
     chatServiceUrl: env.CHAT_SERVICE_URL,
+    maintenanceBaseUrl: env.MAINTENANCE_BASE_URL,
+    mainAppBaseUrl: env.MAIN_APP_BASE_URL,
 
     // Weather APIs
     meteoblue: {

@@ -4,14 +4,17 @@
  */
 
 import express from 'express';
+import OpenAI from 'openai';
 import { weatherAreaService } from '../services/weather-area.service.js';
 import { weatherFetchService } from '../services/weather-fetch.service.js';
 import { weatherForecastService } from '../services/weather-forecast.service.js';
 import { weatherCreditsService } from '../services/weather-credits.service.js';
+import { getEnv } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
 
 const router = express.Router();
 const logger = createLogger('weather-routes');
+const env = getEnv();
 
 // ========== AREAS ==========
 
@@ -259,6 +262,108 @@ router.get('/credits', async (req, res) => {
     res.json({ success: true, data: credits });
   } catch (error) {
     logger.error('Failed to get credits', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ========== AI SAILING SUMMARY ==========
+
+/**
+ * POST /api/weather/ai-sailing-summary
+ * Generate AI-powered sailing conditions summary
+ */
+router.post('/ai-sailing-summary', async (req, res) => {
+  try {
+    const { scores, area, preferences } = req.body;
+
+    if (!scores || scores.length === 0) {
+      return res.status(400).json({ success: false, error: 'No scores provided' });
+    }
+
+    // Build prompt with scoring data
+    const bestWindows = [...scores].sort((a, b) => b.score - a.score).slice(0, 5);
+    const worstWindows = [...scores].sort((a, b) => a.score - b.score).slice(0, 5);
+
+    const summaryData = scores.map(s =>
+      `${s.dayName} ${s.dayNum} ${s.timeLabel}: Wind ${s.wind?.toFixed(0) || '--'}kn, Wave ${s.waveCalc?.toFixed(1) || s.waveConsensus?.toFixed(1) || '--'}m, Period ${s.period?.toFixed(0) || '--'}s, Current: ${s.currentRelation}, Score: ${s.score}/100`
+    ).join('\n');
+
+    const prompt = `You are a sailing weather advisor for a catamaran. Analyze this 10-day forecast data and provide a concise sailing recommendation.
+
+LOCATION: ${area?.name || 'Caribbean'} (${area?.lat?.toFixed(2) || '16.2'}°N, ${area?.lng?.toFixed(2) || '-61.5'}°W)
+
+SAILOR PREFERENCES:
+- Preferred wind: under ${preferences?.preferWind || 20} knots
+- Maximum tolerable wind: ${preferences?.maxWind || 25} knots
+- Preferred wave height: under ${preferences?.preferWave || 1.3}m
+- Maximum tolerable waves: ${preferences?.maxWave || 1.5}m
+- Minimum comfortable wave period: ${preferences?.minPeriod || 6}s
+- Current: prefer following or crossing, avoid opposing (creates steep waves)
+
+FORECAST DATA (50 time blocks over 10 days):
+${summaryData}
+
+BEST WINDOWS (highest scores):
+${bestWindows.map(w => `- ${w.dayName} ${w.dayNum} ${w.timeLabel}: Score ${w.score}`).join('\n')}
+
+WORST WINDOWS (lowest scores):
+${worstWindows.map(w => `- ${w.dayName} ${w.dayNum} ${w.timeLabel}: Score ${w.score}`).join('\n')}
+
+Provide:
+1. A 2-3 sentence summary of the best sailing windows in the next 10 days
+2. Any specific cautions or things to avoid
+3. Keep it conversational and practical for a sailor planning their week`;
+
+    const outlookPrompt = `Based on typical January weather patterns for ${area?.name || 'Guadeloupe'} in the Caribbean (${area?.lat?.toFixed(2) || '16.2'}°N, ${area?.lng?.toFixed(2) || '-61.5'}°W):
+
+Provide a brief 2-3 sentence general outlook for days 11-17 (the week after the forecast period). Consider:
+- Typical trade wind patterns for this time of year
+- Seasonal swell patterns from the Atlantic
+- Any common weather phenomena (cold front passages, etc.)
+
+Note: This is a general seasonal outlook, not a forecast. Be appropriately uncertain.`;
+
+    // Initialize OpenAI
+    const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+    const model = 'gpt-4.1-mini'; // Lightweight model for summaries
+
+    // Get both summary and outlook in parallel
+    const [summaryResponse, outlookResponse] = await Promise.all([
+      openai.chat.completions.create({
+        model,
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 300,
+        temperature: 0.7
+      }),
+      openai.chat.completions.create({
+        model,
+        messages: [{ role: 'user', content: outlookPrompt }],
+        max_tokens: 150,
+        temperature: 0.7
+      })
+    ]);
+
+    const summary = summaryResponse.choices[0]?.message?.content || 'Unable to generate summary';
+    const outlook = outlookResponse.choices[0]?.message?.content || 'Unable to generate outlook';
+
+    logger.info('AI sailing summary generated', {
+      area: area?.name,
+      scoreCount: scores.length,
+      bestScore: bestWindows[0]?.score,
+      worstScore: worstWindows[0]?.score
+    });
+
+    res.json({
+      success: true,
+      data: {
+        summary,
+        outlook,
+        generatedAt: new Date().toISOString()
+      }
+    });
+
+  } catch (error) {
+    logger.error('Failed to generate AI sailing summary', { error: error.message });
     res.status(500).json({ success: false, error: error.message });
   }
 });

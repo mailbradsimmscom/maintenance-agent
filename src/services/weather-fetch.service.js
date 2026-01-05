@@ -6,6 +6,7 @@
 import { weatherRepository } from '../repositories/weather.repository.js';
 import { openMeteoRepository } from '../repositories/open-meteo.repository.js';
 import { meteoblueRepository } from '../repositories/meteoblue.repository.js';
+import { stormglassRepository } from '../repositories/stormglass.repository.js';
 import { weatherCreditsService } from './weather-credits.service.js';
 import { getConfig } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
@@ -23,9 +24,10 @@ export const weatherFetchService = {
    * @returns {Promise<Object>} Fetch results from each source
    */
   async fetchForArea(areaId, options = {}) {
-    const { sources = ['openmeteo', 'meteoblue'] } = options;
+    const { sources = ['openmeteo', 'meteoblue', 'stormglass'] } = options;
     const fetchOpenMeteo = sources.includes('openmeteo');
     const fetchMeteoblue = sources.includes('meteoblue');
+    const fetchStormglass = sources.includes('stormglass');
     const area = await weatherRepository.getAreaById(areaId);
     if (!area) {
       throw new Error(`Area not found: ${areaId}`);
@@ -34,7 +36,8 @@ export const weatherFetchService = {
     const results = {
       openMeteoForecast: null,
       openMeteoMarine: null,
-      meteoblue: null
+      meteoblue: null,
+      stormglass: null
     };
     const startTime = Date.now();
 
@@ -117,6 +120,42 @@ export const weatherFetchService = {
       } else {
         logger.debug('Meteoblue disabled', { areaId });
         results.meteoblue = { success: false, error: 'Meteoblue disabled', skipped: true };
+      }
+    }
+
+    // 4. Stormglass (if requested and API key configured)
+    if (!fetchStormglass) {
+      results.stormglass = { success: false, error: 'Not requested', skipped: true };
+    } else {
+      const config = getConfig();
+      if (config.stormglass?.apiKey) {
+        await this.delay(300);
+
+        try {
+          const { data, quota } = await stormglassRepository.fetchData(area.latitude, area.longitude);
+          const forecasts = stormglassRepository.transformResponse(data, areaId);
+          const stored = await weatherRepository.storeForecasts(forecasts);
+
+          results.stormglass = {
+            success: true,
+            count: stored.count,
+            quotaRemaining: quota.remaining
+          };
+
+          await this.logFetch(areaId, 'stormglass', 'success', forecasts.length, stored.count);
+          logger.info('Stormglass fetch complete', {
+            areaId,
+            records: stored.count,
+            quotaRemaining: quota.remaining
+          });
+        } catch (error) {
+          logger.error('Stormglass fetch failed', { areaId, error: error.message });
+          results.stormglass = { success: false, error: error.message };
+          await this.logFetch(areaId, 'stormglass', 'failed', 0, 0, error.message);
+        }
+      } else {
+        logger.debug('Stormglass not configured (no API key)', { areaId });
+        results.stormglass = { success: false, error: 'Stormglass not configured', skipped: true };
       }
     }
 

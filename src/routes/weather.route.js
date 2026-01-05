@@ -193,11 +193,11 @@ router.get('/areas/:id/7day', async (req, res) => {
 /**
  * POST /api/weather/areas/:id/fetch
  * Trigger manual fetch for an area
- * Body: { sources: ['openmeteo', 'meteoblue'] } - optional, defaults to both
+ * Body: { sources: ['openmeteo', 'meteoblue', 'stormglass'] } - optional, defaults to all
  */
 router.post('/areas/:id/fetch', async (req, res) => {
   try {
-    const sources = req.body?.sources || ['openmeteo', 'meteoblue'];
+    const sources = req.body?.sources || ['openmeteo', 'meteoblue', 'stormglass'];
     logger.info('Manual fetch triggered', { areaId: req.params.id, sources });
     const result = await weatherFetchService.fetchForArea(req.params.id, { sources });
 
@@ -221,6 +221,12 @@ router.post('/areas/:id/fetch', async (req, res) => {
       failures.push(`Meteoblue: ${result.meteoblue.error}`);
     } else if (result.meteoblue?.success) {
       successes.push(`Meteoblue: ${result.meteoblue.count} records`);
+    }
+
+    if (result.stormglass?.success === false && !result.stormglass?.skipped) {
+      failures.push(`Stormglass: ${result.stormglass.error}`);
+    } else if (result.stormglass?.success) {
+      successes.push(`Stormglass: ${result.stormglass.count} records (${result.stormglass.quotaRemaining} calls left today)`);
     }
 
     const hasFailures = failures.length > 0;

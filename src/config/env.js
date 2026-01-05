@@ -78,6 +78,7 @@ const envSchema = z.object({
   // Weather APIs
   METEOBLUE_API_KEY: z.string().optional(),
   METEOBLUE_ENABLED: z.string().default('false'),
+  STORMGLASS_API_KEY: z.string().optional(),
 
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
@@ -191,6 +192,9 @@ export function getConfig() {
     meteoblue: {
       apiKey: env.METEOBLUE_API_KEY,
       enabled: env.METEOBLUE_ENABLED === 'true',
+    },
+    stormglass: {
+      apiKey: env.STORMGLASS_API_KEY,
     },
   };
 }

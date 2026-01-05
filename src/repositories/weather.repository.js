@@ -136,21 +136,39 @@ export const weatherRepository = {
     const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
     const until = new Date(Date.now() + hours * 60 * 60 * 1000).toISOString();
 
-    const { data, error } = await supabase
-      .from('weather_forecasts')
-      .select('*')
-      .eq('area_id', areaId)
-      .gte('forecast_time', todayStart)
-      .lte('forecast_time', until)
-      .order('forecast_time', { ascending: true })
-      .limit(5000); // 10 days * 24 hours * ~10 sources = ~2400 records
+    // Supabase has a 1000 row max limit, so we paginate
+    const PAGE_SIZE = 1000;
+    let allData = [];
+    let page = 0;
+    let hasMore = true;
 
-    if (error) {
-      logger.error('Failed to get forecasts by area', { areaId, error: error.message });
-      throw error;
+    while (hasMore) {
+      const from = page * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+
+      const { data, error } = await supabase
+        .from('weather_forecasts')
+        .select('*')
+        .eq('area_id', areaId)
+        .gte('forecast_time', todayStart)
+        .lte('forecast_time', until)
+        .order('forecast_time', { ascending: true })
+        .range(from, to);
+
+      if (error) {
+        logger.error('Failed to get forecasts by area', { areaId, error: error.message });
+        throw error;
+      }
+
+      allData = allData.concat(data || []);
+      hasMore = data?.length === PAGE_SIZE;
+      page++;
+
+      // Safety limit: max 5 pages (5000 records)
+      if (page >= 5) break;
     }
 
-    return data || [];
+    return allData;
   },
 
   async getLastFetchTime(areaId) {

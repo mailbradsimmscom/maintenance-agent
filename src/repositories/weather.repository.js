@@ -130,7 +130,7 @@ export const weatherRepository = {
     return data;
   },
 
-  async getForecastsByArea(areaId, { hours = 168 } = {}) {
+  async getForecastsByArea(areaId, { hours = 240 } = {}) { // 10 days default
     // Get forecasts from now onwards (into the future), limited to 'hours' worth
     const now = new Date();
     const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
@@ -142,7 +142,8 @@ export const weatherRepository = {
       .eq('area_id', areaId)
       .gte('forecast_time', todayStart)
       .lte('forecast_time', until)
-      .order('forecast_time', { ascending: true });
+      .order('forecast_time', { ascending: true })
+      .limit(5000); // 10 days * 24 hours * ~10 sources = ~2400 records
 
     if (error) {
       logger.error('Failed to get forecasts by area', { areaId, error: error.message });

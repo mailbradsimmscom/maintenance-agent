@@ -66,8 +66,8 @@ export const schedulerJob = {
 
     agentLogger.cronJobScheduled('weekly-recheck', weeklyRecheckSchedule);
 
-    // Weather fetch - every 4 hours (Open-Meteo only, free API)
-    const weatherFetchSchedule = '0 */4 * * *';
+    // Weather fetch - daily at 4am EST/9am UTC (all sources including Stormglass)
+    const weatherFetchSchedule = '0 9 * * *';
     const weatherFetchTask = cron.schedule(weatherFetchSchedule, () => {
       agentLogger.cronJobExecuted('weather-fetch');
       this.performWeatherFetch();

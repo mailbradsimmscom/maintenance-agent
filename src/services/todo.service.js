@@ -462,6 +462,25 @@ export const todoService = {
         const systemName = task.asset_uid ? systemNamesMap.get(task.asset_uid) : null;
         const titlePrefix = systemName ? `${systemName}: ` : '[General] ';
 
+        // Custom actionUrl for document_ingest tasks (parse/detect/ingest todos)
+        let actionUrl = `${config.maintenanceBaseUrl}/edit-user-task-mobile.html?id=${task.id}`;
+        if (task.created_by === 'document_ingest') {
+          try {
+            const notes = JSON.parse(task.notes);
+            if (notes.doc_id) {
+              if (notes.type === 'detection_complete') {
+                actionUrl = `${config.mainAppBaseUrl}/ingest?doc_id=${notes.doc_id}`;
+              } else if (notes.type === 'ingest_complete') {
+                actionUrl = `${config.mainAppBaseUrl}/ingest?doc_id=${notes.doc_id}&view=summary`;
+              } else if (notes.type === 'ingest_failed' || notes.type === 'parse_failed' || notes.type === 'detect_failed') {
+                actionUrl = `${config.mainAppBaseUrl}/ingest?doc_id=${notes.doc_id}&view=retry`;
+              }
+            }
+          } catch {
+            // Fall back to default actionUrl if notes parse fails
+          }
+        }
+
         return {
           id: `user-task-${task.id}`,
           type: 'user_task',
@@ -472,7 +491,7 @@ export const todoService = {
           priority,
           dueDate: task.due_date,
           daysUntilDue,
-          actionUrl: `${config.maintenanceBaseUrl}/edit-user-task-mobile.html?id=${task.id}`, // Edit/reschedule page (mobile)
+          actionUrl,
           canDismiss: false,
           metadata: {
             taskId: task.id,

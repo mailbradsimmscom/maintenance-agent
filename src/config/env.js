@@ -80,6 +80,13 @@ const envSchema = z.object({
   METEOBLUE_ENABLED: z.string().default('false'),
   STORMGLASS_API_KEY: z.string().optional(),
 
+  // Gmail API (for forecast email ingestion)
+  GMAIL_CLIENT_ID: z.string().optional(),
+  GMAIL_CLIENT_SECRET: z.string().optional(),
+  GMAIL_REFRESH_TOKEN: z.string().optional(),
+  FORECAST_SENDER_EMAIL: z.string().default('support@mwxc.com'),
+  FORECAST_EMAIL_ENABLED: z.string().default('false'),
+
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
   LOG_FORMAT: z.enum(['json', 'pretty']).default('pretty'),
@@ -195,6 +202,17 @@ export function getConfig() {
     },
     stormglass: {
       apiKey: env.STORMGLASS_API_KEY,
+    },
+
+    // Gmail / Forecast Email
+    gmail: {
+      clientId: env.GMAIL_CLIENT_ID,
+      clientSecret: env.GMAIL_CLIENT_SECRET,
+      refreshToken: env.GMAIL_REFRESH_TOKEN,
+    },
+    forecastEmail: {
+      senderEmail: env.FORECAST_SENDER_EMAIL,
+      enabled: env.FORECAST_EMAIL_ENABLED === 'true',
     },
   };
 }

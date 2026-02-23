@@ -15,7 +15,7 @@ export const weatherAreaService = {
    * @returns {Promise<Object>} Created area
    */
   async createArea(areaData) {
-    const { name, latitude, longitude, description } = areaData;
+    const { name, latitude, longitude, description, sailing_direction } = areaData;
 
     // Validate coordinates
     if (latitude < -90 || latitude > 90) {
@@ -28,8 +28,13 @@ export const weatherAreaService = {
       throw new Error('Name is required');
     }
 
+    const validDirections = [null, undefined, 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+    if (sailing_direction && !validDirections.includes(sailing_direction)) {
+      throw new Error('Sailing direction must be one of: N, NE, E, SE, S, SW, W, NW');
+    }
+
     logger.info('Creating weather area', { name, latitude, longitude });
-    return weatherRepository.createArea({ name, latitude, longitude, description });
+    return weatherRepository.createArea({ name, latitude, longitude, description, sailing_direction });
   },
 
   /**

@@ -9,6 +9,9 @@ import { weatherAreaService } from '../services/weather-area.service.js';
 import { weatherFetchService } from '../services/weather-fetch.service.js';
 import { weatherForecastService } from '../services/weather-forecast.service.js';
 import { weatherCreditsService } from '../services/weather-credits.service.js';
+import { forecastEmailService } from '../services/forecast-email.service.js';
+import { forecastEmailRepository } from '../repositories/forecast-email.repository.js';
+import { forecastEmailParserService } from '../services/forecast-email-parser.service.js';
 import { getEnv } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
 
@@ -55,7 +58,7 @@ router.get('/areas/:id', async (req, res) => {
  */
 router.post('/areas', async (req, res) => {
   try {
-    const { name, latitude, longitude, description } = req.body;
+    const { name, latitude, longitude, description, sailing_direction } = req.body;
 
     if (!name || latitude === undefined || longitude === undefined) {
       return res.status(400).json({
@@ -68,7 +71,8 @@ router.post('/areas', async (req, res) => {
       name,
       latitude: parseFloat(latitude),
       longitude: parseFloat(longitude),
-      description
+      description,
+      sailing_direction: sailing_direction || null
     });
 
     // Auto-fetch Open-Meteo data for new area (don't await - let it run in background)
@@ -91,6 +95,19 @@ router.post('/areas', async (req, res) => {
         logger.error('Auto-fetch failed', { areaId: area.id, error: err.message });
       });
 
+    // Auto-parse expert forecasts from latest email for new area (background)
+    forecastEmailParserService.parseForNewArea(area)
+      .then(result => {
+        if (result.forecastsWritten > 0) {
+          logger.info('Expert forecasts generated for new area', { areaId: area.id, name, forecastsWritten: result.forecastsWritten });
+        } else {
+          logger.info('No expert forecasts available for new area', { areaId: area.id, name });
+        }
+      })
+      .catch(err => {
+        logger.error('Expert forecast parse failed for new area', { areaId: area.id, error: err.message });
+      });
+
     res.status(201).json({ success: true, data: area, message: 'Area created. Weather data is being fetched...' });
   } catch (error) {
     logger.error('Failed to create area', { error: error.message });
@@ -109,6 +126,7 @@ router.put('/areas/:id', async (req, res) => {
     if (req.body.latitude !== undefined) updates.latitude = parseFloat(req.body.latitude);
     if (req.body.longitude !== undefined) updates.longitude = parseFloat(req.body.longitude);
     if (req.body.description !== undefined) updates.description = req.body.description;
+    if (req.body.sailing_direction !== undefined) updates.sailing_direction = req.body.sailing_direction;
 
     const area = await weatherAreaService.updateArea(req.params.id, updates);
     res.json({ success: true, data: area });
@@ -266,6 +284,82 @@ router.get('/credits', async (req, res) => {
   }
 });
 
+// ========== EXPERT FORECASTS ==========
+
+/**
+ * GET /api/weather/areas/:id/expert-forecast?date=YYYY-MM-DD
+ * Get expert forecast for a specific area and date
+ */
+router.get('/areas/:id/expert-forecast', async (req, res) => {
+  try {
+    const date = req.query.date || new Date().toISOString().split('T')[0];
+    const forecast = await forecastEmailRepository.getExpertForecast(req.params.id, date);
+    res.json({ success: true, data: forecast });
+  } catch (error) {
+    logger.error('Failed to get expert forecast', { id: req.params.id, error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * GET /api/weather/areas/:id/expert-forecasts
+ * Get all expert forecasts for an area (10-day view)
+ */
+router.get('/areas/:id/expert-forecasts', async (req, res) => {
+  try {
+    const forecasts = await forecastEmailRepository.getExpertForecasts(req.params.id);
+    res.json({ success: true, data: forecasts });
+  } catch (error) {
+    logger.error('Failed to get expert forecasts', { id: req.params.id, error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * POST /api/weather/forecast-email/check
+ * Manual trigger: check Gmail for new forecast emails
+ */
+router.post('/forecast-email/check', async (req, res) => {
+  try {
+    const result = await forecastEmailService.checkAndIngest();
+    if (result.disabled) {
+      return res.json({ success: false, error: 'Forecast email feature disabled' });
+    }
+    res.json({ success: true, data: result });
+  } catch (error) {
+    logger.error('Failed to check forecast emails', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * GET /api/weather/forecast-email/status
+ * Get forecast email ingestion status
+ */
+router.get('/forecast-email/status', async (req, res) => {
+  try {
+    const status = await forecastEmailService.getStatus();
+    res.json({ success: true, data: status });
+  } catch (error) {
+    logger.error('Failed to get forecast email status', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * GET /api/weather/expert-forecast-changes
+ * Get per-area change summaries (generated at parse time)
+ */
+router.get('/expert-forecast-changes', async (req, res) => {
+  try {
+    const summaries = await forecastEmailRepository.getChangeSummaries();
+    res.json({ success: true, data: summaries });
+  } catch (error) {
+    logger.error('Failed to get expert forecast changes', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // ========== AI SAILING SUMMARY ==========
 
 /**
@@ -314,7 +408,7 @@ Provide:
 2. Any specific cautions or things to avoid
 3. Keep it conversational and practical for a sailor planning their week`;
 
-    const outlookPrompt = `Based on typical January weather patterns for ${area?.name || 'Guadeloupe'} in the Caribbean (${area?.lat?.toFixed(2) || '16.2'}°N, ${area?.lng?.toFixed(2) || '-61.5'}°W):
+    const outlookPrompt = `Based on typical ${new Date().toLocaleString('en-US', { month: 'long' })} weather patterns for ${area?.name || 'Guadeloupe'} in the Caribbean (${area?.lat?.toFixed(2) || '16.2'}°N, ${area?.lng?.toFixed(2) || '-61.5'}°W):
 
 Provide a brief 2-3 sentence general outlook for days 11-17 (the week after the forecast period). Consider:
 - Typical trade wind patterns for this time of year

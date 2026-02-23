@@ -11,10 +11,10 @@ const logger = createLogger('weather-repository');
 
 export const weatherRepository = {
   // ========== AREAS ==========
-  async createArea({ name, latitude, longitude, description }) {
+  async createArea({ name, latitude, longitude, description, sailing_direction }) {
     const { data, error } = await supabase
       .from('weather_areas')
-      .insert({ name, latitude, longitude, description })
+      .insert({ name, latitude, longitude, description, sailing_direction })
       .select()
       .single();
 

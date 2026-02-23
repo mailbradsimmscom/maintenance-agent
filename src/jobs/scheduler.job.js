@@ -6,6 +6,7 @@
 import cron from 'node-cron';
 import { systemProcessorJob } from './system-processor.job.js';
 import { weatherFetchService } from '../services/weather-fetch.service.js';
+import { forecastEmailService } from '../services/forecast-email.service.js';
 import { getConfig } from '../config/env.js';
 import { createLogger, agentLogger } from '../utils/logger.js';
 
@@ -81,6 +82,21 @@ export const schedulerJob = {
 
     agentLogger.cronJobScheduled('weather-fetch', weatherFetchSchedule);
 
+    // Forecast email check - Mon-Sat at 8am EST / 13:00 UTC
+    const forecastEmailSchedule = '0 13 * * 1-6';
+    const forecastEmailTask = cron.schedule(forecastEmailSchedule, () => {
+      agentLogger.cronJobExecuted('forecast-email-check');
+      this.performForecastEmailCheck();
+    });
+
+    this.scheduledTasks.push({
+      name: 'forecast-email-check',
+      schedule: forecastEmailSchedule,
+      task: forecastEmailTask,
+    });
+
+    agentLogger.cronJobScheduled('forecast-email-check', forecastEmailSchedule);
+
     logger.info(`${this.scheduledTasks.length} cron jobs scheduled`);
   },
 
@@ -138,6 +154,30 @@ export const schedulerJob = {
       });
     } catch (error) {
       logger.error('Scheduled weather fetch failed', { error: error.message });
+    }
+  },
+
+  /**
+   * Check Gmail for new forecast emails, parse and map to areas
+   */
+  async performForecastEmailCheck() {
+    if (!config.forecastEmail?.enabled) {
+      logger.debug('Forecast email feature disabled, skipping cron');
+      return;
+    }
+
+    logger.info('Performing scheduled forecast email check');
+
+    try {
+      const result = await forecastEmailService.checkAndIngest();
+      logger.info('Scheduled forecast email check completed', {
+        found: result.emailsFound,
+        ingested: result.emailsIngested,
+        parsed: result.emailsParsed,
+        errors: result.errors.length,
+      });
+    } catch (error) {
+      logger.error('Scheduled forecast email check failed', { error: error.message });
     }
   },
 

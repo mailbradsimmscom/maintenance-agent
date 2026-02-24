@@ -244,7 +244,7 @@ Return JSON:
   ]
 }
 
-The sections array must only include sections that have at least one of my locations assigned. Every location must appear in exactly one section. Do not return an empty sections array.`;
+The sections array must only include sections that have at least one of my locations within that section's geographic coverage area. If this email does not cover the region where my locations are (e.g., my locations are in the Eastern Caribbean but the email covers the Bahamas or US East Coast), return an EMPTY sections array. Do NOT force a match — only match if the email genuinely covers the area near my GPS coordinates.`;
 
     const response = await openai.chat.completions.create({
       model: config.openai.model,

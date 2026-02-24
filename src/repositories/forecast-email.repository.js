@@ -147,6 +147,25 @@ export const forecastEmailRepository = {
   },
 
   /**
+   * Check if an email produced expert forecasts for any active (non-deleted) areas
+   */
+  async emailHasActiveForecasts(emailId) {
+    const { count, error } = await supabase
+      .from('weather_expert_forecasts')
+      .select('id, weather_areas!inner(is_active, deleted_at)', { count: 'exact', head: true })
+      .eq('email_id', emailId)
+      .eq('weather_areas.is_active', true)
+      .is('weather_areas.deleted_at', null);
+
+    if (error) {
+      logger.error('Failed to check email forecasts', { emailId, error: error.message });
+      return false;
+    }
+
+    return count > 0;
+  },
+
+  /**
    * Update the area_change_summary on a specific forecast row
    */
   async updateChangeSummary(forecastId, summary) {

@@ -357,9 +357,17 @@ router.get('/data-status', async (req, res) => {
     const lastFetches = areas.map(a => a.last_fetch).filter(Boolean).sort().reverse();
     const lastWeatherFetch = lastFetches[0] || null;
 
-    // Last expert email: most recent parsed email
-    const recentEmails = await forecastEmailRepository.getRecentEmails(5);
-    const lastParsed = recentEmails.find(e => e.parse_status === 'parsed');
+    // Last expert email: most recent parsed email that produced forecasts for active areas
+    const recentEmails = await forecastEmailRepository.getRecentEmails(20);
+    let lastParsed = null;
+    for (const email of recentEmails) {
+      if (email.parse_status !== 'parsed') continue;
+      const hasForecasts = await forecastEmailRepository.emailHasActiveForecasts(email.id);
+      if (hasForecasts) {
+        lastParsed = email;
+        break;
+      }
+    }
 
     res.json({
       success: true,

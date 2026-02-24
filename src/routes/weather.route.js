@@ -347,6 +347,41 @@ router.get('/forecast-email/status', async (req, res) => {
 });
 
 /**
+ * GET /api/weather/data-status
+ * Combined status: last weather API fetch + last expert email processed
+ */
+router.get('/data-status', async (req, res) => {
+  try {
+    // Last weather fetch: most recent last_fetch across all active areas
+    const areas = await weatherAreaService.getAllAreas();
+    const lastFetches = areas.map(a => a.last_fetch).filter(Boolean).sort().reverse();
+    const lastWeatherFetch = lastFetches[0] || null;
+
+    // Last expert email: most recent parsed email
+    const recentEmails = await forecastEmailRepository.getRecentEmails(5);
+    const lastParsed = recentEmails.find(e => e.parse_status === 'parsed');
+
+    res.json({
+      success: true,
+      data: {
+        weatherApi: {
+          lastFetch: lastWeatherFetch,
+        },
+        expertEmail: lastParsed ? {
+          subject: lastParsed.subject,
+          receivedAt: lastParsed.received_at,
+          forecastDate: lastParsed.forecast_date,
+          parsedAt: lastParsed.created_at,
+        } : null,
+      }
+    });
+  } catch (error) {
+    logger.error('Failed to get data status', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
  * GET /api/weather/expert-forecast-changes
  * Get per-area change summaries (generated at parse time)
  */

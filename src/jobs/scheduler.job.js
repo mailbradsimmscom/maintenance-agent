@@ -82,8 +82,8 @@ export const schedulerJob = {
 
     agentLogger.cronJobScheduled('weather-fetch', weatherFetchSchedule);
 
-    // Forecast email check - Mon-Sat at 8am EST / 13:00 UTC
-    const forecastEmailSchedule = '0 13 * * 1-6';
+    // Forecast email check - Mon-Sat every 2hrs 6am-8pm EST (11:00-01:00+1 UTC)
+    const forecastEmailSchedule = '0 11,13,15,17,19,21,23,1 * * 1-6';
     const forecastEmailTask = cron.schedule(forecastEmailSchedule, () => {
       agentLogger.cronJobExecuted('forecast-email-check');
       this.performForecastEmailCheck();

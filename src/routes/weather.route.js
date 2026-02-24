@@ -353,7 +353,7 @@ router.get('/forecast-email/status', async (req, res) => {
 router.get('/data-status', async (req, res) => {
   try {
     // Last weather fetch: most recent last_fetch across all active areas
-    const areas = await weatherAreaService.getAllAreas();
+    const areas = await weatherAreaService.getAreasWithLastFetch();
     const lastFetches = areas.map(a => a.last_fetch).filter(Boolean).sort().reverse();
     const lastWeatherFetch = lastFetches[0] || null;
 

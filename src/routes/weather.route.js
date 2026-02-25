@@ -317,7 +317,8 @@ router.get('/areas/:id/expert-forecasts', async (req, res) => {
 
 /**
  * POST /api/weather/forecast-email/check
- * Manual trigger: check Gmail for new forecast emails
+ * Manual trigger: check Gmail for new forecast emails.
+ * Returns immediately after ingestion — parsing runs in background.
  */
 router.post('/forecast-email/check', async (req, res) => {
   try {
@@ -328,6 +329,20 @@ router.post('/forecast-email/check', async (req, res) => {
     res.json({ success: true, data: result });
   } catch (error) {
     logger.error('Failed to check forecast emails', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * GET /api/weather/forecast-email/parse-progress
+ * Poll for parse progress (frontend uses this after triggering check)
+ */
+router.get('/forecast-email/parse-progress', async (req, res) => {
+  try {
+    const progress = await forecastEmailService.getParseProgress();
+    res.json({ success: true, data: progress });
+  } catch (error) {
+    logger.error('Failed to get parse progress', { error: error.message });
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -361,7 +376,7 @@ router.get('/data-status', async (req, res) => {
     const recentEmails = await forecastEmailRepository.getRecentEmails(20);
     let lastParsed = null;
     for (const email of recentEmails) {
-      if (email.parse_status !== 'parsed') continue;
+      if (email.parse_status !== 'parsed' && email.parse_status !== 'partial') continue;
       const hasForecasts = await forecastEmailRepository.emailHasActiveForecasts(email.id);
       if (hasForecasts) {
         lastParsed = email;
@@ -462,7 +477,7 @@ Note: This is a general seasonal outlook, not a forecast. Be appropriately uncer
 
     // Initialize OpenAI
     const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
-    const model = 'gpt-4.1-mini'; // Lightweight model for summaries
+    const model = env.OPENAI_SUMMARY_MODEL || 'gpt-4.1-mini';
 
     // Get both summary and outlook in parallel
     const [summaryResponse, outlookResponse] = await Promise.all([

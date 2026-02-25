@@ -29,7 +29,8 @@ const envSchema = z.object({
 
   // OpenAI
   OPENAI_API_KEY: z.string().min(1),
-  OPENAI_MODEL: z.string().default('gpt-4-turbo-preview'),
+  OPENAI_MODEL: z.string().default('gpt-4.1-mini'),
+  OPENAI_SUMMARY_MODEL: z.string().default('gpt-4.1-mini'),
 
   // Admin/Security
   ADMIN_TOKEN: z.string().min(1),
@@ -86,6 +87,9 @@ const envSchema = z.object({
   GMAIL_REFRESH_TOKEN: z.string().optional(),
   FORECAST_SENDER_EMAIL: z.string().default('support@mwxc.com'),
   FORECAST_EMAIL_ENABLED: z.string().default('false'),
+  FORECAST_RETENTION_DAYS: z.string().default('10'),
+  FORECAST_GMAIL_SEARCH_DAYS: z.string().default('4'),
+  FORECAST_REGION_FILTER: z.string().optional().default(''),
 
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
@@ -129,6 +133,7 @@ export function getConfig() {
     openai: {
       apiKey: env.OPENAI_API_KEY,
       model: env.OPENAI_MODEL,
+      summaryModel: env.OPENAI_SUMMARY_MODEL,
       delayMs: parseInt(env.OPENAI_DELAY_MS, 10),
     },
 
@@ -213,6 +218,9 @@ export function getConfig() {
     forecastEmail: {
       senderEmail: env.FORECAST_SENDER_EMAIL,
       enabled: env.FORECAST_EMAIL_ENABLED === 'true',
+      retentionDays: parseInt(env.FORECAST_RETENTION_DAYS, 10),
+      gmailSearchDays: parseInt(env.FORECAST_GMAIL_SEARCH_DAYS, 10),
+      regionFilter: env.FORECAST_REGION_FILTER,
     },
   };
 }

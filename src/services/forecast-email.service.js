@@ -1,6 +1,7 @@
 /**
  * Forecast Email Service
  * Orchestrates the full pipeline: check Gmail inbox → ingest → parse → map to areas
+ * Parse runs in background (fire-and-forget) so the check endpoint returns immediately.
  */
 
 import { gmailRepository } from '../repositories/gmail.repository.js';
@@ -14,22 +15,34 @@ const logger = createLogger('forecast-email-service');
 
 export const forecastEmailService = {
   /**
-   * Check Gmail for new forecast emails, ingest, and parse them.
-   * This is the main entry point called by the cron job and manual trigger.
-   * @returns {Object} { emailsFound, emailsIngested, emailsParsed, errors }
+   * Check Gmail for new forecast emails and ingest them.
+   * Returns immediately after ingestion — parsing runs in background.
+   * @returns {Object} { emailsFound, emailsIngested, parseTriggered, errors }
    */
   async checkAndIngest() {
     if (!config.forecastEmail.enabled) {
       logger.info('Forecast email feature disabled');
-      return { emailsFound: 0, emailsIngested: 0, emailsParsed: 0, errors: [], disabled: true };
+      return { emailsFound: 0, emailsIngested: 0, parseTriggered: 0, errors: [], disabled: true };
     }
 
     const senderEmail = config.forecastEmail.senderEmail;
-    const results = { emailsFound: 0, emailsIngested: 0, emailsParsed: 0, errors: [] };
+    const searchDays = config.forecastEmail.gmailSearchDays;
+    const results = { emailsFound: 0, emailsIngested: 0, parseTriggered: 0, errors: [] };
+
+    // Parse region filter (comma-separated keywords for subject-line gating)
+    const allowedRegions = config.forecastEmail.regionFilter
+      ?.split(',')
+      .map(s => s.trim().toLowerCase())
+      .filter(s => s.length > 0) || [];
 
     try {
       // Step 1: Search Gmail for recent emails from the forecast sender
-      const query = `from:${senderEmail} newer_than:2d`;
+      // Gmail query subject filter does the real work; code filter below is a safety net
+      let query = `from:${senderEmail} newer_than:${searchDays}d`;
+      if (allowedRegions.length > 0) {
+        const subjectFilter = allowedRegions.map(r => `subject:"${r}"`).join(' OR ');
+        query += ` (${subjectFilter})`;
+      }
       logger.info('Searching Gmail for forecast emails', { query });
 
       const messages = await gmailRepository.searchMessages(query);
@@ -38,18 +51,23 @@ export const forecastEmailService = {
 
       if (messages.length === 0) {
         logger.info('No new forecast emails found');
-        // Cleanup old emails
         await this._cleanup();
         return results;
       }
 
-      // Step 2: Process each message
+      // Step 2: Ingest each message (store in DB, no parsing yet)
+      const emailsToProcess = [];
+
       for (const { id: gmailMessageId } of messages) {
         try {
           // Check if already ingested
           const existing = await forecastEmailRepository.emailExists(gmailMessageId);
           if (existing && existing.parse_status === 'parsed') {
-            logger.debug('Email already ingested and parsed, skipping', { gmailMessageId });
+            logger.debug('Email already parsed, skipping', { gmailMessageId });
+            continue;
+          }
+          if (existing && existing.parse_status === 'parsing') {
+            logger.debug('Email currently being parsed, skipping', { gmailMessageId });
             continue;
           }
 
@@ -64,13 +82,23 @@ export const forecastEmailService = {
             continue;
           }
 
-          // Extract region tag from subject
+          // Code safety-net filter (Gmail query already filters, this is redundant protection)
+          if (allowedRegions.length > 0) {
+            const subjectLower = headers.subject?.toLowerCase() || '';
+            if (!allowedRegions.some(region => subjectLower.includes(region))) {
+              logger.debug('Skipping email due to region filter', {
+                subject: headers.subject, allowedRegions,
+              });
+              continue;
+            }
+          }
+
           const regionTag = this._extractRegionTag(headers.subject);
 
-          // Insert into database (or get existing for retry)
+          // Insert or re-use existing record
           let emailRecord;
           if (existing) {
-            // Existing but failed - re-use record
+            logger.info('Existing email found', { gmailMessageId, parse_status: existing.parse_status });
             emailRecord = { id: existing.id };
           } else {
             emailRecord = await forecastEmailRepository.insertEmail({
@@ -79,33 +107,37 @@ export const forecastEmailService = {
               subject: headers.subject,
               received_at: headers.date ? new Date(headers.date).toISOString() : new Date().toISOString(),
               raw_text: rawText,
-              forecast_date: null, // Will be set by parser
+              forecast_date: null,
               region_tag: regionTag,
             });
             results.emailsIngested++;
           }
 
-          // Step 3: Parse with GPT and map to areas
-          const parseResult = await forecastEmailParserService.parseAndMap({
+          emailsToProcess.push({
             ...emailRecord,
             subject: headers.subject,
             raw_text: rawText,
             received_at: headers.date ? new Date(headers.date).toISOString() : new Date().toISOString(),
           });
-
-          results.emailsParsed++;
-          logger.info('Email processed', {
-            gmailMessageId,
-            subject: headers.subject,
-            areasMatched: parseResult.areasMatched,
-          });
         } catch (err) {
-          logger.error('Failed to process email', { gmailMessageId, error: err.message });
+          logger.error('Failed to ingest email', { gmailMessageId, error: err.message });
           results.errors.push({ gmailMessageId, error: err.message });
         }
       }
 
-      // Step 4: Cleanup old emails (>10 days)
+      // Step 3: Fire-and-forget parsing — cap concurrency at 4
+      // Do NOT await — let parsing run in background so the HTTP response returns immediately
+      const PARSE_CONCURRENCY = 4;
+      const parseInBatches = async () => {
+        for (let i = 0; i < emailsToProcess.length; i += PARSE_CONCURRENCY) {
+          const batch = emailsToProcess.slice(i, i + PARSE_CONCURRENCY);
+          await Promise.allSettled(batch.map(email => this._parseInBackground(email)));
+        }
+      };
+      parseInBatches().catch(err => logger.error('Batch parsing failed', { error: err.message }));
+      results.parseTriggered = emailsToProcess.length;
+
+      // Step 4: Cleanup old emails
       await this._cleanup();
 
     } catch (err) {
@@ -118,45 +150,92 @@ export const forecastEmailService = {
   },
 
   /**
+   * Parse an email in the background with job lock protection.
+   */
+  async _parseInBackground(email) {
+    try {
+      // Acquire lock
+      const locked = await forecastEmailRepository.acquireParseLock(email.id);
+      if (!locked) {
+        logger.debug('Could not acquire parse lock, skipping', { emailId: email.id });
+        return;
+      }
+
+      const result = await forecastEmailParserService.parseAndMap(email);
+      logger.info('Background parse completed', {
+        emailId: email.id,
+        subject: email.subject,
+        forecastsWritten: result.forecastsWritten,
+      });
+    } catch (err) {
+      logger.error('Background parse failed', { emailId: email.id, error: err.message });
+      // parseAndMap already marks as 'failed' internally
+    }
+  },
+
+  /**
    * Get ingestion status for the status endpoint
    */
   async getStatus() {
-    const recentEmails = await forecastEmailRepository.getRecentEmails(10);
-    const parsed = recentEmails.filter(e => e.parse_status === 'parsed').length;
-    const failed = recentEmails.filter(e => e.parse_status === 'failed').length;
-    const pending = recentEmails.filter(e => e.parse_status === 'pending').length;
+    const recentEmails = await forecastEmailRepository.getRecentEmails(20);
+    const counts = { queued: 0, parsing: 0, parsed: 0, partial: 0, failed: 0 };
+    for (const e of recentEmails) {
+      if (counts[e.parse_status] !== undefined) {
+        counts[e.parse_status]++;
+      }
+    }
 
     return {
       enabled: config.forecastEmail.enabled,
       senderEmail: config.forecastEmail.senderEmail,
       recentEmails: recentEmails.length,
-      parsed,
-      failed,
-      pending,
+      ...counts,
+      pending: counts.queued + counts.parsing, // for backwards compat
       lastEmail: recentEmails[0] || null,
     };
   },
 
   /**
+   * Get parse progress (for frontend polling)
+   */
+  async getParseProgress() {
+    const recentEmails = await forecastEmailRepository.getRecentEmails(20);
+    const queued = recentEmails.filter(e => e.parse_status === 'queued').length;
+    const parsing = recentEmails.filter(e => e.parse_status === 'parsing').length;
+    const parsed = recentEmails.filter(e => e.parse_status === 'parsed').length;
+    const partial = recentEmails.filter(e => e.parse_status === 'partial').length;
+    const failed = recentEmails.filter(e => e.parse_status === 'failed').length;
+
+    return {
+      inProgress: queued + parsing > 0,
+      queued,
+      parsing,
+      parsed,
+      partial,
+      failed,
+      total: recentEmails.length,
+    };
+  },
+
+  /**
    * Extract a region tag from the email subject
-   * e.g., "Caribbean Sailing Brief - Antigua Region" → "Antigua Region"
    */
   _extractRegionTag(subject) {
     if (!subject) return null;
-    // Try common patterns
     const dashMatch = subject.match(/[-–]\s*(.+)$/);
     if (dashMatch) return dashMatch[1].trim();
     return subject.trim();
   },
 
   /**
-   * Clean up old emails (>10 days) to match forecast horizon
+   * Clean up old emails using configured retention
    */
   async _cleanup() {
     try {
-      const deleted = await forecastEmailRepository.deleteOlderThan(10);
+      const days = config.forecastEmail.retentionDays;
+      const deleted = await forecastEmailRepository.deleteOlderThan(days);
       if (deleted > 0) {
-        logger.info('Cleaned up old forecast emails', { deleted });
+        logger.info('Cleaned up old forecast emails', { deleted, retentionDays: days });
       }
     } catch (err) {
       logger.error('Failed to clean up old emails', { error: err.message });

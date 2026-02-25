@@ -4,9 +4,11 @@
  */
 
 import supabaseRepo from './supabase.repository.js';
+import { getConfig } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
 
 const supabase = supabaseRepo.client;
+const config = getConfig();
 const logger = createLogger('forecast-email-repository');
 
 export const forecastEmailRepository = {
@@ -44,7 +46,7 @@ export const forecastEmailRepository = {
         raw_text,
         forecast_date,
         region_tag,
-        parse_status: 'pending',
+        parse_status: 'queued',
       })
       .select()
       .single();
@@ -126,6 +128,62 @@ export const forecastEmailRepository = {
     return count;
   },
 
+  /**
+   * Store structured forecast JSON on the email row (Step 1 checkpoint)
+   */
+  async storeStructuredForecast(emailId, structured, emailHash = null) {
+    const updates = { structured_forecast: structured };
+    if (emailHash) updates.email_hash = emailHash;
+
+    const { error } = await supabase
+      .from('weather_forecast_emails')
+      .update(updates)
+      .eq('id', emailId);
+
+    if (error) {
+      logger.error('Failed to store structured forecast', { emailId, error: error.message });
+      throw error;
+    }
+  },
+
+  /**
+   * Get structured forecast JSON from the email row
+   */
+  async getStructuredForecast(emailId) {
+    const { data, error } = await supabase
+      .from('weather_forecast_emails')
+      .select('structured_forecast')
+      .eq('id', emailId)
+      .single();
+
+    if (error) {
+      logger.error('Failed to get structured forecast', { emailId, error: error.message });
+      return null;
+    }
+
+    return data?.structured_forecast || null;
+  },
+
+  /**
+   * Atomic job lock: set parse_status to 'parsing' only if eligible.
+   * Returns true if lock acquired, false if another worker has it.
+   */
+  async acquireParseLock(emailId) {
+    const { data, error } = await supabase
+      .from('weather_forecast_emails')
+      .update({ parse_status: 'parsing' })
+      .eq('id', emailId)
+      .in('parse_status', ['queued', 'failed', 'partial'])
+      .select('id');
+
+    if (error) {
+      logger.error('Failed to acquire parse lock', { emailId, error: error.message });
+      return false;
+    }
+
+    return data && data.length > 0;
+  },
+
   // ========== WEATHER_EXPERT_FORECASTS ==========
 
   /**
@@ -134,7 +192,7 @@ export const forecastEmailRepository = {
   async insertExpertForecast(forecast) {
     const { data, error } = await supabase
       .from('weather_expert_forecasts')
-      .insert(forecast)
+      .upsert(forecast, { onConflict: 'area_id,forecast_date' })
       .select()
       .single();
 

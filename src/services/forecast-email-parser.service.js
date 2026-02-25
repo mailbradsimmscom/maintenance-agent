@@ -159,6 +159,7 @@ export const forecastEmailParserService = {
           const insertedIds = [];
           for (const forecast of areaForecasts) {
             try {
+              const structuredDay = section.days?.find(d => d.date === forecast.date) || null;
               const row = await forecastEmailRepository.insertExpertForecast({
                 email_id: email.id,
                 area_id: area.id,
@@ -173,6 +174,7 @@ export const forecastEmailParserService = {
                 buoy_readings: null,
                 full_excerpt: null,
                 llm_raw_response: null,
+                structured_data: structuredDay,
               });
               insertedIds.push(row.id);
               forecastsWritten++;
@@ -264,6 +266,7 @@ export const forecastEmailParserService = {
 
       for (const forecast of areaForecasts) {
         try {
+          const structuredDay = section?.days?.find(d => d.date === forecast.date) || null;
           await forecastEmailRepository.insertExpertForecast({
             email_id: email.id,
             area_id: area.id,
@@ -278,6 +281,7 @@ export const forecastEmailParserService = {
             buoy_readings: null,
             full_excerpt: null,
             llm_raw_response: null,
+            structured_data: structuredDay,
           });
           forecastsWritten++;
         } catch (err) {

@@ -68,11 +68,18 @@ export function resolveDateRange(startDay, endDay, primaryDate) {
   const baseMonth = base.getUTCMonth();
   const baseYear = base.getUTCFullYear();
 
-  const start = new Date(Date.UTC(baseYear, baseMonth, startDay, 12));
+  let start = new Date(Date.UTC(baseYear, baseMonth, startDay, 12));
 
   // Overflow guard: setUTCDate silently overflows on short months (Feb 30 → Mar 2)
   if (start.getUTCMonth() !== baseMonth) {
     throw new Error(`Day ${startDay} does not exist in month ${baseMonth + 1} of ${baseYear}`);
+  }
+
+  // Future-bias: forecasts are forward-looking. If the resolved day is >1 day
+  // before the primary date, it refers to next month (e.g. "Sat01" on Feb 25 = Mar 1)
+  const diffDays = (base - start) / (1000 * 60 * 60 * 24);
+  if (diffDays > 1) {
+    start = new Date(Date.UTC(baseYear, baseMonth + 1, startDay, 12));
   }
 
   let end;
@@ -80,7 +87,14 @@ export function resolveDateRange(startDay, endDay, primaryDate) {
     // Range crosses month boundary (e.g. 28-02 means 28th to 2nd of next month)
     end = new Date(Date.UTC(baseYear, baseMonth + 1, endDay, 12));
   } else {
-    end = new Date(Date.UTC(baseYear, baseMonth, endDay, 12));
+    // Apply same future-bias to end date
+    const endCandidate = new Date(Date.UTC(baseYear, baseMonth, endDay, 12));
+    const endDiff = (base - endCandidate) / (1000 * 60 * 60 * 24);
+    if (endDiff > 1) {
+      end = new Date(Date.UTC(baseYear, baseMonth + 1, endDay, 12));
+    } else {
+      end = endCandidate;
+    }
   }
 
   const dates = [];

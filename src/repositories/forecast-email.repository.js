@@ -192,7 +192,7 @@ export const forecastEmailRepository = {
   async insertExpertForecast(forecast) {
     const { data, error } = await supabase
       .from('weather_expert_forecasts')
-      .upsert(forecast, { onConflict: 'area_id,forecast_date' })
+      .upsert(forecast, { onConflict: 'email_id,area_id,forecast_date' })
       .select()
       .single();
 

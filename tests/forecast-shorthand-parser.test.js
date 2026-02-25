@@ -48,6 +48,26 @@ describe('resolveDateRange', () => {
     const result = resolveDateRange(25, 25, '2026-02-25');
     assert.deepEqual(result, ['2026-02-25']);
   });
+
+  it('future-bias: day 01 on Feb 25 bumps to March', () => {
+    const result = resolveDateRange(1, 1, '2026-02-25');
+    assert.deepEqual(result, ['2026-03-01']);
+  });
+
+  it('future-bias: day 02 on Feb 25 bumps to March', () => {
+    const result = resolveDateRange(2, 2, '2026-02-25');
+    assert.deepEqual(result, ['2026-03-02']);
+  });
+
+  it('future-bias: day 24 on Feb 25 is only 1 day back, stays in Feb', () => {
+    const result = resolveDateRange(24, 24, '2026-02-25');
+    assert.deepEqual(result, ['2026-02-24']);
+  });
+
+  it('future-bias: range with both days in past bumps to next month', () => {
+    const result = resolveDateRange(1, 3, '2026-02-25');
+    assert.deepEqual(result, ['2026-03-01', '2026-03-02', '2026-03-03']);
+  });
 });
 
 // ==================== resolveDateToken ====================

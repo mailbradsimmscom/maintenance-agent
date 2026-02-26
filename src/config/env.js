@@ -39,6 +39,8 @@ const envSchema = z.object({
   AGENT_RUN_INTERVAL_MINUTES: z.string().default('60'),
   AGENT_BATCH_SIZE: z.string().default('5'),
   AGENT_CONFIDENCE_THRESHOLD: z.string().default('0.7'),
+  /** Set to 'false' to temporarily disable the system-check cron (e.g. while fixing agent memory upsert). */
+  AGENT_SYSTEM_CHECK_ENABLED: z.string().default('true'),
 
   // Feature flags
   ENABLE_REAL_WORLD_SEARCH: z.string().default('false'),
@@ -142,6 +144,7 @@ export function getConfig() {
       runIntervalMinutes: parseInt(env.AGENT_RUN_INTERVAL_MINUTES, 10),
       batchSize: parseInt(env.AGENT_BATCH_SIZE, 10),
       confidenceThreshold: parseFloat(env.AGENT_CONFIDENCE_THRESHOLD),
+      systemCheckEnabled: env.AGENT_SYSTEM_CHECK_ENABLED === 'true',
     },
 
     // Feature flags

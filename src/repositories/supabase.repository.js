@@ -229,7 +229,7 @@ export const agentMemoryRepository = {
         asset_uid: assetUid,
         ...memoryData,
         updated_at: new Date().toISOString(),
-      })
+      }, { onConflict: 'asset_uid' })
       .select()
       .single();
 

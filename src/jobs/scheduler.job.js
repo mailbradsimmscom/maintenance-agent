@@ -22,20 +22,24 @@ export const schedulerJob = {
   setupCronJobs() {
     logger.info('Setting up cron jobs');
 
-    // Primary system check - runs every N minutes (configurable)
-    const systemCheckInterval = `*/${config.agent.runIntervalMinutes} * * * *`;
-    const systemCheckTask = cron.schedule(systemCheckInterval, () => {
-      agentLogger.cronJobExecuted('system-check');
-      systemProcessorJob.checkForNewSystems();
-    });
+    // Primary system check - runs every N minutes (configurable); can be disabled via AGENT_SYSTEM_CHECK_ENABLED=false
+    if (config.agent.systemCheckEnabled) {
+      const systemCheckInterval = `*/${config.agent.runIntervalMinutes} * * * *`;
+      const systemCheckTask = cron.schedule(systemCheckInterval, () => {
+        agentLogger.cronJobExecuted('system-check');
+        systemProcessorJob.checkForNewSystems();
+      });
 
-    this.scheduledTasks.push({
-      name: 'system-check',
-      schedule: systemCheckInterval,
-      task: systemCheckTask,
-    });
+      this.scheduledTasks.push({
+        name: 'system-check',
+        schedule: systemCheckInterval,
+        task: systemCheckTask,
+      });
 
-    agentLogger.cronJobScheduled('system-check', systemCheckInterval);
+      agentLogger.cronJobScheduled('system-check', systemCheckInterval);
+    } else {
+      logger.info('System check cron disabled (AGENT_SYSTEM_CHECK_ENABLED=false)');
+    }
 
     // Daily real-world update check (2 AM)
     const dailyUpdateSchedule = '0 2 * * *';

@@ -36,6 +36,12 @@ export const forecastEmailService = {
       .filter(s => s.length > 0) || [];
 
     try {
+      // Recover stale parse locks (stuck in 'parsing' for >10 minutes)
+      const staleCount = await forecastEmailRepository.recoverStaleLocks(10);
+      if (staleCount > 0) {
+        logger.info('Recovered stale parse locks', { count: staleCount });
+      }
+
       // Step 1: Search Gmail for recent emails from the forecast sender
       // Gmail query subject filter does the real work; code filter below is a safety net
       let query = `from:${senderEmail} newer_than:${searchDays}d`;

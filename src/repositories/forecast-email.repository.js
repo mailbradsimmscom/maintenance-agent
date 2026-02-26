@@ -184,6 +184,27 @@ export const forecastEmailRepository = {
     return data && data.length > 0;
   },
 
+  /**
+   * Recover stale parse locks — reset emails stuck in 'parsing' for longer than maxMinutes.
+   * Returns count of recovered rows.
+   */
+  async recoverStaleLocks(maxMinutes = 10) {
+    const cutoff = new Date(Date.now() - maxMinutes * 60 * 1000).toISOString();
+    const { data, error } = await supabase
+      .from('weather_forecast_emails')
+      .update({ parse_status: 'queued', parse_error: null })
+      .eq('parse_status', 'parsing')
+      .lt('created_at', cutoff)
+      .select('id');
+
+    if (error) {
+      logger.error('Failed to recover stale locks', { error: error.message });
+      return 0;
+    }
+
+    return data?.length || 0;
+  },
+
   // ========== WEATHER_EXPERT_FORECASTS ==========
 
   /**
@@ -192,7 +213,7 @@ export const forecastEmailRepository = {
   async insertExpertForecast(forecast) {
     const { data, error } = await supabase
       .from('weather_expert_forecasts')
-      .upsert(forecast, { onConflict: 'email_id,area_id,forecast_date' })
+      .upsert(forecast, { onConflict: 'area_id,forecast_date' })
       .select()
       .single();
 

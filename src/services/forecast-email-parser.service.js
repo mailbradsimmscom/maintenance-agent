@@ -25,6 +25,11 @@ const openai = new OpenAI({ apiKey: config.openai.apiKey, timeout: 120000 });
 
 const FT_TO_M = 0.3048;
 
+// Strip unpaired unicode surrogate escapes that cause JSON.parse to fail
+function sanitizeLlmJson(str) {
+  return str.replace(/\\u[dD][89a-fA-F][0-9a-fA-F]{2}(?!\\u[dD][c-fC-F][0-9a-fA-F]{2})/g, '');
+}
+
 // 16-point → 8-point compass bucketing (each maps to nearest 8-point)
 const COMPASS_BUCKET = {
   N: 'N', NNE: 'NE', NE: 'NE', ENE: 'NE', E: 'E', ESE: 'E',
@@ -355,7 +360,7 @@ RULES:
       preview: content.substring(0, 200),
     });
 
-    const parsed = JSON.parse(content);
+    const parsed = JSON.parse(sanitizeLlmJson(content));
 
     // Auto-fix positive Caribbean longitudes
     for (const section of (parsed.sections || [])) {
@@ -632,7 +637,7 @@ Each area must have exactly ${dates.length} entries for dates: ${dates.join(', '
     const content = response.choices[0]?.message?.content || '';
     logger.info('Step 3 (render) complete', { length: content.length, areaCount: areaDescriptions.length });
 
-    const parsed = JSON.parse(content);
+    const parsed = JSON.parse(sanitizeLlmJson(content));
     return parsed.areas || {};
   },
 

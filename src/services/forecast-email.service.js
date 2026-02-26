@@ -125,17 +125,16 @@ export const forecastEmailService = {
         }
       }
 
-      // Step 3: Fire-and-forget parsing — cap concurrency at 4
-      // Do NOT await — let parsing run in background so the HTTP response returns immediately
-      const PARSE_CONCURRENCY = 4;
-      const parseInBatches = async () => {
-        for (let i = 0; i < emailsToProcess.length; i += PARSE_CONCURRENCY) {
-          const batch = emailsToProcess.slice(i, i + PARSE_CONCURRENCY);
-          await Promise.allSettled(batch.map(email => this._parseInBackground(email)));
-        }
-      };
-      parseInBatches().catch(err => logger.error('Batch parsing failed', { error: err.message }));
+      // Step 3: Parse emails synchronously (v4 is fast enough to await)
       results.parseTriggered = emailsToProcess.length;
+      results.parseResults = [];
+      for (const email of emailsToProcess) {
+        const parseResult = await this._parseEmail(email);
+        results.parseResults.push(parseResult || { emailId: email.id, forecastsWritten: 0 });
+      }
+      results.totalForecastsWritten = results.parseResults.reduce(
+        (sum, r) => sum + (r.forecastsWritten || 0), 0
+      );
 
       // Step 4: Cleanup old emails
       await this._cleanup();
@@ -152,24 +151,24 @@ export const forecastEmailService = {
   /**
    * Parse an email in the background with job lock protection.
    */
-  async _parseInBackground(email) {
+  async _parseEmail(email) {
     try {
-      // Acquire lock
       const locked = await forecastEmailRepository.acquireParseLock(email.id);
       if (!locked) {
         logger.debug('Could not acquire parse lock, skipping', { emailId: email.id });
-        return;
+        return { emailId: email.id, forecastsWritten: 0, skipped: true };
       }
 
       const result = await forecastEmailParserService.parseAndMap(email);
-      logger.info('Background parse completed', {
+      logger.info('Parse completed', {
         emailId: email.id,
         subject: email.subject,
         forecastsWritten: result.forecastsWritten,
       });
+      return { emailId: email.id, ...result };
     } catch (err) {
-      logger.error('Background parse failed', { emailId: email.id, error: err.message });
-      // parseAndMap already marks as 'failed' internally
+      logger.error('Parse failed', { emailId: email.id, error: err.message });
+      return { emailId: email.id, forecastsWritten: 0, error: err.message };
     }
   },
 

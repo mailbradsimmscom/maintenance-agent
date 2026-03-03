@@ -325,15 +325,29 @@ export const forecastEmailService = {
 
     for (const email of emails) {
       try {
-        const userMessage = `Subject: ${email.subject}\n\n${email.raw_text}`;
+        // Extract issuance date from subject (e.g. "Tue3" → Tuesday the 3rd)
+        const issuanceDate = new Date(email.subject?.match(/\d+/)?.[0] ? Date.now() : Date.now()).toISOString().split('T')[0];
 
         const response = await openai.chat.completions.create({
-          model,
+          model: 'gpt-5.1',
+          temperature: 0,
+          top_p: 1,
+          max_completion_tokens: 6000,
           messages: [
             { role: 'system', content: STRUCTURING_SYSTEM_PROMPT },
-            { role: 'user', content: userMessage },
+            {
+              role: 'user',
+              content: `
+ISSUANCE DATE (ISO): ${issuanceDate}
+
+EMAIL SUBJECT:
+${email.subject}
+
+EMAIL BODY:
+${email.raw_text}
+              `,
+            },
           ],
-          max_completion_tokens: 4000,
         });
 
         const structuredText = response.choices[0]?.message?.content;

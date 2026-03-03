@@ -333,7 +333,7 @@ export const forecastEmailService = {
             { role: 'system', content: STRUCTURING_SYSTEM_PROMPT },
             { role: 'user', content: userMessage },
           ],
-          max_tokens: 4000,
+          max_completion_tokens: 4000,
           temperature: 0,
         });
 

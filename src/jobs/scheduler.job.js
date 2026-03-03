@@ -177,7 +177,6 @@ export const schedulerJob = {
       logger.info('Scheduled forecast email check completed', {
         found: result.emailsFound,
         ingested: result.emailsIngested,
-        parsed: result.emailsParsed,
         errors: result.errors.length,
       });
     } catch (error) {

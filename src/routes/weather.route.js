@@ -335,16 +335,10 @@ router.post('/forecast-email/check', async (req, res) => {
 
 /**
  * GET /api/weather/forecast-email/parse-progress
- * Poll for parse progress (frontend uses this after triggering check)
+ * Deprecated — parsing is now a separate concern
  */
 router.get('/forecast-email/parse-progress', async (req, res) => {
-  try {
-    const progress = await forecastEmailService.getParseProgress();
-    res.json({ success: true, data: progress });
-  } catch (error) {
-    logger.error('Failed to get parse progress', { error: error.message });
-    res.status(500).json({ success: false, error: error.message });
-  }
+  res.json({ success: true, data: { inProgress: false, message: 'Parsing disabled — ingestion only' } });
 });
 
 /**

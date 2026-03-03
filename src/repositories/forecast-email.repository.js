@@ -20,7 +20,7 @@ export const forecastEmailRepository = {
   async emailExists(gmailMessageId) {
     const { data, error } = await supabase
       .from('weather_forecast_emails')
-      .select('id, parse_status')
+      .select('id, parse_status, raw_text')
       .eq('gmail_message_id', gmailMessageId)
       .maybeSingle();
 
@@ -29,7 +29,7 @@ export const forecastEmailRepository = {
       throw error;
     }
 
-    return data; // null if not found, { id, parse_status } if found
+    return data; // null if not found, { id, parse_status, raw_text } if found
   },
 
   /**
@@ -46,7 +46,7 @@ export const forecastEmailRepository = {
         raw_text,
         forecast_date,
         region_tag,
-        parse_status: 'queued',
+        parse_status: 'ingested',
       })
       .select()
       .single();
@@ -58,6 +58,21 @@ export const forecastEmailRepository = {
 
     logger.info('Forecast email inserted', { id: data.id, subject, gmail_message_id });
     return data;
+  },
+
+  /**
+   * Update email content (re-ingest after failed attempt)
+   */
+  async updateEmailContent(emailId, updates) {
+    const { error } = await supabase
+      .from('weather_forecast_emails')
+      .update(updates)
+      .eq('id', emailId);
+
+    if (error) {
+      logger.error('Failed to update email content', { emailId, error: error.message });
+      throw error;
+    }
   },
 
   /**

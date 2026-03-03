@@ -131,16 +131,10 @@ export const forecastEmailService = {
         }
       }
 
-      // Step 3: Parse emails synchronously (v4 is fast enough to await)
-      results.parseTriggered = emailsToProcess.length;
+      // Parsing disabled — ingestion only (no LLM calls)
+      results.parseTriggered = 0;
       results.parseResults = [];
-      for (const email of emailsToProcess) {
-        const parseResult = await this._parseEmail(email);
-        results.parseResults.push(parseResult || { emailId: email.id, forecastsWritten: 0 });
-      }
-      results.totalForecastsWritten = results.parseResults.reduce(
-        (sum, r) => sum + (r.forecastsWritten || 0), 0
-      );
+      results.totalForecastsWritten = 0;
 
       // Step 4: Cleanup old emails
       await this._cleanup();

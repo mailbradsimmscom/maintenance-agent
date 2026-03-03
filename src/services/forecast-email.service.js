@@ -162,6 +162,8 @@ Do not omit locations.
 
 Maintain professional marine tone.
 
+IMPORTANT: The subject line is the authoritative source for the issuance date and day of week. Never ask clarifying questions. Always produce the full structured output in a single response. Do not truncate or summarize.
+
 Now transform the following forecast email:`;
 
 export const forecastEmailService = {
@@ -325,9 +327,6 @@ export const forecastEmailService = {
 
     for (const email of emails) {
       try {
-        // Extract issuance date from subject (e.g. "Tue3" → Tuesday the 3rd)
-        const issuanceDate = new Date(email.subject?.match(/\d+/)?.[0] ? Date.now() : Date.now()).toISOString().split('T')[0];
-
         const response = await openai.chat.completions.create({
           model,
           max_completion_tokens: 6000,
@@ -335,15 +334,7 @@ export const forecastEmailService = {
             { role: 'system', content: STRUCTURING_SYSTEM_PROMPT },
             {
               role: 'user',
-              content: `
-ISSUANCE DATE (ISO): ${issuanceDate}
-
-EMAIL SUBJECT:
-${email.subject}
-
-EMAIL BODY:
-${email.raw_text}
-              `,
+              content: `Subject: ${email.subject}\n\n${email.raw_text}`,
             },
           ],
         });

@@ -353,7 +353,9 @@ export const forecastEmailService = {
     for (const email of emails) {
       try {
         const response = await openai.chat.completions.create({
-          model,
+          model: 'gpt-4.1',
+          temperature: 0,
+          top_p: 1,
           max_completion_tokens: 6000,
           messages: [
             { role: 'system', content: STRUCTURING_SYSTEM_PROMPT },

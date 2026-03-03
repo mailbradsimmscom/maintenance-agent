@@ -16,7 +16,32 @@ const config = getConfig();
 const env = getEnv();
 const logger = createLogger('forecast-email-service');
 
-const STRUCTURING_SYSTEM_PROMPT = `You are a marine forecast structuring engine.
+const STRUCTURING_SYSTEM_PROMPT = `Produce the full structured output immediately. Do not ask questions, request confirmations, or offer choices. Do not comment on length or formatting constraints. Just output the structured forecast.
+
+OUTPUT FORMAT IS STRICT MACHINE-PARSE STYLE.
+
+Use only plain text.
+Do not use Markdown.
+Do not use bold.
+Do not use tables.
+Do not use separators.
+Do not use decorative characters.
+
+Every section must begin with an uppercase token followed by a colon.
+
+Allowed tokens are:
+
+SECTION:
+CORRIDOR:
+SUGGEST:
+DATE:
+WIND:
+SEAS:
+SWELL:
+PRECIP:
+KEY:
+
+You are a marine forecast structuring engine.
 
 Transform the following Caribbean marine forecast email into a fully normalized structured format using the exact rules below.
 

@@ -334,7 +334,6 @@ export const forecastEmailService = {
             { role: 'user', content: userMessage },
           ],
           max_completion_tokens: 4000,
-          temperature: 0,
         });
 
         const structuredText = response.choices[0]?.message?.content;

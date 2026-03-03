@@ -329,7 +329,7 @@ export const forecastEmailService = {
         const issuanceDate = new Date(email.subject?.match(/\d+/)?.[0] ? Date.now() : Date.now()).toISOString().split('T')[0];
 
         const response = await openai.chat.completions.create({
-          model: 'gpt-5.1',
+          model,
           temperature: 0,
           top_p: 1,
           max_completion_tokens: 6000,

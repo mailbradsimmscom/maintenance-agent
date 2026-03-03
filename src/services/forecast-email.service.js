@@ -373,8 +373,11 @@ export const forecastEmailService = {
           continue;
         }
 
-        // Store structured forecast and mark as parsed
-        await forecastEmailRepository.storeStructuredForecast(email.id, structuredText);
+        // Extract corridors from COMBINED SAILING CORRIDORS (Key) section
+        const corridors = this._extractCorridors(structuredText);
+
+        // Store structured forecast, corridors, and mark as parsed
+        await forecastEmailRepository.storeStructuredForecast(email.id, structuredText, null, corridors);
         await forecastEmailRepository.updateParseStatus(email.id, 'parsed');
 
         logger.info('Email structured successfully', {
@@ -401,6 +404,20 @@ export const forecastEmailService = {
     const dashMatch = subject.match(/[-–]\s*(.+)$/);
     if (dashMatch) return dashMatch[1].trim();
     return subject.trim();
+  },
+
+  /**
+   * Extract corridor names from the COMBINED SAILING CORRIDORS (Key) section.
+   * Returns a JSON array of corridor names (including subzones).
+   */
+  _extractCorridors(structuredText) {
+    const keySection = structuredText.match(/COMBINED SAILING CORRIDORS \(Key\)\s*\n([\s\S]*?)$/i);
+    if (!keySection) return [];
+
+    return keySection[1]
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0 && !line.startsWith('SECTION') && !line.startsWith('KEY:'));
   },
 
   /**

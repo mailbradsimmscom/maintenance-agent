@@ -160,9 +160,10 @@ export const forecastEmailRepository = {
   /**
    * Store structured forecast JSON on the email row (Step 1 checkpoint)
    */
-  async storeStructuredForecast(emailId, structured, emailHash = null) {
+  async storeStructuredForecast(emailId, structured, emailHash = null, corridors = null) {
     const updates = { structured_forecast: structured };
     if (emailHash) updates.email_hash = emailHash;
+    if (corridors) updates.corridors = corridors;
 
     const { error } = await supabase
       .from('weather_forecast_emails')

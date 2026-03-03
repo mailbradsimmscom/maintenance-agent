@@ -348,6 +348,31 @@ router.post('/forecast-email/parse', async (req, res) => {
 });
 
 /**
+ * POST /api/weather/forecast-email/backfill-corridors
+ * One-off: extract corridors from existing structured_forecast data (no LLM call)
+ */
+router.post('/forecast-email/backfill-corridors', async (req, res) => {
+  try {
+    const emails = await forecastEmailRepository.getRecentEmails(50);
+    let updated = 0;
+    for (const email of emails) {
+      if (email.parse_status !== 'parsed') continue;
+      const sf = await forecastEmailRepository.getStructuredForecast(email.id);
+      if (!sf) continue;
+      const corridors = forecastEmailService._extractCorridors(sf);
+      if (corridors.length > 0) {
+        await forecastEmailRepository.storeStructuredForecast(email.id, sf, null, corridors);
+        updated++;
+      }
+    }
+    res.json({ success: true, data: { updated } });
+  } catch (error) {
+    logger.error('Failed to backfill corridors', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
  * GET /api/weather/forecast-email/parse-progress
  * Returns structuring progress counts
  */

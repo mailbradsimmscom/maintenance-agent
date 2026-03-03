@@ -233,14 +233,13 @@ export const forecastEmailService = {
   },
 
   /**
-   * Clean up old emails using configured retention
+   * Clean up old emails — keep the 6 most recent (full rolling week Mon-Sat)
    */
   async _cleanup() {
     try {
-      const days = config.forecastEmail.retentionDays;
-      const deleted = await forecastEmailRepository.deleteOlderThan(days);
+      const deleted = await forecastEmailRepository.deleteOldEmails(6);
       if (deleted > 0) {
-        logger.info('Cleaned up old forecast emails', { deleted, retentionDays: days });
+        logger.info('Cleaned up old forecast emails', { deleted, kept: 6 });
       }
     } catch (err) {
       logger.error('Failed to clean up old emails', { error: err.message });

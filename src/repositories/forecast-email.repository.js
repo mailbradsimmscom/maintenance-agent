@@ -105,25 +105,39 @@ export const forecastEmailRepository = {
   },
 
   /**
-   * Delete emails older than N days (cascades to expert_forecasts via FK)
+   * Delete oldest emails, keeping the most recent `keepCount`.
+   * FK CASCADE cleans up their weather_expert_forecasts rows.
    */
-  async deleteOlderThan(days) {
-    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+  async deleteOldEmails(keepCount = 6) {
+    // Get all emails ordered by received_at DESC
+    const { data: allEmails, error: fetchError } = await supabase
+      .from('weather_forecast_emails')
+      .select('id, received_at')
+      .order('received_at', { ascending: false });
+
+    if (fetchError) {
+      logger.error('Failed to fetch emails for retention', { error: fetchError.message });
+      throw fetchError;
+    }
+
+    if (!allEmails || allEmails.length <= keepCount) return 0;
+
+    const idsToDelete = allEmails.slice(keepCount).map(e => e.id);
 
     const { data, error } = await supabase
       .from('weather_forecast_emails')
       .delete()
-      .lt('received_at', cutoff)
+      .in('id', idsToDelete)
       .select('id');
 
     if (error) {
-      logger.error('Failed to delete old emails', { days, error: error.message });
+      logger.error('Failed to delete old emails', { keepCount, error: error.message });
       throw error;
     }
 
     const count = data?.length || 0;
     if (count > 0) {
-      logger.info('Deleted old forecast emails', { count, cutoffDays: days });
+      logger.info('Deleted old forecast emails', { count, kept: keepCount });
     }
     return count;
   },
@@ -213,7 +227,7 @@ export const forecastEmailRepository = {
   async insertExpertForecast(forecast) {
     const { data, error } = await supabase
       .from('weather_expert_forecasts')
-      .upsert(forecast, { onConflict: 'area_id,forecast_date' })
+      .upsert(forecast, { onConflict: 'email_id,area_id,forecast_date' })
       .select()
       .single();
 
@@ -284,11 +298,13 @@ export const forecastEmailRepository = {
 
   /**
    * Get change summaries for all areas (for weather-areas listing page)
+   * Joins email received_at for accurate "Updated X ago" display.
+   * Filters out past-date bullets from change summary JSON arrays.
    */
   async getChangeSummaries() {
     const { data, error } = await supabase
       .from('weather_expert_forecasts')
-      .select('area_id, area_change_summary, created_at, weather_areas!inner(name, is_active, deleted_at)')
+      .select('area_id, area_change_summary, created_at, weather_forecast_emails!inner(received_at), weather_areas!inner(name, is_active, deleted_at)')
       .not('area_change_summary', 'is', null)
       .eq('weather_areas.is_active', true)
       .is('weather_areas.deleted_at', null)
@@ -301,19 +317,68 @@ export const forecastEmailRepository = {
 
     if (!data || data.length === 0) return [];
 
+    const todayStr = new Date().toISOString().split('T')[0];
+
     // Deduplicate: one summary per area (most recent)
     const seen = new Map();
     for (const row of data) {
       if (!seen.has(row.area_id)) {
+        // Filter past dates from the summary JSON array
+        const filtered = this._filterPastDates(row.area_change_summary, todayStr);
+        if (!filtered) continue; // all bullets were past dates — skip area
+
         seen.set(row.area_id, {
           area_id: row.area_id,
           area_name: row.weather_areas?.name || 'Unknown',
-          summary: row.area_change_summary,
-          updated_at: row.created_at,
+          summary: filtered,
+          updated_at: row.weather_forecast_emails?.received_at || row.created_at,
         });
       }
     }
     return Array.from(seen.values());
+  },
+
+  /**
+   * Filter past-date bullets from a change summary.
+   * Summary is a JSON array string like: [{"label":"Feb 25","text":"..."},{"label":"Mar 03","text":"..."}]
+   * Returns filtered JSON string, or null if all bullets were filtered out.
+   */
+  _filterPastDates(summary, todayStr) {
+    if (!summary) return null;
+    try {
+      const bullets = JSON.parse(summary);
+      if (!Array.isArray(bullets)) return summary; // not the expected format, pass through
+
+      const filtered = bullets.filter(b => {
+        if (!b.label) return true; // keep bullets without a date label
+        // Parse label like "Feb 25" or "Mar 03" into a date for the current year
+        const parsed = this._parseBulletDate(b.label);
+        if (!parsed) return true; // can't parse — keep it
+        return parsed >= todayStr;
+      });
+
+      if (filtered.length === 0) return null;
+      return JSON.stringify(filtered);
+    } catch {
+      // Old plain-text summaries — pass through unchanged
+      return summary;
+    }
+  },
+
+  /**
+   * Parse a bullet label like "Feb 25" or "Mar 03" into YYYY-MM-DD for comparison.
+   * Returns null if parsing fails.
+   */
+  _parseBulletDate(label) {
+    const months = { Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06',
+                     Jul: '07', Aug: '08', Sep: '09', Oct: '10', Nov: '11', Dec: '12' };
+    const match = label.match(/^([A-Z][a-z]{2})\s*(\d{1,2})$/);
+    if (!match) return null;
+    const mon = months[match[1]];
+    if (!mon) return null;
+    const day = match[2].padStart(2, '0');
+    const year = new Date().getFullYear();
+    return `${year}-${mon}-${day}`;
   },
 
   /**

@@ -1,17 +1,168 @@
 /**
- * Forecast Email Ingestion Service
- * Gmail → DB. No LLM calls. No parsing.
- * Searches Gmail for forecast emails, stores them in weather_forecast_emails.
+ * Forecast Email Service
+ * Gmail → DB ingestion, then LLM structuring via OpenAI.
+ * Searches Gmail for forecast emails, stores them in weather_forecast_emails,
+ * then sends unstructured emails to OpenAI to populate structured_forecast.
  * Keeps 6 most recent emails (rolling week Mon-Sat).
  */
 
+import OpenAI from 'openai';
 import { gmailRepository } from '../repositories/gmail.repository.js';
 import { forecastEmailRepository } from '../repositories/forecast-email.repository.js';
-import { getConfig } from '../config/env.js';
+import { getConfig, getEnv } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
 
 const config = getConfig();
+const env = getEnv();
 const logger = createLogger('forecast-email-service');
+
+const STRUCTURING_SYSTEM_PROMPT = `You are a marine forecast structuring engine.
+
+Transform the following Caribbean marine forecast email into a fully normalized structured format using the exact rules below.
+
+STRUCTURE RULES (MANDATORY)
+1. GENERAL COMMENTARY SECTION (ALWAYS FIRST)
+
+Create a section titled:
+
+GENERAL COMMENTARY (Applies to All Corridors)
+
+This must:
+
+Summarize the macro pattern (high pressure, trades, swell drivers).
+
+Include outlook information.
+
+Include precip timing notes.
+
+Include any "no eastbound windows" type global notes.
+
+Do NOT repeat corridor-specific routing guidance here.
+
+2. CORRIDOR STRUCTURE
+
+Organize output strictly by combined sailing corridors.
+
+Each corridor must follow this format:
+
+CORRIDOR: [Corridor Name]
+
+Suggest
+
+Include routing direction guidance.
+
+Include diurnal acceleration notes.
+
+Include "too rough" / "salty" commentary.
+
+Move any operational notes here.
+
+Do NOT include raw wind numbers here.
+
+3. DATE NORMALIZATION (CRITICAL)
+
+From the subject line extract the issuance date.
+
+If subject says:
+"Wx Update, E Caribbean, Tue3 7am"
+
+Then:
+
+Today = Tuesday the 3rd – 5:00 AM
+
+Tonight = Tuesday the 3rd – 5:00 PM
+
+Rules:
+
+Today must always be labeled:
+[Full Weekday], [Month if known] [Day] – 5:00 AM
+
+Tonight must always be labeled:
+[Full Weekday], [Month if known] [Day] – 5:00 PM
+
+All other days must be written as:
+[Full Weekday] the [Day]
+
+Never use shorthand like "Wed4".
+
+Always expand ranges into individual days if possible.
+
+4. WITHIN EACH DATE BLOCK USE EXACT ORDER
+
+For every date, use this order exactly:
+
+Wind:
+Seas (wind-driven):
+Swell:
+Precip:
+
+Never combine Seas and Swell.
+Never combine Wind and Seas.
+Always separate them.
+
+If seas are implied from wind (e.g. "/ 5–8'"), move them to Seas.
+
+If swell is defined in a separate section, map it correctly to that corridor and day.
+
+If swell only applies regionally (e.g. Trinidad–Guadeloupe band), attach appropriately.
+
+5. CORRIDOR INTEGRATION RULES
+
+Some corridors combine subzones.
+
+For example:
+Mona Passage–Dominican Republic includes:
+
+Mona Passage
+
+East DR (near Samaná)
+
+West DR (Rio San Juan–Luperón)
+
+If subzones exist:
+
+Preserve subzone breakdown inside Wind and Seas.
+
+Do NOT flatten them.
+
+6. PRECIP HANDLING
+
+If precip is given as a range (e.g., today–Sat7):
+
+Expand it into each individual day.
+
+If email states:
+"Coverage highest overnights into mornings"
+
+Mention that in Suggest or Tonight block.
+
+7. AT END CREATE:
+
+COMBINED SAILING CORRIDORS (Key)
+
+List every corridor used in this output.
+
+If a corridor includes subzones, indent them beneath it.
+
+8. STYLE RULES
+
+Do not summarize away detail.
+
+Preserve numeric fidelity exactly.
+
+Preserve gust values.
+
+Preserve swell periods.
+
+Do not editorialize.
+
+Do not add new forecast interpretation.
+
+Do not omit locations.
+
+Maintain professional marine tone.
+
+Now transform the following forecast email:`;
 
 export const forecastEmailService = {
   /**
@@ -126,6 +277,15 @@ export const forecastEmailService = {
       results.errors.push({ error: err.message });
     }
 
+    // Structure any emails missing structured_forecast
+    try {
+      const structureResult = await this.structureEmails();
+      results.structured = structureResult.structured;
+    } catch (err) {
+      logger.error('Structuring step failed', { error: err.message });
+      results.structured = 0;
+    }
+
     logger.info('Forecast email check completed', results);
     return results;
   },
@@ -142,6 +302,66 @@ export const forecastEmailService = {
       recentEmails: recentEmails.length,
       lastEmail: recentEmails[0] || null,
     };
+  },
+
+  /**
+   * Send unstructured emails to OpenAI for LLM structuring.
+   * Populates structured_forecast and sets parse_status='parsed'.
+   * @returns {Object} { structured, skipped, errors }
+   */
+  async structureEmails() {
+    const results = { structured: 0, skipped: 0, errors: [] };
+
+    const emails = await forecastEmailRepository.getEmailsNeedingStructure();
+    if (emails.length === 0) {
+      logger.info('No emails need structuring');
+      return results;
+    }
+
+    logger.info('Structuring emails with LLM', { count: emails.length });
+
+    const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY, timeout: 120000 });
+    const model = config.openai.model;
+
+    for (const email of emails) {
+      try {
+        const userMessage = `Subject: ${email.subject}\n\n${email.raw_text}`;
+
+        const response = await openai.chat.completions.create({
+          model,
+          messages: [
+            { role: 'system', content: STRUCTURING_SYSTEM_PROMPT },
+            { role: 'user', content: userMessage },
+          ],
+          max_tokens: 4000,
+          temperature: 0,
+        });
+
+        const structuredText = response.choices[0]?.message?.content;
+        if (!structuredText) {
+          logger.warn('Empty LLM response for email', { emailId: email.id });
+          results.errors.push({ emailId: email.id, error: 'Empty LLM response' });
+          continue;
+        }
+
+        // Store structured forecast and mark as parsed
+        await forecastEmailRepository.storeStructuredForecast(email.id, structuredText);
+        await forecastEmailRepository.updateParseStatus(email.id, 'parsed');
+
+        logger.info('Email structured successfully', {
+          emailId: email.id,
+          subject: email.subject,
+          responseLength: structuredText.length,
+        });
+        results.structured++;
+      } catch (err) {
+        logger.error('Failed to structure email', { emailId: email.id, error: err.message });
+        results.errors.push({ emailId: email.id, error: err.message });
+      }
+    }
+
+    logger.info('Email structuring completed', results);
+    return results;
   },
 
   /**

@@ -234,6 +234,25 @@ export const forecastEmailRepository = {
     return data?.length || 0;
   },
 
+  /**
+   * Get emails that need LLM structuring (have raw_text but no structured_forecast)
+   */
+  async getEmailsNeedingStructure() {
+    const { data, error } = await supabase
+      .from('weather_forecast_emails')
+      .select('id, subject, raw_text')
+      .is('structured_forecast', null)
+      .not('raw_text', 'is', null)
+      .order('received_at', { ascending: false });
+
+    if (error) {
+      logger.error('Failed to get emails needing structure', { error: error.message });
+      throw error;
+    }
+
+    return data || [];
+  },
+
   // ========== WEATHER_EXPERT_FORECASTS ==========
 
   /**

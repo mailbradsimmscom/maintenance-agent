@@ -334,11 +334,43 @@ router.post('/forecast-email/check', async (req, res) => {
 });
 
 /**
+ * POST /api/weather/forecast-email/parse
+ * Manual trigger: run LLM structuring on unstructured emails
+ */
+router.post('/forecast-email/parse', async (req, res) => {
+  try {
+    const result = await forecastEmailService.structureEmails();
+    res.json({ success: true, data: result });
+  } catch (error) {
+    logger.error('Failed to parse forecast emails', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
  * GET /api/weather/forecast-email/parse-progress
- * Deprecated — parsing is now a separate concern
+ * Returns structuring progress counts
  */
 router.get('/forecast-email/parse-progress', async (req, res) => {
-  res.json({ success: true, data: { inProgress: false, message: 'Parsing disabled — ingestion only' } });
+  try {
+    const emails = await forecastEmailRepository.getRecentEmails(50);
+    const total = emails.length;
+    const structured = emails.filter(e => e.parse_status === 'parsed').length;
+    const needsStructure = emails.filter(e => e.parse_status === 'ingested').length;
+
+    res.json({
+      success: true,
+      data: {
+        total,
+        structured,
+        needsStructure,
+        inProgress: false,
+      }
+    });
+  } catch (error) {
+    logger.error('Failed to get parse progress', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 /**

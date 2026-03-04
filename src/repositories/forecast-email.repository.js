@@ -241,13 +241,121 @@ export const forecastEmailRepository = {
   async getEmailsNeedingStructure() {
     const { data, error } = await supabase
       .from('weather_forecast_emails')
-      .select('id, subject, raw_text')
+      .select('id, subject, raw_text, received_at')
       .is('structured_forecast', null)
       .not('raw_text', 'is', null)
       .order('received_at', { ascending: false });
 
     if (error) {
       logger.error('Failed to get emails needing structure', { error: error.message });
+      throw error;
+    }
+
+    return data || [];
+  },
+
+  /**
+   * Store corridor-level structured JSON on the email row
+   */
+  async storeCorridorData(emailId, corridorData) {
+    const { error } = await supabase
+      .from('weather_forecast_emails')
+      .update({ corridor_data: corridorData })
+      .eq('id', emailId);
+
+    if (error) {
+      logger.error('Failed to store corridor_data', { emailId, error: error.message });
+      throw error;
+    }
+  },
+
+  /**
+   * Get emails that have corridor_data ready for fan-out to weather_forecasts
+   */
+  async getEmailsWithCorridorData() {
+    const { data, error } = await supabase
+      .from('weather_forecast_emails')
+      .select('id, subject, corridor_data, corridors_included')
+      .not('corridor_data', 'is', null)
+      .order('received_at', { ascending: false });
+
+    if (error) {
+      logger.error('Failed to get emails with corridor data', { error: error.message });
+      throw error;
+    }
+
+    return data || [];
+  },
+
+  /**
+   * Get emails that have structured_forecast and corridors_included but no corridor_data
+   */
+  async getEmailsNeedingCorridorData() {
+    const { data, error } = await supabase
+      .from('weather_forecast_emails')
+      .select('id, subject, received_at, structured_forecast, corridors_included')
+      .is('corridor_data', null)
+      .not('structured_forecast', 'is', null)
+      .not('corridors_included', 'is', null)
+      .order('received_at', { ascending: false });
+
+    if (error) {
+      logger.error('Failed to get emails needing corridor data', { error: error.message });
+      throw error;
+    }
+
+    return data || [];
+  },
+
+  /**
+   * Store which corridors (from weather_areas) are relevant to this email
+   */
+  async updateCorridorsIncluded(emailId, corridorsIncluded) {
+    const { error } = await supabase
+      .from('weather_forecast_emails')
+      .update({ corridors_included: corridorsIncluded })
+      .eq('id', emailId);
+
+    if (error) {
+      logger.error('Failed to update corridors_included', { emailId, error: error.message });
+      throw error;
+    }
+  },
+
+  /**
+   * Get the corridor list from the most recent email that has corridors
+   */
+  async getLatestCorridors() {
+    const { data, error } = await supabase
+      .from('weather_forecast_emails')
+      .select('corridors')
+      .not('corridors', 'is', null)
+      .order('received_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      logger.error('Failed to get latest corridors', { error: error.message });
+      throw error;
+    }
+
+    return data?.corridors || [];
+  },
+
+  /**
+   * Get the two most recent emails with corridor_data for corridor display.
+   */
+  async getEmailsForCorridorDisplay() {
+    const { data, error } = await supabase
+      .from('weather_forecast_emails')
+      .select('id, subject, received_at, structured_forecast, corridor_data, corridors_included')
+      .not('corridor_data', 'is', null)
+      .not('corridors_included', 'is', null)
+      .order('received_at', { ascending: false })
+      .limit(2);
+
+    if (error) {
+      logger.error('Failed to get emails for corridor display', { error: error.message });
       throw error;
     }
 

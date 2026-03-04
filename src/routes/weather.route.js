@@ -11,7 +11,6 @@ import { weatherForecastService } from '../services/weather-forecast.service.js'
 import { weatherCreditsService } from '../services/weather-credits.service.js';
 import { forecastEmailService } from '../services/forecast-email.service.js';
 import { forecastEmailRepository } from '../repositories/forecast-email.repository.js';
-import { forecastEmailParserService } from '../services/forecast-email-parser.service.js';
 import { getEnv } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
 
@@ -95,18 +94,18 @@ router.post('/areas', async (req, res) => {
         logger.error('Auto-fetch failed', { areaId: area.id, error: err.message });
       });
 
-    // Auto-parse expert forecasts from latest email for new area (background)
-    forecastEmailParserService.parseForNewArea(area)
-      .then(result => {
-        if (result.forecastsWritten > 0) {
-          logger.info('Expert forecasts generated for new area', { areaId: area.id, name, forecastsWritten: result.forecastsWritten });
-        } else {
-          logger.info('No expert forecasts available for new area', { areaId: area.id, name });
+    // Auto-assign corridor via LLM, then fan-out existing expert data (background)
+    weatherAreaService.assignCorridor(area)
+      .then(async (corridor) => {
+        if (!corridor) return;
+        logger.info('Corridor assigned', { areaId: area.id, corridor });
+        // Fan out latest email's corridor_data to this new area
+        const result = await forecastEmailService.fanOutForNewArea(area.id, corridor);
+        if (result.rowsWritten > 0) {
+          logger.info('Expert data fanned out to new area', { areaId: area.id, corridor, rows: result.rowsWritten });
         }
       })
-      .catch(err => {
-        logger.error('Expert forecast parse failed for new area', { areaId: area.id, error: err.message });
-      });
+      .catch(err => logger.error('Corridor assignment/fan-out failed', { areaId: area.id, error: err.message }));
 
     res.status(201).json({ success: true, data: area, message: 'Area created. Weather data is being fetched...' });
   } catch (error) {
@@ -373,6 +372,76 @@ router.post('/forecast-email/backfill-corridors', async (req, res) => {
 });
 
 /**
+ * POST /api/weather/areas/backfill-corridors
+ * One-off: assign corridors to all active areas that don't have one
+ */
+router.post('/areas/backfill-corridors', async (req, res) => {
+  try {
+    const areas = await weatherAreaService.getAllAreas();
+    const needsCorridor = areas.filter(a => !a.corridor);
+    const results = { updated: 0, errors: [] };
+
+    for (const area of needsCorridor) {
+      try {
+        const corridor = await weatherAreaService.assignCorridor(area);
+        if (corridor) results.updated++;
+      } catch (err) {
+        results.errors.push({ areaId: area.id, name: area.name, error: err.message });
+        logger.error('Backfill corridor failed for area', { areaId: area.id, error: err.message });
+      }
+    }
+
+    logger.info('Corridor backfill complete', { total: needsCorridor.length, updated: results.updated, errors: results.errors.length });
+    res.json({ success: true, data: results });
+  } catch (error) {
+    logger.error('Failed to backfill corridors', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * POST /api/weather/forecast-email/fan-out-forecasts
+ * Step 4b: Fan out corridor_data to per-area rows in weather_forecasts
+ */
+router.post('/forecast-email/fan-out-forecasts', async (req, res) => {
+  try {
+    const result = await forecastEmailService.fanOutToForecasts();
+    res.json({ success: true, data: result });
+  } catch (error) {
+    logger.error('Failed to fan out forecasts', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * POST /api/weather/forecast-email/extract-corridor-data
+ * Step 4a: Extract corridor-level JSON from structured emails
+ */
+router.post('/forecast-email/extract-corridor-data', async (req, res) => {
+  try {
+    const result = await forecastEmailService.extractCorridorData();
+    res.json({ success: true, data: result });
+  } catch (error) {
+    logger.error('Failed to extract corridor data', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * POST /api/weather/forecast-email/backfill-corridors-included
+ * One-off: stamp corridors_included on all existing emails
+ */
+router.post('/forecast-email/backfill-corridors-included', async (req, res) => {
+  try {
+    const result = await forecastEmailService.backfillCorridorsIncluded();
+    res.json({ success: true, data: result });
+  } catch (error) {
+    logger.error('Failed to backfill corridors_included', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
  * GET /api/weather/forecast-email/parse-progress
  * Returns structuring progress counts
  */
@@ -423,17 +492,9 @@ router.get('/data-status', async (req, res) => {
     const lastFetches = areas.map(a => a.last_fetch).filter(Boolean).sort().reverse();
     const lastWeatherFetch = lastFetches[0] || null;
 
-    // Last expert email: most recent parsed email that produced forecasts for active areas
-    const recentEmails = await forecastEmailRepository.getRecentEmails(20);
-    let lastParsed = null;
-    for (const email of recentEmails) {
-      if (email.parse_status !== 'parsed' && email.parse_status !== 'partial') continue;
-      const hasForecasts = await forecastEmailRepository.emailHasActiveForecasts(email.id);
-      if (hasForecasts) {
-        lastParsed = email;
-        break;
-      }
-    }
+    // Last expert email: most recent parsed email
+    const recentEmails = await forecastEmailRepository.getRecentEmails(5);
+    const lastParsed = recentEmails.find(e => e.parse_status === 'parsed' || e.parse_status === 'partial') || null;
 
     res.json({
       success: true,
@@ -444,13 +505,25 @@ router.get('/data-status', async (req, res) => {
         expertEmail: lastParsed ? {
           subject: lastParsed.subject,
           receivedAt: lastParsed.received_at,
-          forecastDate: lastParsed.forecast_date,
-          parsedAt: lastParsed.created_at,
         } : null,
       }
     });
   } catch (error) {
     logger.error('Failed to get data status', { error: error.message });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * GET /api/weather/corridor-display
+ * Corridor display data: general commentary, per-corridor suggest + trend
+ */
+router.get('/corridor-display', async (req, res) => {
+  try {
+    const data = await forecastEmailService.getCorridorDisplay();
+    res.json({ success: true, data });
+  } catch (error) {
+    logger.error('Failed to get corridor display', { error: error.message });
     res.status(500).json({ success: false, error: error.message });
   }
 });

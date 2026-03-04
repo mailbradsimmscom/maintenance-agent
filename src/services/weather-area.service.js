@@ -3,7 +3,10 @@
  * Business logic for managing weather areas (CRUD)
  */
 
+import OpenAI from 'openai';
 import { weatherRepository } from '../repositories/weather.repository.js';
+import { forecastEmailRepository } from '../repositories/forecast-email.repository.js';
+import { getConfig } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('weather-area-service');
@@ -81,6 +84,49 @@ export const weatherAreaService = {
   async deleteArea(id) {
     logger.info('Deleting weather area', { id });
     return weatherRepository.deleteArea(id);
+  },
+
+  /**
+   * Assign a corridor to a weather area via LLM matching
+   * @param {Object} area - { id, name, latitude, longitude }
+   * @returns {Promise<string|null>} Matched corridor name or null
+   */
+  async assignCorridor(area) {
+    const corridors = await forecastEmailRepository.getLatestCorridors();
+    if (!corridors || corridors.length === 0) {
+      logger.info('No corridors available for assignment', { areaId: area.id });
+      return null;
+    }
+
+    const config = getConfig();
+    const openai = new OpenAI({ apiKey: config.openai.apiKey, timeout: 30000 });
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4.1',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a Caribbean marine geography expert. Given a location, pick the single best matching corridor from the provided list. Reply with ONLY the exact corridor name, nothing else.'
+        },
+        {
+          role: 'user',
+          content: `Location: ${area.name} (${area.latitude}, ${area.longitude})\n\nCorridors:\n${corridors.join('\n')}`
+        }
+      ],
+      temperature: 0,
+      max_tokens: 100,
+    });
+
+    const matched = response.choices[0]?.message?.content?.trim();
+
+    if (!matched || !corridors.includes(matched)) {
+      logger.warn('LLM corridor match not in list', { areaId: area.id, matched, corridors });
+      return null;
+    }
+
+    await weatherRepository.updateCorridor(area.id, matched);
+    logger.info('Corridor assigned', { areaId: area.id, name: area.name, corridor: matched });
+    return matched;
   },
 
   /**

@@ -221,6 +221,39 @@ export const weatherRepository = {
     return data;
   },
 
+  // ========== CORRIDOR MAPPING ==========
+  async getActiveCorridors() {
+    const { data, error } = await supabase
+      .from('weather_areas')
+      .select('corridor')
+      .is('deleted_at', null)
+      .eq('is_active', true)
+      .not('corridor', 'is', null);
+
+    if (error) {
+      logger.error('Failed to get active corridors', { error: error.message });
+      throw error;
+    }
+
+    // Deduplicate
+    const unique = [...new Set((data || []).map(r => r.corridor))];
+    return unique;
+  },
+
+  async updateCorridor(areaId, corridor) {
+    const { error } = await supabase
+      .from('weather_areas')
+      .update({ corridor })
+      .eq('id', areaId);
+
+    if (error) {
+      logger.error('Failed to update corridor', { areaId, error: error.message });
+      throw error;
+    }
+
+    logger.info('Corridor updated', { areaId, corridor });
+  },
+
   async updateCredits(apiName, creditsUsed) {
     const current = await this.getCredits(apiName);
     if (!current) {

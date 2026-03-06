@@ -610,10 +610,36 @@ export const forecastEmailService = {
   _findCorridorInText(structuredText, corridorName) {
     const normalized = this._normalizeCorridor(corridorName);
     const matches = structuredText.match(/CORRIDOR:\s*(.+)/gi) || [];
+    // Exact normalized match first
     for (const m of matches) {
       const name = m.replace(/^CORRIDOR:\s*/i, '').trim();
       if (this._normalizeCorridor(name) === normalized) {
         return name;
+      }
+    }
+    // Substring match fallback — handles LLM dropping or adding suffixes
+    for (const m of matches) {
+      const name = m.replace(/^CORRIDOR:\s*/i, '').trim();
+      const norm = this._normalizeCorridor(name);
+      if (normalized.includes(norm) || norm.includes(normalized)) {
+        return name;
+      }
+    }
+    return null;
+  },
+
+  /**
+   * Find a key in a corridor_data object by fuzzy matching.
+   * Handles exact, normalized, and substring matches.
+   */
+  _findKeyFuzzy(data, corridorName) {
+    if (!data || !corridorName) return null;
+    if (data[corridorName]) return corridorName;
+    const normalized = this._normalizeCorridor(corridorName);
+    for (const key of Object.keys(data)) {
+      const norm = this._normalizeCorridor(key);
+      if (norm === normalized || normalized.includes(norm) || norm.includes(normalized)) {
+        return key;
       }
     }
     return null;
@@ -673,7 +699,8 @@ export const forecastEmailService = {
     const forecastRows = [];
 
     for (const area of areasWithCorridor) {
-      const corridor = corridorData[area.corridor];
+      const corridorKey = this._findKeyFuzzy(corridorData, area.corridor);
+      const corridor = corridorKey ? corridorData[corridorKey] : null;
       if (!corridor || !corridor.dates) {
         logger.warn('No corridor data for area', { areaId: area.id, corridor: area.corridor });
         continue;
@@ -884,8 +911,10 @@ export const forecastEmailService = {
    * Compare corridor_data between two emails and generate plain-English trend bullets.
    */
   _compareCorridor(todayData, yesterdayData, corridorName) {
-    const today = todayData?.[corridorName]?.dates;
-    const yesterday = yesterdayData?.[corridorName]?.dates;
+    const todayKey = this._findKeyFuzzy(todayData, corridorName);
+    const yesterdayKey = this._findKeyFuzzy(yesterdayData, corridorName);
+    const today = todayKey ? todayData[todayKey]?.dates : null;
+    const yesterday = yesterdayKey ? yesterdayData[yesterdayKey]?.dates : null;
 
     if (!today || !yesterday) return null;
 

@@ -591,6 +591,35 @@ export const forecastEmailService = {
   },
 
   /**
+   * Normalize a corridor name for fuzzy matching.
+   * Strips periods, normalizes dashes, collapses whitespace, lowercases.
+   */
+  _normalizeCorridor(name) {
+    return name
+      .replace(/\./g, '')
+      .replace(/[–—-]/g, '-')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  },
+
+  /**
+   * Find the exact corridor name used in structured text by fuzzy-matching
+   * against the provided corridorName. Returns the exact text name or null.
+   */
+  _findCorridorInText(structuredText, corridorName) {
+    const normalized = this._normalizeCorridor(corridorName);
+    const matches = structuredText.match(/CORRIDOR:\s*(.+)/gi) || [];
+    for (const m of matches) {
+      const name = m.replace(/^CORRIDOR:\s*/i, '').trim();
+      if (this._normalizeCorridor(name) === normalized) {
+        return name;
+      }
+    }
+    return null;
+  },
+
+  /**
    * Extract a single corridor's DATE blocks from the structured text.
    * Returns the text between CORRIDOR: [name] and the next CORRIDOR: (or COMBINED SAILING CORRIDORS),
    * with SUGGEST: block removed — only DATE/WIND/SEAS/SWELL/PRECIP lines.
@@ -598,8 +627,10 @@ export const forecastEmailService = {
   _extractCorridorSection(structuredText, corridorName) {
     if (!structuredText || !corridorName) return null;
 
-    // Find the corridor section — match from CORRIDOR: [name] to the next CORRIDOR: or COMBINED SAILING CORRIDORS
-    const escaped = corridorName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const actualName = this._findCorridorInText(structuredText, corridorName);
+    if (!actualName) return null;
+
+    const escaped = actualName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const pattern = new RegExp(`CORRIDOR:\\s*${escaped}\\s*\\n([\\s\\S]*?)(?=CORRIDOR:|COMBINED SAILING CORRIDORS|$)`, 'i');
     const match = structuredText.match(pattern);
     if (!match) return null;
@@ -836,7 +867,11 @@ export const forecastEmailService = {
    */
   _extractSuggest(structuredText, corridorName) {
     if (!structuredText || !corridorName) return null;
-    const escaped = corridorName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    const actualName = this._findCorridorInText(structuredText, corridorName);
+    if (!actualName) return null;
+
+    const escaped = actualName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const pattern = new RegExp(
       `CORRIDOR:\\s*${escaped}\\s*\\n[\\s\\S]*?SUGGEST:\\s*\\n?([\\s\\S]*?)(?=DATE:|CORRIDOR:|COMBINED SAILING|$)`,
       'i'

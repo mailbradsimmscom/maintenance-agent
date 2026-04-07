@@ -5,7 +5,7 @@
 
 import OpenAI from 'openai';
 import { weatherRepository } from '../repositories/weather.repository.js';
-import { forecastEmailRepository } from '../repositories/forecast-email.repository.js';
+import { CANONICAL_CORRIDORS } from './forecast-email.service.js';
 import { getConfig } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
 
@@ -92,11 +92,7 @@ export const weatherAreaService = {
    * @returns {Promise<string|null>} Matched corridor name or null
    */
   async assignCorridor(area) {
-    const corridors = await forecastEmailRepository.getLatestCorridors();
-    if (!corridors || corridors.length === 0) {
-      logger.info('No corridors available for assignment', { areaId: area.id });
-      return null;
-    }
+    const corridors = CANONICAL_CORRIDORS;
 
     const config = getConfig();
     const openai = new OpenAI({ apiKey: config.openai.apiKey, timeout: 30000 });

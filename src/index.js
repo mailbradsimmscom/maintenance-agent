@@ -23,6 +23,7 @@ import { getConfig } from './config/env.js';
 import logger, { agentLogger } from './utils/logger.js';
 import adminRoutes from './routes/admin/index.js';
 import weatherRoutes from './routes/weather.route.js';
+import journeyRoutes from './routes/journey.route.js';
 import { requestLogger } from './middleware/request-logger.js';
 import { errorHandler, notFoundHandler } from './middleware/error-handler.js';
 
@@ -94,6 +95,12 @@ function createExpressApp() {
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+  // Generate requestId for each request
+  app.use((req, res, next) => {
+    res.locals.requestId = crypto.randomUUID();
+    next();
+  });
+
   // Request logging
   app.use(requestLogger);
 
@@ -125,6 +132,9 @@ function createExpressApp() {
 
   // Weather API routes (public - no admin token required)
   app.use('/api/weather', weatherRoutes);
+
+  // Journey API routes (public - no admin token required)
+  app.use('/api/journey', journeyRoutes);
 
   // 404 handler
   app.use(notFoundHandler);

@@ -17,6 +17,15 @@ const config = getConfig();
 const env = getEnv();
 const logger = createLogger('forecast-email-service');
 
+export const CANONICAL_CORRIDORS = [
+  'Trinidad–St Vincent',
+  'St Lucia–Guadeloupe',
+  'Antigua–St Martin',
+  'Anegada Passage–Eastern Puerto Rico–Virgin Islands',
+  'Mona Passage–Dominican Republic',
+  'ABC Islands–Venezuela',
+];
+
 const STRUCTURING_SYSTEM_PROMPT = `Produce the full structured output immediately. Do not ask questions, request confirmations, or offer choices. Do not comment on length or formatting constraints. Just output the structured forecast.
 
 OUTPUT FORMAT IS STRICT MACHINE-PARSE STYLE.
@@ -68,6 +77,14 @@ Do NOT repeat corridor-specific routing guidance here.
 2. CORRIDOR STRUCTURE
 
 Organize output strictly by combined sailing corridors.
+
+Use ONLY these exact corridor names, regardless of how the source email labels them:
+- Trinidad–St Vincent
+- St Lucia–Guadeloupe
+- Antigua–St Martin
+- Anegada Passage–Eastern Puerto Rico–Virgin Islands
+- Mona Passage–Dominican Republic
+- ABC Islands–Venezuela
 
 Each corridor must follow this format:
 

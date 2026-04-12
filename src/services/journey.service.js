@@ -11,6 +11,7 @@ import { getConfig } from '../config/env.js';
 import { createLogger } from '../utils/logger.js';
 import { validateWaypoints, checkWaypointsInWater, calculateRouteDistance, estimateDuration, bearing } from '../utils/waypoint-validation.js';
 import { scoreWaypoint, calculateOverallScore, getWeatherAtTime } from '../utils/scoring.js';
+import { openMeteoRepository } from '../repositories/open-meteo.repository.js';
 
 const logger = createLogger('journey-service');
 
@@ -20,10 +21,6 @@ const MAX_ROUTES_TO_GENERATE = 5;
 const DEFAULT_AVG_SOG = 6.5; // knots — typical for this catamaran
 const DEPARTURE_WINDOW_COUNT = 6;
 const DEPARTURE_WINDOW_INTERVAL_HRS = 12;
-
-// Open-Meteo API endpoints (free, unlimited)
-const FORECAST_BASE = 'https://api.open-meteo.com/v1/forecast';
-const MARINE_BASE = 'https://marine-api.open-meteo.com/v1/marine';
 
 const ROUTE_GENERATION_SYSTEM_PROMPT = `You are an expert Caribbean and US East Coast sailing route planner for a cruising catamaran.
 
@@ -543,7 +540,16 @@ Requirements:
     const uniquePoints = this._deduplicateWaypoints(selectedRoutes);
 
     // Fetch weather for all unique points (one fetch covers all 6 windows — 7-day forecast)
-    const weatherCache = await this._fetchWeatherForPoints(uniquePoints);
+    const { cache: weatherCache, failedCount, failedError } = await this._fetchWeatherForPoints(uniquePoints);
+
+    const totalPoints = uniquePoints.size;
+    const weatherStatus = failedCount === 0 ? 'ok'
+      : failedCount < totalPoints ? 'partial'
+      : 'failed';
+
+    if (weatherStatus === 'failed') {
+      logger.warn('All weather fetches failed — scores will be neutral', { journeyId, failedError });
+    }
 
     // Delete existing scenarios for this journey (re-scoring replaces old)
     await journeyRepository.deleteScenariosByJourneyId(journeyId);
@@ -587,8 +593,8 @@ Requirements:
       await journeyRepository.update(journeyId, { earliest_departure: earliestDeparture });
     }
 
-    logger.info('Scoring complete', { journeyId, scenarioCount: scenarios.length });
-    return { scenarios, aiSummary };
+    logger.info('Scoring complete', { journeyId, scenarioCount: scenarios.length, weatherStatus });
+    return { scenarios, aiSummary, weatherStatus, weatherError: weatherStatus !== 'ok' ? failedError : null };
   },
 
   /**
@@ -626,89 +632,56 @@ Requirements:
 
   /**
    * Fetch Open-Meteo forecast + marine data for all unique waypoint locations
-   * Returns a cache keyed by rounded lat,lon
+   * Sequential with delay to avoid 429 rate limits. Retries once on 429.
    * @private
-   * @returns {Promise<Map<string, {forecast: Object, marine: Object}>>}
+   * @returns {Promise<{cache: Map, failedCount: number, failedError: string|null}>}
    */
   async _fetchWeatherForPoints(uniquePoints) {
     const cache = new Map();
     const entries = Array.from(uniquePoints.entries());
+    let failedCount = 0;
+    let failedError = null;
 
     logger.info('Fetching weather for waypoints', { uniquePointCount: entries.length });
 
-    // Fetch in parallel with concurrency limit of 4
-    const CONCURRENCY = 4;
-    for (let i = 0; i < entries.length; i += CONCURRENCY) {
-      const batch = entries.slice(i, i + CONCURRENCY);
-      const results = await Promise.all(batch.map(async ([key, { lat, lon }]) => {
-        try {
-          const [forecast, marine] = await Promise.all([
-            this._fetchForecast(lat, lon),
-            this._fetchMarine(lat, lon),
-          ]);
-          return { key, forecast, marine };
-        } catch (err) {
-          logger.warn('Weather fetch failed for point', { key, error: err.message });
-          return { key, forecast: null, marine: null };
-        }
-      }));
-
-      for (const { key, forecast, marine } of results) {
+    for (const [key, { lat, lon }] of entries) {
+      try {
+        const [forecast, marine] = await Promise.all([
+          openMeteoRepository.fetchForecastBasic(lat, lon),
+          openMeteoRepository.fetchMarineBasic(lat, lon),
+        ]);
         cache.set(key, { forecast, marine });
+      } catch (err) {
+        // Retry once on 429 after a 2-second wait
+        if (err.message.includes('429')) {
+          logger.warn('Rate limited, retrying after 2s', { key });
+          await new Promise(r => setTimeout(r, 2000));
+          try {
+            const [forecast, marine] = await Promise.all([
+              openMeteoRepository.fetchForecastBasic(lat, lon),
+              openMeteoRepository.fetchMarineBasic(lat, lon),
+            ]);
+            cache.set(key, { forecast, marine });
+          } catch (retryErr) {
+            logger.warn('Weather fetch failed after retry', { key, error: retryErr.message });
+            cache.set(key, { forecast: null, marine: null });
+            failedCount++;
+            failedError = retryErr.message;
+          }
+        } else {
+          logger.warn('Weather fetch failed for point', { key, error: err.message });
+          cache.set(key, { forecast: null, marine: null });
+          failedCount++;
+          failedError = err.message;
+        }
       }
+
+      // 300ms delay between points to stay under rate limits
+      await new Promise(r => setTimeout(r, 300));
     }
 
-    logger.info('Weather fetch complete', { cachedPoints: cache.size });
-    return cache;
-  },
-
-  /**
-   * Fetch Open-Meteo forecast for a single point (no multi-model, single default)
-   * @private
-   */
-  async _fetchForecast(lat, lon) {
-    const params = new URLSearchParams({
-      latitude: lat.toString(),
-      longitude: lon.toString(),
-      hourly: 'wind_speed_10m,wind_direction_10m,wind_gusts_10m',
-      forecast_days: '7',
-      timezone: 'UTC',
-    });
-
-    const res = await fetch(`${FORECAST_BASE}?${params}`);
-    if (!res.ok) {
-      throw new Error(`Forecast API ${res.status}`);
-    }
-    return res.json();
-  },
-
-  /**
-   * Fetch Open-Meteo marine data for a single point
-   * Includes ocean currents if available
-   * @private
-   */
-  async _fetchMarine(lat, lon) {
-    const params = new URLSearchParams({
-      latitude: lat.toString(),
-      longitude: lon.toString(),
-      hourly: [
-        'wave_height',
-        'wave_period',
-        'swell_wave_height',
-        'swell_wave_direction',
-        'wind_wave_height',
-        'ocean_current_velocity',
-        'ocean_current_direction',
-      ].join(','),
-      forecast_days: '7',
-      timezone: 'UTC',
-    });
-
-    const res = await fetch(`${MARINE_BASE}?${params}`);
-    if (!res.ok) {
-      throw new Error(`Marine API ${res.status}`);
-    }
-    return res.json();
+    logger.info('Weather fetch complete', { cachedPoints: cache.size, failedCount });
+    return { cache, failedCount, failedError };
   },
 
   /**
@@ -878,7 +851,7 @@ Best: ${bestRoute?.name} departing ${new Date(best.departure_time).toLocaleDateS
 
     // Collect unique waypoint coords for weather fetch
     const uniquePoints = this._deduplicateWaypoints([{ waypoints: aheadWaypoints }]);
-    const weatherCache = await this._fetchWeatherForPoints(uniquePoints);
+    const { cache: weatherCache } = await this._fetchWeatherForPoints(uniquePoints);
 
     // Calculate ETAs and score each waypoint ahead
     const now = new Date();

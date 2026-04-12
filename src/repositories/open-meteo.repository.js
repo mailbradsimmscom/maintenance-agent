@@ -105,6 +105,62 @@ export const openMeteoRepository = {
   },
 
   /**
+   * Fetch basic forecast (wind only, default model) for journey scoring
+   * Lighter than fetchForecastData — no multi-model, fewer fields
+   * @param {number} latitude
+   * @param {number} longitude
+   * @returns {Promise<Object>} API response with wind data
+   */
+  async fetchForecastBasic(latitude, longitude) {
+    const params = new URLSearchParams({
+      latitude: latitude.toString(),
+      longitude: longitude.toString(),
+      hourly: 'wind_speed_10m,wind_direction_10m,wind_gusts_10m',
+      forecast_days: '7',
+      timezone: 'UTC',
+    });
+
+    const url = `${FORECAST_BASE}?${params}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Forecast API ${response.status}`);
+    }
+    return response.json();
+  },
+
+  /**
+   * Fetch basic marine data for journey scoring
+   * Includes ocean currents but not SST or extra wave directions
+   * @param {number} latitude
+   * @param {number} longitude
+   * @returns {Promise<Object>} API response with marine data
+   */
+  async fetchMarineBasic(latitude, longitude) {
+    const params = new URLSearchParams({
+      latitude: latitude.toString(),
+      longitude: longitude.toString(),
+      hourly: [
+        'wave_height',
+        'wave_period',
+        'swell_wave_height',
+        'swell_wave_direction',
+        'wind_wave_height',
+        'ocean_current_velocity',
+        'ocean_current_direction',
+      ].join(','),
+      forecast_days: '7',
+      timezone: 'UTC',
+    });
+
+    const url = `${MARINE_BASE}?${params}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Marine API ${response.status}`);
+    }
+    return response.json();
+  },
+
+  /**
    * Transform multi-model forecast response to individual records
    * @param {Object} apiResponse - Raw API response
    * @param {string} areaId - Weather area UUID
